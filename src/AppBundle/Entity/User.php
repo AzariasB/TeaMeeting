@@ -45,20 +45,6 @@ class User implements UserInterface {
     private $isAdmin;
     
     //All the non-saved informations
-    
-    /**
-     * Not THE password, but the password
-     * the user entered a second time when
-     * registering
-     * So, we don't need to save this into
-     * the database
-     *  
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     * 
-     * @var string 
-     */
-    private $plainPassword;
 
     /**
      * Set if is admin

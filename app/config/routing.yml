@@ -12,3 +12,6 @@ logout:
 lobby:
     path: /lobby
     defaults: { _controller: AppBundle:Default:lobby }
+change_password:
+    path: /change_password
+    defaults: { _controller: AppBundle:Default:changePassword }

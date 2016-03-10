@@ -31,8 +31,14 @@ class RegisterController extends Controller {
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /**
+             * Since randombyte return hard-to-type chars,
+             * we have to encode this in base64
+             */
+            $randPwd = base64_encode(random_bytes(10));
+            
             $password = $this->get('security.password_encoder')
-                    ->encodePassword($user, $user->getPlainPassword());
+                    ->encodePassword($user, $randPwd);
             $user->setPassword($password);
             $user->setIsAdmin(false);
             
@@ -40,8 +46,9 @@ class RegisterController extends Controller {
             $em->persist($user);
             $em->flush();
             
-            //TODO : return to connection page or something
-            return $this->redirectToRoute('home');
+            return $this->render('registration/usercreated.html.twig',array(
+                'password' => $randPwd
+            ));
         }
         
         return $this->render(

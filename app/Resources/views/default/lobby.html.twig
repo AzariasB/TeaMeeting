@@ -5,4 +5,12 @@
     <div>
         Welcome into the lobby
     </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <strong>Welcome here admin</strong>
+        <a href="{{ path('register') }}">Create a user</a>
+    {% endif %}
+    
+    <a href="{{ path('change_password') }}">Change password</a>
+    <a href="{{ path('logout') }}">Logout</a>
 {% endblock %}

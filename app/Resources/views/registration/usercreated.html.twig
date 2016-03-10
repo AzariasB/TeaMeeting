@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+    <div>
+        The user was sucessfully created.
+        {% if password %}
+            <p> His password is <strong>{{ password }}
+                {% else %}
+                    <p> The user has no password assigned yet...</p>
+                {% endif %}
+    </div>
+
+    <a href="{{ path('lobby') }}">Back to the lobby</a>
+
+{% endblock %}
