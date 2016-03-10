@@ -1,0 +1,14 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+home:
+    path: /home
+    defaults: { _controller: AppBundle:Default:index }
+register:
+    path: /register
+    defaults: { _controller: AppBundle:Register:register }
+logout:
+    path: /logout
+lobby:
+    path: /lobby
+    defaults: { _controller: AppBundle:Default:lobby }
