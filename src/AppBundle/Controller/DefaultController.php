@@ -31,7 +31,13 @@ class DefaultController extends Controller {
     }
 
     public function lobbyAction(Request $req) {
-        return $this->render('default/lobby.html.twig');
+        $em = $this->getDoctrine()->getManager();
+        $users =  $em->getRepository('AppBundle:User')->findAll();
+        $projects = $em->getRepository('AppBundle:Project')->findAll();
+        return $this->render('default/lobby.html.twig',array(
+            'users' => $users,
+            'projects' => $projects
+        ));
     }
 
     public function changePasswordAction(Request $req) {

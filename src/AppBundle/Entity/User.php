@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
  * @ORM\Entity
  * @UniqueEntity(fields="username", message="Username already taken")
@@ -44,7 +45,6 @@ class User implements UserInterface {
      */
     private $isAdmin;
     
-    //All the non-saved informations
 
     /**
      * Set if is admin

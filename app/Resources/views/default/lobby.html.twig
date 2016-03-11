@@ -1,16 +1,56 @@
-{# empty Twig template #}
+
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    <div>
-        Welcome into the lobby
-    </div>
+{% block title %}
+    Lobby
+{% endblock %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-        <strong>Welcome here admin</strong>
-        <a href="{{ path('register') }}">Create a user</a>
-    {% endif %}
-    
+
+{% block body %}
+    <h2>
+        Welcome into the lobby
+    </h2>
+
     <a href="{{ path('change_password') }}">Change password</a>
     <a href="{{ path('logout') }}">Logout</a>
+
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div id="admin_part">
+            <strong>Welcome here admin</strong>
+
+            <div id="users_management">
+                <a href="{{ path('register') }}">Create a user</a>
+                {% if users %}
+                    <h5>Users</h5>
+                    <ul id="user_list" >
+                        {% for user in users %}
+                            <li>
+                                {{ user.username }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <h5>No users</h5>
+                {% endif %}
+            </div>
+
+            <div id="project_management">
+                <a href="{{ path('newproject') }}">Create a project</a>
+                {% if projects %}
+                    <h5>Projects</h5>
+                    <ul id="project_list" >
+                        {% for proj in projects %}
+                            <li>
+                                {{ proj.projectName }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <h5>No projects</h5>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
 {% endblock %}

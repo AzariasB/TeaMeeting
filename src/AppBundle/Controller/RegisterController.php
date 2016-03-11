@@ -25,7 +25,6 @@ class RegisterController extends Controller {
      * @Route("/register", name="user_registration")
      */
     public function registerAction(Request $request) {
-
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
@@ -33,9 +32,9 @@ class RegisterController extends Controller {
         if ($form->isSubmitted() && $form->isValid()) {
             /**
              * Since randombyte return hard-to-type chars,
-             * we have to encode this in base64
+             * we have to encode this in base64,
              */
-            $randPwd = base64_encode(random_bytes(10));
+            $randPwd = base64_encode(random_bytes(6));
             
             $password = $this->get('security.password_encoder')
                     ->encodePassword($user, $randPwd);

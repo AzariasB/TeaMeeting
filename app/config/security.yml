@@ -35,8 +35,9 @@ security:
                 default_target_path: lobby
             # activate different ways to authenticate
             
-#    access_control:
-#        - { path: ^/register, roles: ROLE_ADMIN }
+    access_control:
+        - { path: ^/register, roles: ROLE_ADMIN }
+        - { path: ^/newproject, roles: ROLE_ADMIN }
 
             # http_basic: ~
             # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate

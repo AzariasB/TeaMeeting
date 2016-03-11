@@ -1,0 +1,16 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Create project
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_row(form.projectName) }}
+    {{ form_row(form.leader) }}
+    {{ form_row(form.secretary) }}
+
+    <button type="submit">Create</button>
+    {{ form_end(form) }}
+{% endblock %}

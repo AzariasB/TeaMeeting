@@ -15,3 +15,6 @@ lobby:
 change_password:
     path: /change_password
     defaults: { _controller: AppBundle:Default:changePassword }
+newproject:
+    path: /newproject
+    defaults : { _controller: AppBundle:Project:createNew }
