@@ -12,9 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
 use AppBundle\Entity\Project;
-use AppBundle\Entity\UserRole;
 use AppBundle\Form\ProjectType;
-use AppBundle\Form\RoleType;
 
 /**
  * Description of ProjectController
@@ -26,65 +24,76 @@ class ProjectController extends Controller {
     public function createNewAction(Request $req) {
         $proj = new Project();
 
-        $role1 = new UserRole();
-        $role1->setRoleName('Painter');
-        $proj->getRoles()->add($role1);
-
-        $role2 = new UserRole();
-        $role2->setRoleName('Lecturer');
-        $proj->getRoles()->add($role2);
-
         $form = $this->createForm(ProjectType::class, $proj);
 
         $form->handleRequest($req);
         if ($form->isSubmitted() && $form->isValid()) {
-            $samePerson = $form->get('leader')
-                            ->getData()
-                            ->getId() === $form->get('secretary')
-                            ->getData()
-                            ->getId();
 
-            if ($samePerson) {
-                $form
-                        ->get('leader')
+            if ($this->leaderIsSecretary($form)) {
+                $form->get('leader')
                         ->addError(new FormError('The same personn cannot be leader and secretary'));
-                return $this->render(
-                                'project/create.html.twig', array('form' => $form->createView())
-                );
+                return $this->createProjectPage($form);
             }
             $proj->setLocked(false);
+            foreach ($proj->getRoles() as $r) {
+                $r->setProject($proj);
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($proj);
             $em->flush();
-            $role1->setProject($proj);
-            $em->merge($role1);
-            $role2->setProject($proj);
-            $em->merge($role2);
-            $em->flush();
-
             return $this->render('project/created.html.twig');
         }
 
-        return $this->render(
-                        'project/create.html.twig', array('form' => $form->createView())
-        );
+        return $this->createProjectPage($form);
     }
 
+    /**
+     * Return the page created from
+     * the given form
+     * 
+     * @param From $form
+     * @return Response
+     */
+    private function createProjectPage($form) {
+        return $this->renderCreate('project/create.html.twig', array(
+                    'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * If, when the form is submitted
+     * the user selected to be the leader
+     * is also selected to be the secretary
+     * 
+     * @param Form $form
+     * @return boolean
+     */
+    private function leaderIsSecretary($form) {
+        $leader = $form->get('leader')->getData();
+        $secreatary = $form->get('secretary')->getData();
+        return $leader->getId() === $secreatary->getId();
+    }
+
+    /**
+     * 
+     * Lock the project
+     * 
+     * @param integer $proj
+     * @return Response
+     */
     public function lockAction($proj) {
-        if ($this->changeProjStateTo($proj, true)) {
-            return $this->redirectToRoute('lobby');
-        } else {
-            //return $this->redirect(error);
-        }
+        return $this->changeProjStateTo($proj, true);
     }
 
+    /**
+     * Unlock the project
+     * 
+     * @param integer $proj
+     * @return Response
+     */
     public function unlockAction($proj) {
-        if($this->changeProjStateTo($proj, false)){
-            return $this->redirectToRoute('lobby');
-        }else{
-            //return $this->redirect(error);
-        }
+        return $this->changeProjStateTo($proj, false);
     }
 
     /**
@@ -103,8 +112,13 @@ class ProjectController extends Controller {
         if ($p->getLocked() !== $newState) {
             $p->setLocked($newState);
             $success = true;
+            $this->saveProject($p);
         }
-        $this->saveProject($p);
+        if ($success) {
+            return $this->redirectToRoute('lobby');
+        } else {
+            //return $this->redirectToRoute('Already locked,unlocked');
+        }
         return $success;
     }
 

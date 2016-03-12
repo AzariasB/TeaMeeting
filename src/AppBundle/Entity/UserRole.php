@@ -28,13 +28,15 @@ class UserRole {
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(nullable=false)
      * @var User
      */
     private $student;
-    
+
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="roles",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="roles")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id",nullable=false)
      * @var Project
      */
     private $project;
@@ -89,24 +91,24 @@ class UserRole {
     public function getStudent() {
         return $this->student;
     }
-    
+
     /**
      * Set project
      * 
      * @param Project $projectId
      * @return UserRole
      */
-    public function setProject($projectId){
+    public function setProject($projectId) {
         $this->project = $projectId;
         return $this;
     }
-    
+
     /**
      * Get project
      * 
      * @return Project 
      */
-    public function getProject(){
+    public function getProject() {
         return $this->project;
     }
 

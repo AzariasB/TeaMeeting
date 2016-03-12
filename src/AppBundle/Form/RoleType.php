@@ -28,8 +28,7 @@ class RoleType extends AbstractType {
                 ->add('student', EntityType::class, array(
                     'class' => 'AppBundle:User',
                     'choice_label' => 'username'))
-                ->add('roleName', TextType::class)
-                ->add('project',  HiddenType::class);
+                ->add('roleName', TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver) {

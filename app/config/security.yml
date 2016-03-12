@@ -38,6 +38,9 @@ security:
     access_control:
         - { path: ^/register, roles: ROLE_ADMIN }
         - { path: ^/newproject, roles: ROLE_ADMIN }
+        - { path: ^/lock, roles: ROLE_ADMIN }
+        - { path: ^/unlock, roles: ROLE_ADMIN }
+        - { path: ^/lobby, roles: ROLE_USER }
 
             # http_basic: ~
             # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
