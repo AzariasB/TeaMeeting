@@ -1,14 +1,13 @@
 <?php
 
-
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
 
 /**
  * Description of ProjectType
@@ -29,10 +28,13 @@ class ProjectType extends AbstractType {
                 ->add('leader', EntityType::class, array(
                     'class' => 'AppBundle:User',
                     'choice_label' => 'username'))
-                ->add('secretary',EntityType::class,array(
+                ->add('secretary', EntityType::class, array(
                     'class' => 'AppBundle:User',
-                    'choice_label' => 'username'
-                ));
+                    'choice_label' => 'username'))
+                ->add('roles', CollectionType::class, array(
+                    'entry_type' => RoleType::class
+                        )
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver) {

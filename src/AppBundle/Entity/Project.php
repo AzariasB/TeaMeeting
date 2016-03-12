@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use AppBundle\Entity\UserRole;
 
 /**
  * Project
@@ -44,11 +46,16 @@ class Project {
     private $secretary;
 
     /**
-     * @ORM\OneToOne(targetEntity="ProjectRoles")
-     * @var array
+     * @ORM\OneToMany(targetEntity="UserRole",mappedBy="project",cascade={"persist"})
+     * @var ArrayCollection
      */
     private $roles;
 
+    
+    public function __construct() {
+        $this->roles = new ArrayCollection();
+    }
+    
     /**
      * Get id
      *
@@ -144,7 +151,7 @@ class Project {
     /**
      * Set roles
      *
-     * @param integer $roles
+     * @param ArrayCollection $roles
      * @return Project
      */
     public function setRoles($roles) {
@@ -156,7 +163,7 @@ class Project {
     /**
      * Get roles
      *
-     * @return integer 
+     * @return ArrayCollection 
      */
     public function getRoles() {
         return $this->roles;

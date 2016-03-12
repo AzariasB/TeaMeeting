@@ -18,3 +18,9 @@ change_password:
 newproject:
     path: /newproject
     defaults : { _controller: AppBundle:Project:createNew }
+unlockproject:
+    path: /unlock/{proj}
+    defaults: { _controller: AppBundle:Project:unlock }
+lockproject:
+    path: /lock/{proj}
+    defaults: { _controller: AppBundle:Project:lock }

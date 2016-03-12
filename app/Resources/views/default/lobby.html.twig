@@ -43,6 +43,15 @@
                         {% for proj in projects %}
                             <li>
                                 {{ proj.projectName }}
+                                {% if proj.locked %}
+                                    <a href="unlock/{{ proj.id }}">
+                                        Unlock
+                                    </a>
+                                {% else %}
+                                    <a href="lock/{{ proj.id }}">
+                                        Lock
+                                    </a>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
