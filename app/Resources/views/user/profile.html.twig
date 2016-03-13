@@ -1,0 +1,30 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    User profile
+{% endblock %}
+
+
+{% block body %}
+    <h2>
+        Profile of {{ user.username }}
+    </h2>
+
+    {% if user.isAdmin %}
+        <p> This user is administrator</p>
+    {% endif %}
+
+    {% if roles|length %}
+        <h3>The user participate to the following projects</h3>
+        <ul>
+            {% for r in roles %}
+                <strong>{{ r.project.projectName }}</strong> :
+                {{ r.roleName }}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>The user has no project</h3>
+    {% endif %}
+
+{% endblock %}

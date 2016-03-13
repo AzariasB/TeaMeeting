@@ -20,6 +20,13 @@ use AppBundle\Form\ProjectType;
  * @author boutina
  */
 class ProjectController extends Controller {
+    
+    public function infoAction($proj){
+        $obj = $this->getProject($proj);
+        return $this->render('project/presentation.html.twig',array(
+            'project' => $obj
+        ));
+    }
 
     public function createNewAction(Request $req) {
         $proj = new Project();

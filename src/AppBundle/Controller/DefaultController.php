@@ -42,7 +42,7 @@ class DefaultController extends Controller {
 
     public function changePasswordAction(Request $req) {
         $changePasswordModel = new ChangePassword();
-        $form = $this->createForm(new ChangePasswordType(), $changePasswordModel);
+        $form = $this->createForm(ChangePasswordType::class, $changePasswordModel);
 
         $form->handleRequest($req);
 

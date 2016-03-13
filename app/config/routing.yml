@@ -24,3 +24,9 @@ unlockproject:
 lockproject:
     path: /lock/{proj}
     defaults: { _controller: AppBundle:Project:lock }
+seeproject:
+    path: /project/{proj}
+    defaults: { _controller: AppBundle:Project:info }
+seeprofile:
+    path: /user/{user}
+    defaults: { _controller: AppBundle:User:info }

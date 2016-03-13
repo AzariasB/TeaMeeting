@@ -26,7 +26,9 @@
                     <ul id="user_list" >
                         {% for user in users %}
                             <li>
-                                {{ user.username }}
+                                <a href="{{ path('seeprofile',{'user':user.id}) }}">
+                                    {{ user.username }}
+                                </a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -42,13 +44,16 @@
                     <ul id="project_list" >
                         {% for proj in projects %}
                             <li>
-                                {{ proj.projectName }}
+                                <a href="{{ path('seeproject',{'proj':proj.id})}}">
+                                    {{ proj.projectName }}
+                                </a>
+                                -
                                 {% if proj.locked %}
-                                    <a href="unlock/{{ proj.id }}">
+                                    <a href="{{ path('unlockproject',{'proj' : proj.id}) }}">
                                         Unlock
                                     </a>
                                 {% else %}
-                                    <a href="lock/{{ proj.id }}">
+                                    <a href="{{ path('lockproject',{'proj' : proj.id}) }}">
                                         Lock
                                     </a>
                                 {% endif %}

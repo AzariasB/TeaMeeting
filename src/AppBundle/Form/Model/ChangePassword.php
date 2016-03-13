@@ -9,7 +9,6 @@
 namespace AppBundle\Form\Model;
 
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
-use Symfony\Component\Validator\Constraint as Assert;
 
 /**
  * Description of ChangePassword
@@ -27,7 +26,12 @@ class ChangePassword {
      */
     public $oldPassword;
     
-    // Can force the number min of chars for the new one
+    /**
+     *
+     * 
+     * 
+     * @var string 
+     */
     public $newPassword;
     
 }

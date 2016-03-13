@@ -1,0 +1,41 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+   {{ project.projectName }}
+{% endblock %}
+
+{% block body %}
+    <h2>Project "{{ project.projectName }}" </h2>
+
+    <h3> Leader : {{ project.leader.username }} </h3>
+
+    <h3> Secretary : {{ project.secretary.username }}</h3>
+
+    {% if project.roles|length %}
+        <h3>Other roles :</h3>
+        <ul>
+            {% for ro in project.roles %}
+                <li>
+                    <strong>{{ ro.student.username }}</strong> :
+                    {{ ro.roleName }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No other roles</h3>
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        {% if project.locked %}
+            <a href="{{ path('unlockproject',{'proj' : project.id}) }}">
+                Unlock
+            </a>
+        {% else %}
+            <a href="{{ path('lockproject',{'proj' : project.id}) }}">
+                Lock
+            </a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
