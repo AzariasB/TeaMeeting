@@ -10,16 +10,7 @@
     {{ form_row(form.projectName) }}
     {{ form_row(form.leader) }}
     {{ form_row(form.secretary) }}
-
-    <div>
-        <h3>Roles</h3>
-        <ul class="roles" data-prototype="{{ form_widget(form.roles.vars.prototype)|e }}" >
-            {% for role in form.roles %}
-                <li>{{ form_row(role.roleName) }}</li>
-                {% endfor %}
-        </ul>
-    </div>
-
+    {{ form_row(form.participants) }}
 
     <div>
         <button type="submit">Create</button>

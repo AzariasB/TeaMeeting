@@ -35,25 +35,25 @@ class RegisterController extends Controller {
              * we have to encode this in base64,
              */
             $randPwd = base64_encode(random_bytes(6));
-            
+
             $password = $this->get('security.password_encoder')
                     ->encodePassword($user, $randPwd);
             $user->setPassword($password);
             $user->setIsAdmin(false);
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-            
-            return $this->render('registration/usercreated.html.twig',array(
-                'password' => $randPwd
+
+            return $this->render('registration/usercreated.html.twig', array(
+                        'password' => $randPwd
             ));
         }
-        
-        return $this->render(
-                'registration/register.html.twig',
-                array('form' => $form->createView())
-                );
+
+        return $this->render('registration/register.html.twig', array(
+                    'form' => $form->createView()
+                        )
+        );
     }
 
 }

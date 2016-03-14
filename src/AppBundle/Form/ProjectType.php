@@ -31,9 +31,11 @@ class ProjectType extends AbstractType {
                 ->add('secretary', EntityType::class, array(
                     'class' => 'AppBundle:User',
                     'choice_label' => 'username'))
-                ->add('roles', CollectionType::class, array(
-                    'entry_type' => RoleType::class,
-                    'allow_add' => true
+                ->add('participants', EntityType::class, array(
+                    'class' => 'AppBundle:User',
+                    'choice_label' => 'username',
+                    'multiple' => true,
+                    'expanded' => true
                     )
         );
     }

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -45,7 +46,19 @@ class User implements UserInterface {
      */
     private $isAdmin;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="Project",inversedBy="participants")
+     * @ORM\JoinTable(name="users_projects")
+     * @var ArrayCollection
+     */
+    private $projects;
+    
 
+    
+    public function __construct() {
+        $this->projects = new ArrayCollection();
+    }
+    
     /**
      * Set if is admin
      * 
@@ -78,12 +91,11 @@ class User implements UserInterface {
 
     /**
      * The salt to add while hashing the password   
-     * @todo : create salt from username
      * 
      * @return string
      */
     public function getSalt() {
-        return null;
+        return base64_decode($this->username);
     }
 
     /**
@@ -109,7 +121,8 @@ class User implements UserInterface {
             $this->id,
             $this->username,
             $this->password,
-            $this->isAdmin
+            $this->isAdmin,
+            $this->projects
         ));
     }
 
@@ -118,7 +131,8 @@ class User implements UserInterface {
                 $this->id,
                 $this->username,
                 $this->password,
-                $this->isAdmin
+                $this->isAdmin,
+                $this->projects
                 ) = unserialize($serialised);
     }
 
@@ -163,27 +177,28 @@ class User implements UserInterface {
     public function getPassword() {
         return $this->password;
     }
-
+    
     /**
-     * Get plain password
+     * Set projects
      * 
-     * @return string
-     */
-    public function getPlainPassword() {
-        return $this->plainPassword;
-    }
-
-    /**
-     * Set plain password
-     * 
-     * @param string $plainPassword
+     * @param ArrayCollection $projs
      * @return User
      */
-    public function setPlainPassword($plainPassword) {
-        $this->plainPassword = $plainPassword;
-
+    public function setProject($projs){
+        $this->projects = $projs;
+        
         return $this;
     }
+    
+    /**
+     * Get projects
+     * 
+     * @return ArrayCollection
+     */
+    public function getProjects(){
+        return $this->projects;
+    }
+
     
     public function eraseCredentials()
     {

@@ -63,7 +63,7 @@ class ProjectController extends Controller {
      * @return Response
      */
     private function createProjectPage($form) {
-        return $this->renderCreate('project/create.html.twig', array(
+        return $this->render('project/create.html.twig', array(
                     'form' => $form->createView()
         ));
     }

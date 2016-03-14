@@ -50,10 +50,18 @@ class Project {
      * @var ArrayCollection
      */
     private $roles;
+    
+    /**
+     *
+     * @ORM\ManyToMany(targetEntity="User",mappedBy="projects")
+     * @var ArrayCollection
+     */
+    private $participants;
 
     
     public function __construct() {
         $this->roles = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
     
     /**
@@ -169,4 +177,25 @@ class Project {
         return $this->roles;
     }
 
+    /**
+     * Set participants
+     * 
+     * @param ArrayCollection $parts
+     * @return Project
+     */
+    public function setParticipants($parts){
+        $this->participants = $parts;
+        
+        return $this;
+    }
+    
+    /**
+     * Get participants
+     * 
+     * @return ArrayCollection
+     */
+    public function getParticipants(){
+        return $this->participants;
+    }
+    
 }
