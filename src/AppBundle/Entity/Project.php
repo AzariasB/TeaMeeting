@@ -46,14 +46,15 @@ class Project {
     private $secretary;
 
     /**
-     * @ORM\OneToMany(targetEntity="UserRole",mappedBy="project",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="UserRole",mappedBy="project",cascade={"persist","remove"})
      * @var ArrayCollection
      */
     private $roles;
     
     /**
      *
-     * @ORM\ManyToMany(targetEntity="User",mappedBy="projects")
+     * @ORM\ManyToMany(targetEntity="User",inversedBy="projects")
+     * @ORM\JoinTable(name="users_projects")
      * @var ArrayCollection
      */
     private $participants;
@@ -129,7 +130,7 @@ class Project {
     /**
      * Get leader
      *
-     * @return integer 
+     * @return User 
      */
     public function getLeader() {
         return $this->leader;
@@ -150,7 +151,7 @@ class Project {
     /**
      * Get secretary
      *
-     * @return integer 
+     * @return User 
      */
     public function getSecretary() {
         return $this->secretary;
@@ -196,6 +197,20 @@ class Project {
      */
     public function getParticipants(){
         return $this->participants;
+    }
+    
+    /**
+     * 
+     * Add participant to
+     * the participants list
+     * 
+     * @param User $parts
+     * @return Project
+     */
+    public function addParticipants($parts){
+        $this->participants->add($parts);
+        
+        return $this;
     }
     
 }

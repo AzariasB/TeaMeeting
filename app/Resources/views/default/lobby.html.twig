@@ -57,6 +57,10 @@
                                         Lock
                                     </a>
                                 {% endif %}
+                                -
+                                <a href="{{ path('deleteproject',{'projId' : proj.id}) }}">
+                                    Delete
+                                </a>
                             </li>
                         {% endfor %}
                     </ul>

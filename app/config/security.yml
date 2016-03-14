@@ -40,6 +40,7 @@ security:
         - { path: ^/newproject, roles: ROLE_ADMIN }
         - { path: ^/lock, roles: ROLE_ADMIN }
         - { path: ^/unlock, roles: ROLE_ADMIN }
+        - { path: ^/delete/project, roles: ROLE_ADMIN }
         - { path: ^/lobby, roles: ROLE_USER }
 
             # http_basic: ~

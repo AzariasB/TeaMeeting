@@ -20,11 +20,11 @@ use AppBundle\Form\ProjectType;
  * @author boutina
  */
 class ProjectController extends Controller {
-    
-    public function infoAction($proj){
+
+    public function infoAction($proj) {
         $obj = $this->getProject($proj);
-        return $this->render('project/presentation.html.twig',array(
-            'project' => $obj
+        return $this->render('project/presentation.html.twig', array(
+                    'project' => $obj
         ));
     }
 
@@ -45,14 +45,67 @@ class ProjectController extends Controller {
             foreach ($proj->getRoles() as $r) {
                 $r->setProject($proj);
             }
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($proj);
-            $em->flush();
+            $this->addParticipants($proj);
+            $this->createProject($proj);
             return $this->render('project/created.html.twig');
         }
 
         return $this->createProjectPage($form);
+    }
+
+    /**
+     * Route to delete a project
+     * 
+     * @param int $projId
+     * @return Response
+     */
+    public function deleteAction($projId) {
+        $this->deleteProject($projId);
+        return $this->redirectToRoute('lobby');
+    }
+
+    /**
+     * Add the leader and the
+     * secretary to the participants
+     * if not already done
+     * 
+     * @param Project $proj
+     */
+    private function addParticipants(&$proj){
+        $parts = $proj->getParticipants();
+        $leader = $proj->getLeader();
+        $secretary = $proj->getSecretary();
+        if(!$parts->contains($leader)){
+            $proj->addParticipants($leader);
+        }
+        if(!$parts->contains($secretary)){
+            $proj->addParticipants($secretary);
+        }
+    }
+    
+    /**
+     * Delete the project
+     * 
+     * @param integer $projId
+     */
+    private function deleteProject($projId) {
+        $em = $this->getDoctrine()->getManager();
+        $p = $em->find(Project::class, $projId);
+        if ($p) {
+            $em->remove($p);
+            $em->flush();
+        }
+    }
+
+    /**
+     * Create the project
+     * 
+     * @param Project $proj
+     */
+    private function createProject($proj) {
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($proj);
+        $em->flush();
     }
 
     /**
@@ -145,7 +198,7 @@ class ProjectController extends Controller {
      * 
      * @param Project $project
      */
-    private function saveProject($project) {
+    private function saveProject(&$project) {
         $em = $this->getDoctrine()->getManager();
         $em->merge($project);
         $em->flush();

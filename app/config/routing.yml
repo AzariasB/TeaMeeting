@@ -24,6 +24,9 @@ unlockproject:
 lockproject:
     path: /lock/{proj}
     defaults: { _controller: AppBundle:Project:lock }
+deleteproject:
+    path: /delete/project/{projId}
+    defaults: { _controller: AppBundle:Project:delete }
 seeproject:
     path: /project/{proj}
     defaults: { _controller: AppBundle:Project:info }

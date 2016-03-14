@@ -16,15 +16,30 @@
     {% endif %}
 
     {% if roles|length %}
-        <h3>The user participate to the following projects</h3>
+        <h3>The user has the following roles in the projects</h3>
         <ul>
             {% for r in roles %}
-                <strong>{{ r.project.projectName }}</strong> :
-                {{ r.roleName }}
+                <li> 
+                    <strong>{{ r.project.projectName }}</strong> :
+                    {{ r.roleName }}
+                </li>
             {% endfor %}
         </ul>
     {% else %}
         <h3>The user has no project</h3>
+    {% endif %}
+
+    {% if user.projects|length %}
+        <h3>The user is part of these projects</h3>
+        <ul>
+            {% for proj in user.projects %}
+                <li>
+                    {{ proj.projectName }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>The user is part of no projects</h3>
     {% endif %}
 
 {% endblock %}

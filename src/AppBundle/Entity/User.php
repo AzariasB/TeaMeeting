@@ -47,8 +47,7 @@ class User implements UserInterface {
     private $isAdmin;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Project",inversedBy="participants")
-     * @ORM\JoinTable(name="users_projects")
+     * @ORM\ManyToMany(targetEntity="Project",mappedBy="participants",cascade={"persist","remove"})
      * @var ArrayCollection
      */
     private $projects;

@@ -2,7 +2,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-   {{ project.projectName }}
+    {{ project.projectName }}
 {% endblock %}
 
 {% block body %}
@@ -26,6 +26,19 @@
         <h3>No other roles</h3>
     {% endif %}
 
+    {% if project.participants|length %} 
+        <h3>Participants :</h3>
+        <ul>
+            {% for part in project.participants %}
+                <li>
+                    {{ part.username }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No participants (this means no leader nor secretary)</h3>
+    {% endif %}
+
     {% if is_granted('ROLE_ADMIN') %}
         {% if project.locked %}
             <a href="{{ path('unlockproject',{'proj' : project.id}) }}">
@@ -36,6 +49,10 @@
                 Lock
             </a>
         {% endif %}
+        -
+        <a href="{{ path('deleteproject',{'projId': project.id}) }}">
+            Delete
+        </a>
     {% endif %}
 {% endblock %}
 
