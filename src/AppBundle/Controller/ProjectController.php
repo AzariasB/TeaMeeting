@@ -30,7 +30,7 @@ class ProjectController extends Controller {
         }
 
         $curUs = $this->getCurrentUser();
-        if ($proj->getLeader() == $curUs) {
+        if ($proj->getLeader() == $curUs && !$proj->getLocked()) {
             return $this->handleAddRolesForm($proj, $req);
         }
         return $this->infoProjectPage($proj);

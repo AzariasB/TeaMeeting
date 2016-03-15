@@ -53,6 +53,13 @@ class Project {
     
     /**
      *
+     * @ORM\OneToMany(targetEntity="Meeting",mappedBy="project",cascade={"persist","remove"})
+     * @var ArrayCollection
+     */
+    private $meetings;
+    
+    /**
+     *
      * @ORM\ManyToMany(targetEntity="User",inversedBy="projects")
      * @ORM\JoinTable(name="users_projects")
      * @var ArrayCollection
@@ -63,6 +70,7 @@ class Project {
     public function __construct() {
         $this->roles = new ArrayCollection();
         $this->participants = new ArrayCollection();
+        $this->meetings = new ArrayCollection();
     }
     
     /**
@@ -222,4 +230,45 @@ class Project {
         return $this;
     }
     
+    /**
+     * Set meetings
+     * 
+     * @param ArrayCollection $meetings
+     * @return Project
+     */
+    public function setMeetings(ArrayCollection $meetings){
+        $this->meetings = $meetings;
+        return $this;
+    }
+    
+    /**
+     * Get meetings
+     * 
+     * @return ArrayCollection
+     */
+    public function getMeetings(){
+        return $this->meetings;
+    }    
+    
+    /**
+     * Add a meeting
+     * 
+     * @param Meeting $me
+     * @return Project
+     */
+    public function addMeeting(Meeting $me){
+        $this->meetings->add($me);
+        return $this;
+    }
+    
+    /**
+     * Remove a meeting
+     * 
+     * @param Meeting $met
+     * @return Project
+     */
+    public function removeMeeting(Meeting $met){
+        $this->meetings->remove($met);
+        return $this;
+    }
 }
