@@ -179,6 +179,15 @@ class Project {
     }
 
     /**
+     * Remove role
+     * 
+     * @param UserRole $r
+     */
+    public function removeRole(UserRole $r){
+        $this->roles->removeElement($r);
+    }
+    
+    /**
      * Set participants
      * 
      * @param ArrayCollection $parts

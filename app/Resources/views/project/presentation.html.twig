@@ -40,15 +40,12 @@
     {% endif %}
 
     {% if form %}
-        <script>
-             var rolesCount = '{{ project.roles|length }}';
-        </script>
         <script src="{{ asset('js/addRoles.js') }}" ></script>
         {{ form_start(form) }}
         <ul id="roles-fields-list"
             data-prototype="{{ form_widget(form.roles.vars.prototype)|e }}">
             {% for roleField in form.roles %}
-                <li>
+                <li class="role-line" >
                     {{ form_errors(roleField) }}
                     {{ form_widget(roleField) }}
                 </li>
@@ -57,7 +54,7 @@
         <a href="#" id="add-role">Add a role</a>
 
         <div>
-            <button type="submit">Add roles</button>
+            <button type="submit">Save modifications</button>
         </div>
         {{ form_end(form) }}
     {% endif %}

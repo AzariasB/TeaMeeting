@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
+use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Project;
 use AppBundle\Form\ProjectType;
 use AppBundle\Form\ProjectRolesType;
@@ -24,6 +25,10 @@ class ProjectController extends Controller {
 
     public function infoAction($projId, Request $req) {
         $proj = $this->getProject($projId);
+        if (!$proj) {
+            throw $this->createNotFoundException('No project found for id ' . $projId);
+        }
+
         $curUs = $this->getCurrentUser();
         if ($proj->getLeader() == $curUs) {
             return $this->handleAddRolesForm($proj, $req);
@@ -47,16 +52,37 @@ class ProjectController extends Controller {
             return $this->infoProjectPage($proj, $form->createView());
         }
 
+        $origRoles = new ArrayCollection();
+        foreach ($proj->getRoles() as $ro) {
+            $origRoles->add($ro);
+        }
+
         $form->handleRequest($req);
 
         if ($form->isSubmitted() && $form->isValid()) {
             foreach ($proj->getRoles() as $role) {
                 $role->setProject($proj);
             }
+            $this->editRoles($proj, $origRoles);
             $this->saveProject($proj);
             return $this->handleAddRolesForm($proj);
         } else {
             return $this->infoProjectPage($proj, $form->createView());
+        }
+    }
+
+    /**
+     * 
+     * @param Project $proj
+     * @param ArrayCollection $origRoles
+     */
+    private function editRoles(&$proj, $origRoles) {
+        $em = $this->getDoctrine()->getManager();
+        foreach($origRoles as $role){
+           if(!$proj->getRoles()->contains($role)){
+               $proj->removeRole($role);
+               $em->remove($role);
+            }
         }
     }
 
@@ -68,7 +94,7 @@ class ProjectController extends Controller {
      * @param FormView $formView
      * @return Response
      */
-    private function infoProjectPage($project,$formView = null) {
+    private function infoProjectPage($project, $formView = null) {
         return $this->render('project/presentation.html.twig', array(
                     'project' => $project,
                     'form' => $formView
@@ -92,7 +118,7 @@ class ProjectController extends Controller {
                 $r->setProject($proj);
             }
             $this->addParticipants($proj);
-            $this->createProject($proj);
+            $this->saveProject($proj);
             return $this->render('project/created.html.twig');
         }
 
@@ -143,16 +169,7 @@ class ProjectController extends Controller {
         }
     }
 
-    /**
-     * Create the project
-     * 
-     * @param Project $proj
-     */
-    private function createProject($proj) {
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($proj);
-        $em->flush();
-    }
+
 
     /**
      * Return the page created from
@@ -244,9 +261,9 @@ class ProjectController extends Controller {
      * 
      * @param Project $project
      */
-    private function saveProject(&$project) {
+    private function saveProject($project) {
         $em = $this->getDoctrine()->getManager();
-        $em->merge($project);
+        $em->persist($project);
         $em->flush();
     }
 

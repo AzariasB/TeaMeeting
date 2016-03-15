@@ -12,6 +12,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use AppBundle\Entity\Project;
 
 /**
  * Description of ProjectRolesType
@@ -29,7 +30,11 @@ class ProjectRolesType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('roles', CollectionType::class, array(
             'entry_type' => RoleType::class,
-            'allow_add' => true
+            'allow_add' => true,
+            'allow_delete' => true,
+            'entry_options' => array(
+                'project' => $options['data']
+            )
         ));
     }
 
