@@ -28,7 +28,7 @@ deleteproject:
     path: /delete/project/{projId}
     defaults: { _controller: AppBundle:Project:delete }
 seeproject:
-    path: /project/{proj}
+    path: /project/{projId}
     defaults: { _controller: AppBundle:Project:info }
 seeprofile:
     path: /user/{user}

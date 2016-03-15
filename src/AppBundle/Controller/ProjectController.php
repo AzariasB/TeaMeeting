@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
 use AppBundle\Entity\Project;
 use AppBundle\Form\ProjectType;
+use AppBundle\Form\ProjectRolesType;
 
 /**
  * Description of ProjectController
@@ -21,16 +22,61 @@ use AppBundle\Form\ProjectType;
  */
 class ProjectController extends Controller {
 
-    public function infoAction($proj) {
-        $obj = $this->getProject($proj);
+    public function infoAction($projId, Request $req) {
+        $proj = $this->getProject($projId);
+        $curUs = $this->getCurrentUser();
+        if ($proj->getLeader() == $curUs) {
+            return $this->handleAddRolesForm($proj, $req);
+        }
+        return $this->infoProjectPage($proj);
+    }
+
+    /**
+     * Handle the form
+     * if new roles are added
+     * to the project
+     * 
+     * @param Project $proj
+     * @param Request $req
+     * @return Response
+     */
+    private function handleAddRolesForm($proj, $req = null) {
+        $form = $this->createForm(ProjectRolesType::class, $proj);
+
+        if (!$req) {
+            return $this->infoProjectPage($proj, $form->createView());
+        }
+
+        $form->handleRequest($req);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($proj->getRoles() as $role) {
+                $role->setProject($proj);
+            }
+            $this->saveProject($proj);
+            return $this->handleAddRolesForm($proj);
+        } else {
+            return $this->infoProjectPage($proj, $form->createView());
+        }
+    }
+
+    /**
+     * Create the infopage
+     * of a project
+     * 
+     * @param Project $project
+     * @param FormView $formView
+     * @return Response
+     */
+    private function infoProjectPage($project,$formView = null) {
         return $this->render('project/presentation.html.twig', array(
-                    'project' => $obj
+                    'project' => $project,
+                    'form' => $formView
         ));
     }
 
     public function createNewAction(Request $req) {
         $proj = new Project();
-
         $form = $this->createForm(ProjectType::class, $proj);
 
         $form->handleRequest($req);
@@ -71,18 +117,18 @@ class ProjectController extends Controller {
      * 
      * @param Project $proj
      */
-    private function addParticipants(&$proj){
+    private function addParticipants(&$proj) {
         $parts = $proj->getParticipants();
         $leader = $proj->getLeader();
         $secretary = $proj->getSecretary();
-        if(!$parts->contains($leader)){
+        if (!$parts->contains($leader)) {
             $proj->addParticipants($leader);
         }
-        if(!$parts->contains($secretary)){
+        if (!$parts->contains($secretary)) {
             $proj->addParticipants($secretary);
         }
     }
-    
+
     /**
      * Delete the project
      * 
@@ -202,6 +248,15 @@ class ProjectController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->merge($project);
         $em->flush();
+    }
+
+    /**
+     * Get the current user
+     * 
+     * @return User
+     */
+    private function getCurrentUser() {
+        return $this->get('security.token_storage')->getToken()->getUser();
     }
 
 }

@@ -44,7 +44,7 @@
                     <ul id="project_list" >
                         {% for proj in projects %}
                             <li>
-                                <a href="{{ path('seeproject',{'proj':proj.id})}}">
+                                <a href="{{ path('seeproject',{'projId':proj.id})}}">
                                     {{ proj.projectName }}
                                 </a>
                                 -
