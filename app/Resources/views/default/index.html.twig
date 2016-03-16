@@ -1,24 +1,43 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/login.css') }}" />
+{% endblock %}
+
 {% block body %}
     {% if error %}
         <div> An error occured : </div>
         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
+    <div id="form-center" class="col-xs-12 col-sm-4 col-sm-offset-4">
 
-    <form action="{{ path('home') }}" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+        <form action="{{ path('home') }}" method="post" role="form" >
+            <div class="form-group">
+                <div class="input-group">
+                    <label for="username"
+                           class="input-group-addon glyphicon glyphicon-user"
+                           >Username:</label>
+                    <input class="form-control" 
+                           type="text"
+                           id="username"
+                           name="_username"
+                           value="{{ last_username }}" />
+                </div>
+            </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password" />
+            <div class="form-group">
+                <div class="input-group">
+                    <label for="password"
+                           class="input-group-addon glyphicon glyphicon-lock"
+                           >Password:</label>  
+                    <input class="form-control" type="password" id="password" name="_password" />
+                </div>
+            </div>
 
-        {#
-            If you want to control the URL the user
-            is redirected to on success (more details below)
-            <input type="hidden" name="_target_path" value="/account" />
-        #}
 
-        <button type="submit">login</button>
-    </form>
+            <button class="btn btn-default btn-success" type="submit">
+                Login
+            </button>
+        </form>
+    </div>
 {% endblock %}

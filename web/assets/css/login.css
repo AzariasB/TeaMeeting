@@ -1,0 +1,21 @@
+
+
+/* 
+    Created on : 16 mars 2016, 16:41:39
+    Author     : boutina
+*/
+
+body,html{
+    height: 100%;
+}
+
+body{
+    display: flex;
+    align-items: center;
+}
+
+#form-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

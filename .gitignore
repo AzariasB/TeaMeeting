@@ -12,3 +12,4 @@
 /web/bundles/
 composer.lock
 phpmyadmin
+web/assets/vendor

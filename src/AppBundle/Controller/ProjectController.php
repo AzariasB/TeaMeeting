@@ -53,8 +53,12 @@ class ProjectController extends Controller {
         }
 
         $origRoles = new ArrayCollection();
+        $origMeetings = new ArrayCollection();
         foreach ($proj->getRoles() as $ro) {
             $origRoles->add($ro);
+        }
+        foreach ($proj->getMeetings() as $met){
+            $origMeetings->add($met);
         }
 
         $form->handleRequest($req);
@@ -67,7 +71,7 @@ class ProjectController extends Controller {
                 $meet->setProject($proj);
             }
 
-            $this->editRoles($proj, $origRoles);
+            $this->editRolesAndMeetings($proj, $origRoles,$origMeetings);
             $this->saveProject($proj);
             return $this->handleAddRolesForm($proj);
         } else {
@@ -79,8 +83,9 @@ class ProjectController extends Controller {
      * 
      * @param Project $proj
      * @param ArrayCollection $origRoles
+     * @param ArrayCollection $origMeetings
      */
-    private function editRoles(&$proj, $origRoles) {
+    private function editRolesAndMeetings(&$proj, $origRoles,$origMeetings) {
         $em = $this->getDoctrine()->getManager();
         foreach ($origRoles as $role) {
             if (!$proj->getRoles()->contains($role)) {
@@ -88,7 +93,13 @@ class ProjectController extends Controller {
                 $em->remove($role);
             }
         }
+        foreach($origMeetings as $met){
+            if(!$proj->getMeetings()->contains($met)){
+                $em->remove($met);
+            }
+        }
     }
+    
 
     /**
      * Create the infopage

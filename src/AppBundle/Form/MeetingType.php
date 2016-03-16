@@ -24,10 +24,10 @@ class MeetingType extends AbstractType {
     //put your code here
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $today = new \DateTime();
-        $actualYear = intval($today->format('Y'));
 
         $builder->add('date',  DateTimeType::class,array(
-            'years' => range($actualYear-2, $actualYear+2)
+            'date_widget' => 'single_text',
+            'time_widget' => 'single_text'
         ))
                 ->add('room', TextType::class);
     }

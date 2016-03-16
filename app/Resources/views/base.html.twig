@@ -1,16 +1,32 @@
 <!DOCTYPE html>
+{% set bower = 'assets/vendor/' %}
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-    {% block stylesheets %}{% endblock %}
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    {% block javascripts %}
-        <script src="{{ asset('js/jquery.js') }}"></script>
-    {% endblock %}
-</head>
-<body>
-{% block body %}{% endblock %}
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" 
+              href="{{ asset(bower ~ 'bootstrap/dist/css/bootstrap.min.css') }}" >
 
-</body>
+
+
+        <!-- Before body closing tag -->
+        <script src="{{ asset(bower ~ 'jquery/dist/jquery.js') }}"></script>
+        <script src="{{ asset(bower ~ 'angular/angular.min.js') }}"></script>
+        <script src="{{ asset(bower ~ 'bootstrap/dist/js/bootstrap.min.js') }}"></script>
+        <title>
+            {% block title %}
+                Welcome
+            {% endblock %}
+        </title>
+
+        <link rel = "icon" type = "image/x-icon" href = "{{ asset('favicon.ico') }}" />
+        {% block javascripts %}
+        {% endblock %}
+        {% block stylesheets %}
+        {% endblock %}
+    </head>
+    <body class="container-fluid" >
+        {% block body %}
+        {% endblock %}
+    </body>
 </html>
