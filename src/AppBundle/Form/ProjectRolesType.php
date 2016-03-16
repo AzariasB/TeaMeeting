@@ -22,19 +22,23 @@ use AppBundle\Entity\Project;
 class ProjectRolesType extends AbstractType {
 
     /**
-     * @todo Add an option to create custom roles
      * 
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('roles', CollectionType::class, array(
-            'entry_type' => RoleType::class,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'entry_options' => array(
-                'project' => $options['data']
-            )
+                    'entry_type' => RoleType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'entry_options' => array(
+                        'project' => $options['data']
+                    )
+                ))
+                ->add('meetings', CollectionType::class, array(
+                    'entry_type' => MeetingType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true
         ));
     }
 

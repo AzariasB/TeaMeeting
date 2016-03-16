@@ -63,6 +63,10 @@ class ProjectController extends Controller {
             foreach ($proj->getRoles() as $role) {
                 $role->setProject($proj);
             }
+            foreach ($proj->getMeetings() as $meet) {
+                $meet->setProject($proj);
+            }
+
             $this->editRoles($proj, $origRoles);
             $this->saveProject($proj);
             return $this->handleAddRolesForm($proj);
@@ -78,10 +82,10 @@ class ProjectController extends Controller {
      */
     private function editRoles(&$proj, $origRoles) {
         $em = $this->getDoctrine()->getManager();
-        foreach($origRoles as $role){
-           if(!$proj->getRoles()->contains($role)){
-               $proj->removeRole($role);
-               $em->remove($role);
+        foreach ($origRoles as $role) {
+            if (!$proj->getRoles()->contains($role)) {
+                $proj->removeRole($role);
+                $em->remove($role);
             }
         }
     }
@@ -168,8 +172,6 @@ class ProjectController extends Controller {
             $em->flush();
         }
     }
-
-
 
     /**
      * Return the page created from

@@ -47,7 +47,7 @@ class Meeting {
     
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="Project")
+     * @ORM\ManyToOne(targetEntity="Project",inversedBy="meetings")
      * @ORM\JoinColumn(nullable=false)
      * @var Project
      */

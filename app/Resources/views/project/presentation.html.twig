@@ -39,6 +39,22 @@
         <h3>No participants (this means no leader nor secretary)</h3>
     {% endif %}
 
+    {% if project.meetings|length %}
+        <ul>
+            {% for meet in project.meetings %} 
+                <li>
+                    {{ meet.date|date('d/m/Y H:i') }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No meetings (at all) for this project</h3>
+    {% endif %}
+
+    {# 
+    If there is a form => the current user is the leader
+    of the project
+    #}
     {% if form %}
         <script src="{{ asset('js/addRoles.js') }}" ></script>
         {{ form_start(form) }}
@@ -52,6 +68,17 @@
             {% endfor %}
         </ul>
         <a href="#" id="add-role">Add a role</a>
+
+        <ul id="meetings-fields-list"
+            data-prototype="{{ form_widget(form.meetings.vars.prototype)|e }}" >
+            {% for meetingField in form.meetings %}
+                <li class="meeting-line" >
+                    {{ form_errors(meetingField) }}
+                    {{ form_widget(meetingField) }}
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="#" id="add-meeting" >Create a meeting</a>
 
         <div>
             <button type="submit">Save modifications</button>
