@@ -1,11 +1,21 @@
 
-{% extends "base.html.twig" %}
+<div class="modal-header">
+    <button type="button" class="close" 
+            data-dismiss="modal" 
+            aria-label="Close">
+        <span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">
+        Create a user
+    </h4>
+</div>
+{{ form_start(form,{'attr':{'id':'create-user-form'} }) }}
 
-{% block body %}
-    {{ form_start(form) }}
-    {{ form_row(form.username) }}
-
-    <button type="submit">Create</button>
-    {{ form_end(form) }}
-
-{% endblock %}
+<div class="modal-body">
+    {{ form_label(form.username) }} :
+    {{ form_widget(form.username,{'attr':{'class':'form-control'} }) }}
+</div>
+<div class="modal-footer">
+    <button id="submit-create-user" class="btn btn-default" type="submit">Create</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+{{ form_end(form) }}

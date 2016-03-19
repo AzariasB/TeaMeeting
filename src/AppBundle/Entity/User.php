@@ -94,7 +94,10 @@ class User implements UserInterface {
      * @return string
      */
     public function getSalt() {
-        return base64_decode($this->username);
+        /**
+         * REturn a 22 chars long salt
+         */
+        return null;
     }
 
     /**

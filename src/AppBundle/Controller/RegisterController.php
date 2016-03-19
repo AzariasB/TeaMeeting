@@ -13,6 +13,7 @@ use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Description of RegisterController
@@ -29,30 +30,40 @@ class RegisterController extends Controller {
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            /**
-             * Since randombyte return hard-to-type chars,
-             * we have to encode this in base64,
-             */
-            $randPwd = base64_encode(random_bytes(6));
 
-            $password = $this->get('security.password_encoder')
-                    ->encodePassword($user, $randPwd);
-            $user->setPassword($password);
-            $user->setIsAdmin(false);
+        if ($request->isXmlHttpRequest() && $form->isSubmitted()) {
+            $resp = new JsonResponse();
+            if ($form->isValid()) {
+                /**
+                 * Since randombyte return hard-to-type chars,
+                 * we have to encode this in base64,
+                 */
+                $randPwd = base64_encode(random_bytes(6));
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+                $password = $this->get('security.password_encoder')
+                        ->encodePassword($user, $randPwd);
+                $user->setPassword($password);
+                $user->setIsAdmin(false);
 
-            return $this->render('registration/usercreated.html.twig', array(
-                        'password' => $randPwd
-            ));
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                $resp->setData(array(
+                    'success' => true,
+                    'password' => $randPwd,
+                    'username' => $user->getUsername(),
+                    'userId' => $user->getId())
+                );
+            } else {
+                $resp->setData(array(
+                    'success' => false,
+                    'error' => $form->getErrors())
+                );
+            }
+            return $resp;
         }
-
         return $this->render('registration/register.html.twig', array(
-                    'form' => $form->createView()
-                        )
+                    'form' => $form->createView())
         );
     }
 

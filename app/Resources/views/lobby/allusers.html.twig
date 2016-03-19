@@ -15,6 +15,7 @@
             </li>
         {% endfor %}
     </ul>
+    <span id="profilePath" hidden="">{{ path('seeprofile',{'user':'__number__'}) }}</span>
 {% else %}
     <h5>No users</h5>
 {% endif %}

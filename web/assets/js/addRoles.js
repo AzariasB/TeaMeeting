@@ -33,7 +33,7 @@ $(document).ready(function () {
         var nwWidget = $target.data('prototype');
         nwWidget = nwWidget.replace(/__name__/g, newId);
         
-        var nwLi = $('<li/>',{class : className}).html(nwWidget);
+        var nwLi = $('<li/>',{class : className+ ' list-group-item'}).html(nwWidget);
         addDeleteLink(nwLi);
         nwLi.appendTo($target);
         return nwLi;

@@ -45,7 +45,9 @@
                     <div  id="users-list" class="hidden admin-item" >
                         <h3>Users list</h3>
                         {% include 'lobby/allusers.html.twig' %}
-                        <a class="btn btn-default" href="{{ path('register') }}">
+                        <a id="create_user" 
+                           class="btn btn-default"
+                           href="{{ path('register') }}">
                             <i class="glyphicon glyphicon-plus" ></i>
                             Create a user
                         </a>
@@ -54,4 +56,12 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="userModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 {% endblock %}
