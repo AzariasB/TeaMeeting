@@ -3,10 +3,8 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" 
-              href="{{ asset(bower ~ 'bootstrap/dist/css/bootstrap.min.css') }}" >
-
+        <link rel="stylesheet" href="{{ asset(bower ~ 'bootstrap/dist/css/bootstrap.min.css') }}" >
+        <link rel="stylesheet" href="{{ asset(bower ~ 'font-awesome/css/font-awesome.min.css') }}"
 
 
         <!-- Before body closing tag -->
@@ -25,7 +23,7 @@
         {% block stylesheets %}
         {% endblock %}
     </head>
-    <body class="container-fluid" >
+    <body>
         {% block body %}
         {% endblock %}
     </body>

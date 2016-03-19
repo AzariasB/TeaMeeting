@@ -9,35 +9,44 @@
         <div> An error occured : </div>
         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
-    <div id="form-center" class="col-xs-12 col-sm-4 col-sm-offset-4">
-
-        <form action="{{ path('home') }}" method="post" role="form" >
-            <div class="form-group">
-                <div class="input-group">
-                    <label for="username"
-                           class="input-group-addon glyphicon glyphicon-user"
-                           >Username:</label>
-                    <input class="form-control" 
-                           type="text"
-                           id="username"
-                           name="_username"
-                           value="{{ last_username }}" />
-                </div>
+    <div class="container-fluid">
+        <div class="row text-center" id="form-center" >
+            <div class="col-xs-12 text-center col-sm-6">
+                <h1>
+                    TeaMeeting
+                </h1>
+                <img class="logo" src="{{ asset('assets/img/teabag.jpg') }}" />
             </div>
+            <div class="col-xs-12 col-sm-6 text-left">
+                <form action="{{ path('home') }}" method="post" role="form" >
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="username"
+                                   class="input-group-addon glyphicon glyphicon-user"
+                                   >Username:</label>
+                            <input class="form-control" 
+                                   type="text"
+                                   id="username"
+                                   name="_username"
+                                   value="{{ last_username }}" />
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <div class="input-group">
-                    <label for="password"
-                           class="input-group-addon glyphicon glyphicon-lock"
-                           >Password:</label>  
-                    <input class="form-control" type="password" id="password" name="_password" />
-                </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="password"
+                                   class="input-group-addon glyphicon glyphicon-lock"
+                                   >Password:</label>  
+                            <input class="form-control" type="password" id="password" name="_password" />
+                        </div>
+                    </div>
+
+
+                    <button class="btn btn-default btn-success" type="submit">
+                        Login
+                    </button>
+                </form>
             </div>
-
-
-            <button class="btn btn-default btn-success" type="submit">
-                Login
-            </button>
-        </form>
+        </div>
     </div>
 {% endblock %}

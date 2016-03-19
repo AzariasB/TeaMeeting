@@ -5,70 +5,23 @@
     Lobby
 {% endblock %}
 
+{% block stylesheets %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <link href="{{ asset('assets/css/lobby_admin.css') }}" rel="stylesheet" />
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <script src="{{ asset('assets/js/lobby_admin.js') }}"></script>
+    {% endif %}
+{% endblock %}
 
 {% block body %}
-    <h2>
-        Welcome into the lobby
-    </h2>
-
-    <a href="{{ path('change_password') }}">Change password</a>
-    <a href="{{ path('logout') }}">Logout</a>
-
-
+    {% include 'toolbar.html.twig' %}
     {% if is_granted('ROLE_ADMIN') %}
-        <div id="admin_part">
-            <strong>Welcome here admin</strong>
-
-            <div id="users_management">
-                <a href="{{ path('register') }}">Create a user</a>
-                {% if users %}
-                    <h5>Users</h5>
-                    <ul id="user_list" >
-                        {% for user in users %}
-                            <li>
-                                <a href="{{ path('seeprofile',{'user':user.id}) }}">
-                                    {{ user.username }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <h5>No users</h5>
-                {% endif %}
-            </div>
-
-            <div id="project_management">
-                <a href="{{ path('newproject') }}">Create a project</a>
-                {% if projects %}
-                    <h5>Projects</h5>
-                    <ul id="project_list" >
-                        {% for proj in projects %}
-                            <li>
-                                <a href="{{ path('seeproject',{'projId':proj.id})}}">
-                                    {{ proj.projectName }}
-                                </a>
-                                -
-                                {% if proj.locked %}
-                                    <a href="{{ path('unlockproject',{'proj' : proj.id}) }}">
-                                        Unlock
-                                    </a>
-                                {% else %}
-                                    <a href="{{ path('lockproject',{'proj' : proj.id}) }}">
-                                        Lock
-                                    </a>
-                                {% endif %}
-                                -
-                                <a href="{{ path('deleteproject',{'projId' : proj.id}) }}">
-                                    Delete
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <h5>No projects</h5>
-                {% endif %}
-            </div>
-        </div>
+        {% include 'lobby/admin.html.twig' %}
+    {% else %}
+        {% include 'lobby/user.html.twig' %}
     {% endif %}
-
 {% endblock %}

@@ -1,0 +1,20 @@
+{% if users %}
+    <h5>Users</h5>
+    <ul id="user_list" class="list-group" >
+        {% for user in users %}
+            <li class="list-group-item clearfix " >
+                <a href="{{ path('seeprofile',{'user':user.id}) }}">
+                    {{ user.username }}
+                </a>
+                <span class="pull-right">
+                    <a class="btn btn-xs btn-danger" href="#">
+                        <i class="glyphicon glyphicon-trash" ></i>
+                        Delete user
+                    </a>
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h5>No users</h5>
+{% endif %}

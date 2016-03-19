@@ -1,0 +1,57 @@
+
+{% block body %}
+    <div class="nav-side-menu">
+        <div class="menu-list">
+
+            <ul id="menu-content" class="menu-content collapse out">
+                <li class="active admin-choice" id="see-profile" >
+                    <a href="#" >
+                        <i class="glyphicon glyphicon-cog"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="admin-choice" id="see-projects" >
+                    <a href="#">
+                        <i class="glyphicon glyphicon-book"></i> 
+                        Projects
+                    </a>
+                </li>
+
+                <li class="admin-choice" id="see-users" >
+                    <a href="#" >
+                        <i class="glyphicon glyphicon-user"></i>
+                        Users
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="content" >
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-11">
+                    <div id="admin-profile" class="admin-item" > 
+                        {% include 'lobby/projectlist.html.twig' %}
+                    </div>
+                    <div id="projects-list" class="hidden admin-item" >
+                        <h3>Projects list</h3>
+                        {% include 'lobby/allprojects.html.twig' %}
+                        <a class="btn btn-default"  href="{{ path('newproject') }}">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            Create a project
+                        </a>
+                    </div>
+                    <div  id="users-list" class="hidden admin-item" >
+                        <h3>Users list</h3>
+                        {% include 'lobby/allusers.html.twig' %}
+                        <a class="btn btn-default" href="{{ path('register') }}">
+                            <i class="glyphicon glyphicon-plus" ></i>
+                            Create a user
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

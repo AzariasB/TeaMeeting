@@ -9,6 +9,10 @@ body,html{
     height: 100%;
 }
 
+img.logo{
+    max-width: 25%;
+}
+
 body{
     display: flex;
     align-items: center;

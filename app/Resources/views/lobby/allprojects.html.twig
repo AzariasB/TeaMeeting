@@ -1,0 +1,34 @@
+{% if projects %}
+    <h5>Projects</h5>
+    <ul id="project_list" class="list-group" >
+        {% for proj in projects %}
+            <li class="list-group-item clearfix" >
+                <a href="{{ path('seeproject',{'projId':proj.id}) }}">
+                    {{ proj.projectName }}
+                </a>
+                <span class="pull-right" >
+                    {% if proj.locked %}
+                        <a class="btn btn-success btn-sm"  
+                           href="{{ path('unlockproject',{'proj' : proj.id}) }}">
+                            <i class="fa fa-unlock" ></i>
+                            Unlock
+                        </a>
+                    {% else %}
+                        <a class="btn btn-warning btn-sm" 
+                           href="{{ path('lockproject',{'proj' : proj.id}) }}">
+                            <i class="fa fa-lock" ></i>
+                            Lock
+                        </a>
+                    {% endif %}
+                    <a class="btn btn-danger btn-sm"
+                        href="{{ path('deleteproject',{'projId' : proj.id}) }}">
+                        <i class="glyphicon glyphicon-trash" ></i>
+                        Delete
+                    </a>
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h5>No projects</h5>
+{% endif %}
