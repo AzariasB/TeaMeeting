@@ -9,6 +9,17 @@
     color: #e1ffff;
 }
 
+#project_list li .btn,
+#user_list li .btn{
+    opacity: 0;
+    transition: all ease-in-out 100ms;
+}
+
+#project_list li:hover .btn,
+#user_list li:hover .btn{
+    opacity: 1;
+}
+
 .checkbox-inline{
     width: 16.8em;
     margin-left: 10px;

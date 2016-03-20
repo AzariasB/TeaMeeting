@@ -19,6 +19,7 @@ $(document).ready(function () {
          */
         Object.keys(idsDivs).forEach(function (key) {
             $("#" + key).on('click', function (e) {
+                changeHash(key);
                 e.preventDefault();
                 hideDivs();
                 disActivate();
@@ -27,8 +28,21 @@ $(document).ready(function () {
             });
         });
 
+        var h = window.location.hash.substr(1);
+        if (h) {
+            if(idsDivs[h]){
+                $("#"+h).click();
+            }else{
+                changeHash('');
+            }
+        }
+
         $("#create_user").on('click', launchCreateUserModal);
         $("#create-project").on('click', launchCreateProjectModal);
+    }
+
+    function changeHash(nwHash) {
+        window.location.hash = nwHash;
     }
 
     function hideDivs() {
@@ -58,7 +72,7 @@ $(document).ready(function () {
             addProject(data.projectName, data.projectId);
             $("#projectModal").modal('hide');
         } else {
-            $("#projectModal .modal-content").prepend(data.error);
+            $("#projectModal .modal-content").html(data.newContent);
         }
     }
 

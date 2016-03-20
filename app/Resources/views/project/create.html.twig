@@ -1,6 +1,12 @@
 
 
 {% set formClass = {'attr': {'class': 'form-control' }} %}
+{% macro errorClass(formpart) %}
+    {% if not formpart.vars.valid %}
+        has-error
+    {% endif %}
+{% endmacro %}
+{% import _self as s %}
 
 <div class="modal-header">
     <button type="button" class="close" 
@@ -16,17 +22,17 @@
 <div class="modal-body">
     <div class="row">
         {{ form_start(form) }}
-        <div class="col-xs-12">
-            {{ form_label(form.projectName) }}
-            {{ form_widget(form.projectName,formClass) }}
+        <div class="col-xs-12 {{ s.errorClass(form.projectName) }}">
+            {{ form_row(form.projectName,formClass) }}
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-6 {{ s.errorClass(form.leader) }}">
             {{ form_row(form.leader,formClass) }}
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-6" {{ s.errorClass(form.secretary) }} >
             {{ form_row(form.secretary,formClass) }}
         </div>
-        <div class="col-xs-12">
+        <div class="col-xs-12 {{ s.errorClass(form.participants) }}">
+            {{ form_errors(form.participants) }}
             {{ form_label(form.participants) }}
             <fieldset class="form-group">
                 {% for part in form.participants %}
@@ -46,4 +52,3 @@
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 </div>
 {{ form_end(form) }}
-{#<script src="{{ asset('js/createProject.js') }}"></script>#}

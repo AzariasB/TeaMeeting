@@ -1,5 +1,4 @@
 {% if users %}
-    <h5>Users</h5>
     <ul id="user_list" class="list-group" >
         {% for user in users %}
             <li class="list-group-item clearfix " >
@@ -7,7 +6,11 @@
                     {{ user.username }}
                 </a>
                 <span class="pull-right">
-                    <a class="btn btn-xs btn-danger" href="#">
+                    <a class="btn btn-sm btn-warning" href="#">
+                        <i class="glyphicon glyphicon-refresh" ></i>
+                        Reset password
+                    </a>
+                    <a class="btn btn-sm btn-danger" href="#">
                         <i class="glyphicon glyphicon-trash" ></i>
                         Delete user
                     </a>

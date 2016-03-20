@@ -150,8 +150,8 @@ class ProjectController extends Controller {
                         ->addError(new FormError('The same personn cannot be leader and secretary'));
                 $resp->setData(array(
                     'success' => false,
-                    'error' => $form->getErrors())
-                );
+                    'newContent' => $this->createProjectPage($form)->getContent()
+                ));
                 return $resp;
             }
             $proj->setLocked(false);
@@ -167,10 +167,11 @@ class ProjectController extends Controller {
             ));
             return $resp;
         }
+
         $resp->setData(array(
             'success' => false,
-            'error' => $form->getErrors())
-        );
+            'newContent' => $this->createProjectPage($form)->getContent()
+        ));
         return $resp;
     }
 
