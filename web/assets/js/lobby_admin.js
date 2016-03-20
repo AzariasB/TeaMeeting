@@ -1,7 +1,10 @@
 
 $(document).ready(function () {
 
-    var seeProfilePath = $("#profilePath").text();
+    var seeProfilePath = $("#profilePath").text(),
+            seeProjectPath = $("#seeProjectPath").data('href'),
+            lockProjectPath = $("#lockProjectPath").data('href'),
+            deleteProjectPath = $("#deleteProjectPath").data('href');
 
     var idsDivs = {
         'see-profile': 'admin-profile',
@@ -25,6 +28,7 @@ $(document).ready(function () {
         });
 
         $("#create_user").on('click', launchCreateUserModal);
+        $("#create-project").on('click', launchCreateProjectModal);
     }
 
     function hideDivs() {
@@ -35,30 +39,66 @@ $(document).ready(function () {
         $(".admin-choice").removeClass('active');
     }
 
-    function launchCreateUserModal(e) {
+    function launchCreateProjectModal(e) {
         e.preventDefault();
         var url = $(this).attr('href');
-        $.post(url, {
-            nope: "hey"
-        }, function (res) {
-            $("#userModal .modal-content").html(res);
-            $("#create-user-form").on('submit', function (e) {
+        $.post(url, {}, function (res) {
+            $("#projectModal .modal-content").html(res);
+            $("#create-project-form").on('submit', function (e) {
                 e.preventDefault();
-                $("#submit-create-user").prop('disabled', true);
-                postForm($(this).serialize(), url, confirmCreation);
+                $("#submit-create-project").prop('disabled', true);
+                postForm($(this).serialize(), url, confirmProjectCreation);
             });
-            $("#userModal").modal();
+            $("#projectModal").modal();
         });
     }
 
-    function confirmCreation(data) {
+    function confirmProjectCreation(data) {
         if (data.success) {
-            addUser(data.username,data.userId);
+            addProject(data.projectName, data.projectId);
+            $("#projectModal").modal('hide');
+        } else {
+            $("#projectModal .modal-content").prepend(data.error);
+        }
+    }
+
+    function launchCreateUserModal(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        $.post(url, {},
+                function (res) {
+                    $("#userModal .modal-content").html(res);
+                    $("#create-user-form").on('submit', function (e) {
+                        e.preventDefault();
+                        $("#submit-create-user").prop('disabled', true);
+                        postForm($(this).serialize(), url, confirmUserCreation);
+                    });
+                    $("#userModal").modal();
+                });
+    }
+
+    function confirmUserCreation(data) {
+        if (data.success) {
+            addUser(data.username, data.userId);
             $("#userModal .modal-content .modal-body")
                     .html("The user's pseudo is <b>" + data.password + "</b>");
         } else {
             $("#userModal .modal-content .modal-body").html(data.error);
         }
+    }
+
+    function addProject(projectName, projectId) {
+        var seeHref = seeProjectPath.replace(/__number__/, projectId),
+                lockHref = lockProjectPath.replace(/__number__/, projectId),
+                deleteHref = deleteProjectPath.replace(/__number__/, projectId);
+        var $li = $('<li class="list-group-item clearfix" >' +
+                '<a href="' + seeHref + '">' + projectName + '</a>' +
+                '<span class="pull-right" ><a class="btn btn-warning btn-sm" ' +
+                'href="' + lockHref + '"><i class="fa fa-lock" ></i>' +
+                ' Lock </a>\n<a class="btn btn-danger btn-sm"' +
+                'href="' + deleteHref + '"><i class="glyphicon glyphicon-trash" ></i>' +
+                ' Delete </a></span></li>');
+        $("#project_list").append($li);
     }
 
     function addUser(userName, userId) {
@@ -73,10 +113,6 @@ $(document).ready(function () {
     }
 
     function postForm(data, url, callback) {
-
-        /*
-         * Throw the form values to the server!
-         */
         $.ajax({
             type: 'POST',
             url: url,

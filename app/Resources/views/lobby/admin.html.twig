@@ -37,7 +37,9 @@
                     <div id="projects-list" class="hidden admin-item" >
                         <h3>Projects list</h3>
                         {% include 'lobby/allprojects.html.twig' %}
-                        <a class="btn btn-default"  href="{{ path('newproject') }}">
+                        <a  id="create-project"
+                            class="btn btn-default" 
+                            href="{{ path('newproject') }}">
                             <i class="glyphicon glyphicon-plus"></i>
                             Create a project
                         </a>
@@ -59,6 +61,13 @@
 
 
     <div class="modal fade" id="userModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="projectModal" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
             </div><!-- /.modal-content -->

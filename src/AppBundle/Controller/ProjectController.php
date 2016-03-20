@@ -15,6 +15,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Project;
 use AppBundle\Form\ProjectType;
 use AppBundle\Form\ProjectRolesType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Form;
 
 /**
  * Description of ProjectController
@@ -57,7 +59,7 @@ class ProjectController extends Controller {
         foreach ($proj->getRoles() as $ro) {
             $origRoles->add($ro);
         }
-        foreach ($proj->getMeetings() as $met){
+        foreach ($proj->getMeetings() as $met) {
             $origMeetings->add($met);
         }
 
@@ -71,7 +73,7 @@ class ProjectController extends Controller {
                 $meet->setProject($proj);
             }
 
-            $this->editRolesAndMeetings($proj, $origRoles,$origMeetings);
+            $this->editRolesAndMeetings($proj, $origRoles, $origMeetings);
             $this->saveProject($proj);
             return $this->handleAddRolesForm($proj);
         } else {
@@ -85,7 +87,7 @@ class ProjectController extends Controller {
      * @param ArrayCollection $origRoles
      * @param ArrayCollection $origMeetings
      */
-    private function editRolesAndMeetings(&$proj, $origRoles,$origMeetings) {
+    private function editRolesAndMeetings(&$proj, $origRoles, $origMeetings) {
         $em = $this->getDoctrine()->getManager();
         foreach ($origRoles as $role) {
             if (!$proj->getRoles()->contains($role)) {
@@ -93,13 +95,12 @@ class ProjectController extends Controller {
                 $em->remove($role);
             }
         }
-        foreach($origMeetings as $met){
-            if(!$proj->getMeetings()->contains($met)){
+        foreach ($origMeetings as $met) {
+            if (!$proj->getMeetings()->contains($met)) {
                 $em->remove($met);
             }
         }
     }
-    
 
     /**
      * Create the infopage
@@ -116,17 +117,42 @@ class ProjectController extends Controller {
         ));
     }
 
+    /**
+     * Create a new project
+     * 
+     * @param Request $req
+     * @return Response
+     */
     public function createNewAction(Request $req) {
         $proj = new Project();
         $form = $this->createForm(ProjectType::class, $proj);
 
         $form->handleRequest($req);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $req->isXmlHttpRequest()) {
+            return $this->handleCreateXmlRequest($form, $proj);
+        }
+        return $this->createProjectPage($form);
+    }
 
+    /**
+     * Check the form sended
+     * by ajax
+     * 
+     * @param \Symfony\Component\Form\Form $form
+     * @param Project $proj
+     * @return JsonResponse
+     */
+    private function handleCreateXmlRequest(Form $form, Project $proj) {
+        $resp = new JsonResponse();
+        if ($form->isValid()) {
             if ($this->leaderIsSecretary($form)) {
                 $form->get('leader')
                         ->addError(new FormError('The same personn cannot be leader and secretary'));
-                return $this->createProjectPage($form);
+                $resp->setData(array(
+                    'success' => false,
+                    'error' => $form->getErrors())
+                );
+                return $resp;
             }
             $proj->setLocked(false);
             foreach ($proj->getRoles() as $r) {
@@ -134,10 +160,18 @@ class ProjectController extends Controller {
             }
             $this->addParticipants($proj);
             $this->saveProject($proj);
-            return $this->render('project/created.html.twig');
+            $resp->setData(array(
+                'success' => true,
+                'projectId' => $proj->getId(),
+                'projectName' => $proj->getProjectName()
+            ));
+            return $resp;
         }
-
-        return $this->createProjectPage($form);
+        $resp->setData(array(
+            'success' => false,
+            'error' => $form->getErrors())
+        );
+        return $resp;
     }
 
     /**

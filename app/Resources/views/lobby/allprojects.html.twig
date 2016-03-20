@@ -21,7 +21,7 @@
                         </a>
                     {% endif %}
                     <a class="btn btn-danger btn-sm"
-                        href="{{ path('deleteproject',{'projId' : proj.id}) }}">
+                       href="{{ path('deleteproject',{'projId' : proj.id}) }}">
                         <i class="glyphicon glyphicon-trash" ></i>
                         Delete
                     </a>
@@ -29,6 +29,18 @@
             </li>
         {% endfor %}
     </ul>
+    <span id="seeProjectPath" 
+          data-href="{{ path('seeproject',{'projId':'__number__'}) }}" 
+          hidden="" ></span>
+    <span id="lockProjectPath"
+          hidden=""
+          data-href="{{ path('lockproject',{'proj' : '__number__'}) }}" >
+    </span>
+    <span id="deleteProjectPath" 
+          hidden=""
+          data-href="{{ path('deleteproject',{'projId' : '__number__'}) }}">
+
+    </span>
 {% else %}
     <h5>No projects</h5>
 {% endif %}
