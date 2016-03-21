@@ -22,6 +22,11 @@
             <li class="active" >
                 <a href="#">{{ app.user.username }}</a>
             </li>
+            <li>
+                <a href="{{ path('lobby') }}">
+                    Lobby
+                </a>
+            </li>
             <li><a href="{{ path('logout') }}">Logout</a></li>
             <li><a href="{{ path('change_password') }}">Change password</a></li>
             <li><a href="#" class="glyphicon glyphicon-search" ></a></li>

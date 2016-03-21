@@ -10,11 +10,12 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormError;
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Form;
+use AppBundle\Form\MeetingType;
 use AppBundle\Entity\Project;
-use AppBundle\Form\ProjectType;
-use AppBundle\Form\ProjectRolesType;
+use AppBundle\Entity\Meeting;
 
 /**
  * Description of MeetingController
@@ -23,7 +24,83 @@ use AppBundle\Form\ProjectRolesType;
  */
 class MeetingController extends Controller {
 
-    public function createAction(Request $req){
+    /**
+     * 
+     * @param Request $req
+     */
+    public function createAction(Request $req) {
+
         // Display creation form
+        if ($req->isXmlHttpRequest()) {
+            $meet = new Meeting();
+            $form = $this->createForm(MeetingType::class, $meet);
+
+
+            $form->handleRequest($req);
+
+            if ($form->isSubmitted()) {
+                $projectId = $req->get('project-id');
+                return $this->handleForm($form, $meet, $projectId);
+            }
+
+            return $this->createMeetingForm($form);
+        }
+
+        throw new NotFoundHttpException("Not found");
     }
+
+    /**
+     * 
+     * @param Form $form
+     * @param Meeting $meet
+     * @param integer $projectId
+     */
+    private function handleForm(Form $form, Meeting $meet, $projectId) {
+
+        $rep = new JsonResponse();
+
+        if ($form->isValid()) {
+            $p = $this->getProjectFromId($projectId);
+            $meet->setProject($p);
+            $this->saveMeeting($meet);
+            $rep->setData(array(
+                'success' => true,
+                'meeting' => json_encode($meet)
+            ));
+        } else {
+            $rep->setData(array(
+                'success' => false,
+                'page' => $this->createMeetingForm($form)
+            ));
+        }
+
+        return $rep;
+    }
+
+    private function saveMeeting(Meeting &$meet) {
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($meet);
+        $em->flush();
+    }
+
+    /**
+     * 
+     * @param int $projectId
+     * @return Project
+     */
+    private function getProjectFromId($projectId) {
+        return $this->getDoctrine()->getManager()->find(Project::class, $projectId);
+    }
+
+    /**
+     * 
+     * @param Form $form
+     * @return Response view
+     */
+    private function createMeetingForm(Form $form) {
+        return $this->render('project/meetingForm.html.twig', array(
+                    'form' => $form->createView()
+        ));
+    }
+
 }

@@ -1,0 +1,59 @@
+{#To be deleted#}
+<div class="row">
+    <script src="{{ asset('assets/js/addRoles.js') }}" ></script>
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class='col-xs-12 col-sm-6'>
+        {{ form_label(form.roles) }}
+        {{ form_errors(form.roles) }}
+        <ul id="roles-fields-list"
+            data-prototype="{{ form_widget(form.roles.vars.prototype)|e }}"
+            class="list-group">
+            {% for roleField in form.roles %}
+                <li class="role-line list-group-item form-group-sm col-xs-12" >
+                    {{ form_errors(roleField) }}
+                    <div class="col-xs-12 col-sm-4">
+                        {{ form_errors(roleField.student) }}
+                        {{ form_label(roleField.student) }}
+                        {{ form_widget(roleField.student) }}
+                    </div>
+                    <div class="col-xs-12 col-sm-4" >
+                        {{ form_errors(roleField.student) }}
+                        {{ form_label(roleField.student) }}
+                        {{ form_widget(roleField.roleName) }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <span hidden="" >{{ form_widget(form.roles) }}</span>
+        <a class="btn btn-default" href="#" id="add-role">
+            <i class="glyphicon glyphicon-plus" ></i>
+            Add a role
+        </a>
+    </div>
+    <div class="col-sm-6 col-xs-12">
+        {{ form_errors(form.meetings) }}
+        {{ form_label(form.meetings) }}
+        <ul id="meetings-fields-list"
+            data-prototype="{{ form_widget(form.meetings.vars.prototype)|e }}"
+            class="list-group">
+            {% for meetingField in form.meetings %}
+                <li class="meeting-line list-group-item row" >
+
+                </li>
+            {% endfor %}
+        </ul>
+        <span hidden="">{{ form_widget(form.meetings) }}</span>
+        <a class="btn btn-default" href="#" id="add-meeting" >
+            <i class="glyphicon glyphicon-plus" ></i>
+            Create a meeting
+        </a>
+    </div>
+    <div class="col-xs-12">
+        <button class="btn btn-success" type="submit">
+            <i class="glyphicon glyphicon-save" ></i>
+            Save modifications
+        </button>
+    </div>
+    {{ form_end(form) }}
+</div>

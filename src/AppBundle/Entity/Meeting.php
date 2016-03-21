@@ -17,7 +17,7 @@ use DateTime;
  * @author boutina
  * @ORM\Entity
  */
-class Meeting {
+class Meeting implements \JsonSerializable {
 
     /**
      * 
@@ -27,8 +27,7 @@ class Meeting {
      * @var int
      */
     private $id;
-    
-    
+
     /**
      *
      * @ORM\Column(type="date")
@@ -36,7 +35,7 @@ class Meeting {
      * @var Date Date AND hour of the meeting
      */
     private $date;
-    
+
     /**
      *
      * @ORM\Column(type="string")
@@ -44,7 +43,7 @@ class Meeting {
      * @var string
      */
     private $room;
-    
+
     /**
      * 
      * @ORM\ManyToOne(targetEntity="Project",inversedBy="meetings")
@@ -52,54 +51,54 @@ class Meeting {
      * @var Project
      */
     private $project;
-    
+
     /**
      * Get id
      * 
      * @return int
      */
-    public function getId(){
+    public function getId() {
         return $this->id;
     }
-    
+
     /**
      * Set id
      * 
      * @param int $id
      * @return Meeting
      */
-    public function setId($id){
+    public function setId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
     /**
      * Get date
      * 
      * @return DateTime
      */
-    public function getDate(){
+    public function getDate() {
         return $this->date;
     }
-    
+
     /**
      * Set date
      * 
      * @param DateTime $date
      * @return Meeting
      */
-    public function setDate(DateTime $date){
+    public function setDate(DateTime $date) {
         $this->date = $date;
-        
+
         return $this;
     }
-    
+
     /**
      * Get room
      * 
      * @return string
      */
-    public function getRoom(){
+    public function getRoom() {
         return $this->room;
     }
 
@@ -109,28 +108,38 @@ class Meeting {
      * @param string $room
      * @return Meeting
      */
-    public function setRoom($room){
+    public function setRoom($room) {
         $this->room = $room;
         return $this;
     }
-    
+
     /**
      * Set project
      * 
      * @param Project $proj
      * @return Meeting
      */
-    public function setProject(Project $proj){
+    public function setProject(Project $proj) {
         $this->project = $proj;
         return $this;
     }
-    
+
     /**
      * Get project
      * 
      * @return Project
      */
-    public function getProject(){
+    public function getProject() {
         return $this->project;
     }
+
+    public function jsonSerialize() {
+        return array(
+            'id' => $this->id,
+            'room' => $this->room,
+            'date' => json_encode($this->date),
+            'project' => json_encode($this->project)
+        );
+    }
+
 }

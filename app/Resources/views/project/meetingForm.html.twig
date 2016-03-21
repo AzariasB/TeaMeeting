@@ -1,0 +1,41 @@
+
+
+{% set formClass = {'attr': {'class': 'form-control' }} %}
+{% macro errorClass(formpart) %}
+    {% if not formpart.vars.valid %}
+        has-error
+    {% endif %}
+{% endmacro %}
+{% import _self as s %}
+
+<div class="modal-header">
+    <button type="button" class="close" 
+            data-dismiss="modal" 
+            aria-label="Close">
+        <span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">
+        Create a meeting
+    </h4>
+</div>
+
+{{ form_start(form,{'attr':{'id':'form-create-meeting'} }) }}
+<div class="modal-body">
+    <div class="row">
+        {{ form_start(form) }}
+        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.date.date) }}">
+            {{ form_row(form.date.date,formClass) }}
+        </div>
+        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.date.time) }}">
+            {{ form_row(form.date.time,formClass) }}
+        </div>
+        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.room) }}">
+            {{ form_row(form.room,formClass) }}
+        </div>
+        <input id="project-id" name="project-id" type="hidden" value="" />
+    </div>
+</div>
+<div class="modal-footer">
+    <button id="submit-create-project" class="btn btn-default" type="submit">Create</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+{{ form_end(form) }}

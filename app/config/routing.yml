@@ -33,6 +33,6 @@ seeproject:
 seeprofile:
     path: /user/{user}
     defaults: { _controller: AppBundle:User:info }
-createMeeting:
-    path: /create/meeting/
+add-meeting:
+    path: /add-meeting
     defaults: { _controller: AppBundle:Meeting:create }

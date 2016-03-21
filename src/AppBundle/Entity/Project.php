@@ -10,7 +10,7 @@ use AppBundle\Entity\UserRole;
  * Project
  * @ORM\Entity
  */
-class Project {
+class Project implements \JsonSerializable {
 
     /**
      * 
@@ -271,4 +271,12 @@ class Project {
         $this->meetings->remove($met);
         return $this;
     }
+
+    public function jsonSerialize() {
+        return array(
+            'id' => $this->id,
+            'name' => $this->projectName//Maybe add some more ?
+        );
+    }
+
 }

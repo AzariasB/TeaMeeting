@@ -17,6 +17,7 @@ use AppBundle\Form\ProjectType;
 use AppBundle\Form\ProjectRolesType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Form;
+use \Symfony\Component\Form\FormView;
 
 /**
  * Description of ProjectController
@@ -27,79 +28,16 @@ class ProjectController extends Controller {
 
     public function infoAction($projId, Request $req) {
         $proj = $this->getProject($projId);
-        if (!$proj) {
+        
+        if (is_null($proj)) {
             throw $this->createNotFoundException('No project found for id ' . $projId);
         }
 
         $curUs = $this->getCurrentUser();
         if ($proj->getLeader() == $curUs && !$proj->getLocked()) {
-            return $this->handleAddRolesForm($proj, $req);
+            return $this->infoProjectPage($proj, true);
         }
         return $this->infoProjectPage($proj);
-    }
-
-    /**
-     * Handle the form
-     * if new roles are added
-     * to the project
-     * 
-     * @param Project $proj
-     * @param Request $req
-     * @return Response
-     */
-    private function handleAddRolesForm($proj, $req = null) {
-        $form = $this->createForm(ProjectRolesType::class, $proj);
-
-        if (!$req) {
-            return $this->infoProjectPage($proj, $form->createView());
-        }
-
-        $origRoles = new ArrayCollection();
-        $origMeetings = new ArrayCollection();
-        foreach ($proj->getRoles() as $ro) {
-            $origRoles->add($ro);
-        }
-        foreach ($proj->getMeetings() as $met) {
-            $origMeetings->add($met);
-        }
-
-        $form->handleRequest($req);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($proj->getRoles() as $role) {
-                $role->setProject($proj);
-            }
-            foreach ($proj->getMeetings() as $meet) {
-                $meet->setProject($proj);
-            }
-
-            $this->editRolesAndMeetings($proj, $origRoles, $origMeetings);
-            $this->saveProject($proj);
-            return $this->handleAddRolesForm($proj);
-        } else {
-            return $this->infoProjectPage($proj, $form->createView());
-        }
-    }
-
-    /**
-     * 
-     * @param Project $proj
-     * @param ArrayCollection $origRoles
-     * @param ArrayCollection $origMeetings
-     */
-    private function editRolesAndMeetings(&$proj, $origRoles, $origMeetings) {
-        $em = $this->getDoctrine()->getManager();
-        foreach ($origRoles as $role) {
-            if (!$proj->getRoles()->contains($role)) {
-                $proj->removeRole($role);
-                $em->remove($role);
-            }
-        }
-        foreach ($origMeetings as $met) {
-            if (!$proj->getMeetings()->contains($met)) {
-                $em->remove($met);
-            }
-        }
     }
 
     /**
@@ -107,13 +45,13 @@ class ProjectController extends Controller {
      * of a project
      * 
      * @param Project $project
-     * @param FormView $formView
+     * @param boolean $canEdit
      * @return Response
      */
-    private function infoProjectPage($project, $formView = null) {
+    private function infoProjectPage(Project $project,$canEdit = false) {
         return $this->render('project/presentation.html.twig', array(
                     'project' => $project,
-                    'form' => $formView
+                    'canEdit' => $canEdit
         ));
     }
 

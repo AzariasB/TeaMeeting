@@ -5,6 +5,10 @@
     {{ project.projectName }}
 {% endblock %}
 
+{% block javascripts %}
+    <script src="{{ asset('assets/js/editProject.js') }}"></script>
+{% endblock %}
+
 {% set formClass = {'attr': {'class':'form-control','disabled':'' } } %}
 
 {% block body %}
@@ -13,58 +17,108 @@
     {% endif %}
     <div class="container-fluid">
         <div class="row">
+            <div class="col-xs-2 text-center">
+                <h2>Project "{{ project.projectName }}" </h2>
+            </div>
+            <div class="col-xs-2 text-center" >
+                <h4>
+                    Leader : {{ project.leader.username }} 
+                </h4>
+                <h4>
+                    Secretary : {{ project.secretary.username }}
+                </h4>
+            </div>
+            <div class="col-xs-8">
+                <h3>Participants :</h3>
+                <ul class="list-group list-inline" >
+                    {% for part in project.participants %}
+                        <li class="list-group-item" >
+                            {{ part.username }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-xs-12 col-sm-6">
-                <div class="col-xs-6">
-                    <h2>Project "{{ project.projectName }}" </h2>
-                </div>
-                <div class="col-xs-6" >
-                    <h4>
-                        Leader : {{ project.leader.username }} 
-                    </h4>
-                    <h4>
-                        Secretary : {{ project.secretary.username }}
-                    </h4>
-                </div>
-
                 {% if project.roles|length %}
                     <h3>Other roles :</h3>
                     <ul class="list-group" >
                         {% for ro in project.roles %}
-                            <li class="list-group-item" >
+                            <li class="list-group-item" data-id="{{ ro.id }}" >
                                 <strong>{{ ro.student.username }}</strong> :
                                 {{ ro.roleName }}
+                                {% if canEdit %}
+                                    <span class="pull-right">
+                                        <a href="#"
+                                           class="btn btn-primary btn-xs">
+                                            <i class="glyphicon glyphicon-pencil"></i>
+                                            Edit
+                                        </a>
+                                        <a href="#"
+                                           class="btn btn-warning btn-xs">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                            Delete
+                                        </a>
+                                    </span>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <h3>No other roles</h3>
+                    <h3>No roles</h3>
                 {% endif %}
-
-                {% if project.participants|length %} 
-                    <h3>Participants :</h3>
-                    <ul class="list-group" >
-                        {% for part in project.participants %}
-                            <li class="list-group-item" >
-                                {{ part.username }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <h3>No participants (this means no leader nor secretary)</h3>
+                {% if canEdit %}
+                    <a href="#"
+                       data-project="{{ project.id }}"
+                       id="button-add-role"
+                       class="btn btn-default" >
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Add role
+                    </a>
                 {% endif %}
+            </div>
+            <div class="col-xs-12 col-sm-6">
                 {% if project.meetings|length %}
                     <h3>Meetings : </h3>
-                    <ul class="list-group" >
+                    <ul class="list-group" id="list-meetings" >
                         {% for meet in project.meetings %} 
-                            <li class="list-group-item" >
-                                Meeting at  {{ meet.date|date('d/m/Y H:i') }}
+                            <li class="list-group-item" data-id="{{ meet.id }}" >
+                                Meeting at  {{ meet.date|date('d/m/Y H:i') }} in room {{ meet.room }}
+                                {% if canEdit %}
+                                    <span class="pull-right">
+                                        <a href="#"
+                                           class="btn btn-primary btn-xs">
+                                            <i class="glyphicon glyphicon-pencil"></i>
+                                            Edit
+                                        </a>
+                                        <a href="#"
+                                           class="btn btn-warning btn-xs">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                            Delete
+                                        </a>
+                                    </span>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <h3>No meetings (at all) for this project</h3>
+                    <h3>No meetings for this project</h3>
                 {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
+                {% if canEdit %}
+                    <a href="{{ path('add-meeting') }}"
+                       data-project="{{ project.id }}"
+                       id="button-add-meeting"
+                       class="btn btn-default">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Add meeting
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="row">
+                <div class="col-xs-12">
                     {% if project.locked %}
                         <a class="btn btn-success" 
                            href="{{ path('unlockproject',{'proj' : project.id}) }}">
@@ -83,75 +137,25 @@
                         <i class="glyphicon glyphicon-trash" ></i>
                         Delete
                     </a>
-                {% endif %}
+                </div>
             </div>
-            <div class="col-xs-12 col-sm-6">
-                {% if form %}
-                    <script src="{{ asset('assets/js/addRoles.js') }}" ></script>
-                    {{ form_start(form) }}
-                    <h4>Roles :</h4>
-                    <ul id="roles-fields-list"
-                        data-prototype="{{ form_widget(form.roles.vars.prototype)|e }}"
-                        class="list-group">
-                        {% for roleField in form.roles %}
-                            <li class="role-line list-group-item form-group-sm row" >
-                                {{ form_errors(roleField) }}
-                                <div class="col-xs-12 col-sm-4">
-                                    <label>Student :</label>
-                                    {{ form_widget(roleField.student,formClass) }}
-                                </div>
-                                <div class="col-xs-12 col-sm-4" >
-                                    <label>Role name :</label>
-                                    {{ form_widget(roleField.roleName,formClass) }}
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="row">
-                        <a class="btn btn-default" href="#" id="add-role">
-                            <i class="glyphicon glyphicon-plus" ></i>
-                            Add a role
-                        </a>
-                    </div>
-                    <h4>Meetings :</h4>
-                    <ul id="meetings-fields-list"
-                        data-prototype="{{ form_widget(form.meetings.vars.prototype)|e }}"
-                        class="list-group">
-                        {% for meetingField in form.meetings %}
-                            <li class="meeting-line list-group-item row" >
-                                {{ form_errors(meetingField) }}
-                                <div class="col-xs-12 col-sm-3">
-                                    <label>Date : </label>
-                                    {{ form_widget(meetingField.date.date,formClass) }}
-                                </div>
-                                <div class="col-xs-12 col-sm-3">
-                                    <label>Hour : </label>
-                                    {{ form_widget(meetingField.date.time,formClass) }}
-                                </div>
-                                <div class="col-xs-12 col-sm-3">
-                                    <label>Room :</label>
-                                    {{ form_widget(meetingField.room,formClass) }}
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="row">
-                        <a class="btn btn-default" href="#" id="add-meeting" >
-                            <i class="glyphicon glyphicon-plus" ></i>
-                            Create a meeting
-                        </a>
-                    </div>
+        {% endif %}
 
-                    <div class="row" >
-                        <button class="btn btn-success" type="submit">
-                            <i class="glyphicon glyphicon-save" ></i>
-                            Save modifications
-                        </button>
-                    </div>
-                    {{ form_end(form) }}
-                {% endif %}
-            </div>
-        </div>
+        {% if canEdit %}
+            <div class="modal fade" id="modal-meeting" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="modal-meeting-content" >
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+            <div class="modal fade" id="modal-role" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="modal-role-content" >
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        {% endif %}
     </div>
 {% endblock %}
 
