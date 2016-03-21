@@ -51,6 +51,20 @@ class RoleController extends Controller {
         throw new NotFoundHttpException("Not found");
     }
 
+    public function removeAction($roleId, Request $req) {
+
+        if ($req->isXmlHttpRequest()) {
+            $rep = new JsonResponse();
+            $em = $this->getDoctrine()->getManager();
+            $role = $em->find(UserRole::class, $roleId);
+            $em->remove($role);
+            $em->flush();
+            return $rep->setData(array('success' => true));
+        }
+
+        throw new NotFoundHttpException("Not found");
+    }
+
     /**
      * 
      * @param Form $form

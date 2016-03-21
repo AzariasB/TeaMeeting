@@ -59,8 +59,8 @@
                                             <i class="glyphicon glyphicon-pencil"></i>
                                             Edit
                                         </a>
-                                        <a href="#"
-                                           class="btn btn-warning btn-xs">
+                                        <a href="{{ path('remove-role',{ 'roleId' : ro.id }) }}"
+                                           class="btn btn-warning btn-xs btn-remove">
                                             <i class="glyphicon glyphicon-remove"></i>
                                             Delete
                                         </a>
@@ -152,6 +152,16 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
+            <div class="alert alert-success alert-dismissible" role="alert" id='message-alert'>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                The <span id="removed-object" > </span> was removed.
+                <a href="#" class="alert-link" id="cancel-action" > Cancel</a>
+            </div>
+
+
+            <span id="path-remove-role" 
+                  data-href="{{ path('remove-role',{ 'roleId' : '__name__' }) }}" >
+            </span>
         {% endif %}
     </div>
 {% endblock %}

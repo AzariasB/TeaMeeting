@@ -15,7 +15,7 @@ $(document).ready(function () {
                         '<span class="pull-right">' +
                         '<a href="#" class="btn btn-primary btn-xs">' +
                         '<i class="glyphicon glyphicon-pencil"></i> ' +
-                        ' Edit </a> <a href="#" class="btn btn-warning btn-xs"> ' +
+                        ' Edit </a> <a href="#" class="btn btn-warning btn-xs btn-remove"> ' +
                         '<i class="glyphicon glyphicon-remove"></i> ' +
                         ' Delete </a></span></li>');
             },
@@ -29,12 +29,14 @@ $(document).ready(function () {
             'listId': 'list-roles',
             'newLine': function (data) {
                 var role = data.role;
-                return  $('<li class="list-group-item" data-id="{{ ro.id }}" >' +
+                var deleteHref = $("#path-remove-role").data('href').replace(/__name__/, role.id);
+                return  $('<li class="list-group-item" data-id="' + role.id + '" >' +
                         '<strong>' + role.student.name + '</strong> : ' +
                         role.name + '<span class="pull-right">' +
                         '<a href="#" class="btn btn-primary btn-xs">' +
                         '<i class="glyphicon glyphicon-pencil"></i> ' +
-                        ' Edit </a> \n <a href="#" class="btn btn-warning btn-xs">' +
+                        ' Edit </a> \n <a href="' + deleteHref +
+                        '" class="btn btn-warning btn-xs btn-remove">' +
                         '<i class="glyphicon glyphicon-remove"></i> ' +
                         ' Delete </a></span></li>');
             }
@@ -51,6 +53,47 @@ $(document).ready(function () {
                 firstRequest(url, pId, actions[i]);
             });
         });
+        $("body").on('click','.btn-remove', function (e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var $parent = $(this).parents('li');
+
+            //Set timeout to destruction
+            var t = setTimeout(function () {
+                hideAlert();
+                $.post(url, {}, function (res) {
+                    if (!res.success) {
+                        //Show problem
+                        showAlert('User not deleted');
+                    }
+                });
+                $parent.remove();
+            }, 5000);
+
+            //Hide object
+            $parent.hide();
+
+            //Show alert to the user
+            showAlert("user", function () {
+                clearTimeout(t);
+                $parent.show();
+            });
+        });
+    }
+
+    function showAlert(removed, action) {
+        $("#removed-object").text(removed);
+        $("#message-alert").addClass('show');
+        $("#cancel-action").on('click', function (e) {
+            e.preventDefault();
+            action.call();
+            hideAlert();
+            $(this).off('click');
+        });
+    }
+
+    function hideAlert() {
+        $("#message-alert").removeClass('show');
     }
 
     function firstRequest(url, projectId, obj) {

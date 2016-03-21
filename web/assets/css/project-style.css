@@ -14,3 +14,15 @@
 #list-meetings li:hover .btn{
     opacity: 1;
 }
+
+#message-alert{
+    position: fixed;
+    bottom: 20px;
+    z-index: 900;
+    left: -100%;
+    transition: all ease-in-out 200ms;
+}
+
+#message-alert.show{
+    left: 0;
+}
