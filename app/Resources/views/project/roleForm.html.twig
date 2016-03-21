@@ -14,24 +14,21 @@
             aria-label="Close">
         <span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">
-        Create a meeting
+        Create a Role
     </h4>
 </div>
 
-{{ form_start(form,{'attr':{'id':'form-create-meeting'} }) }}
+{{ form_start(form,{'attr':{'id':'form-create-role'} }) }}
 <div class="modal-body">
     <div class="row">
-        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.date.date) }}">
-            {{ form_row(form.date.date,formClass) }}
+        <div class="col-xs-6 {{ s.errorClass(form.student) }}">
+            {{ form_row(form.student,formClass) }}
         </div>
-        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.date.time) }}">
-            {{ form_row(form.date.time,formClass) }}
+        <div class="col-xs-6 {{ s.errorClass(form.roleName) }}">
+            {{ form_row(form.roleName,formClass) }}
         </div>
-        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.room) }}">
-            {{ form_row(form.room,formClass) }}
-        </div>
-        <input id="project-id" name="project-id" type="hidden" value="" />
     </div>
+    <input id="project-id" name="project-id" type="hidden" value="" />
 </div>
 <div class="modal-footer">
     <button id="submit-create-project" class="btn btn-default" type="submit">Create</button>

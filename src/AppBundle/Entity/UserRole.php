@@ -10,7 +10,7 @@ use AppBundle\Entity\User;
  * UserRole
  * @ORM\Entity
  */
-class UserRole {
+class UserRole implements \JsonSerializable {
 
     /**
      * @ORM\Id
@@ -110,6 +110,15 @@ class UserRole {
      */
     public function getProject() {
         return $this->project;
+    }
+
+    public function jsonSerialize() {
+        return array(
+            'id' => $this->id,
+            'name' => $this->roleName,
+            'student' => $this->student,
+            'project' => $this->project
+        );
     }
 
 }

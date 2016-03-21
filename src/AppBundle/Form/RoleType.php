@@ -21,27 +21,24 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
  */
 class RoleType extends AbstractType {
 
-
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $proj = $options['project'];
-        $choices = [];
-        if($proj){
-          $choices = $proj->getParticipants();
+        $proj = $options['data']->getProject();
+        if ($proj) {
+            $choices = $proj->getParticipants();
         }
         $builder
                 ->add('student', EntityType::class, array(
                     'class' => 'AppBundle:User',
                     'choice_label' => 'username',
                     'choices' => $choices
-                    ))
+                ))
                 ->add('roleName', TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver) {
-       $resolver->setDefaults(array(
-           'data_class' => 'AppBundle\Entity\UserRole',
-           'project' => null
-       ));
+        $resolver->setDefaults(array(
+            'data_class' => 'AppBundle\Entity\UserRole'
+        ));
     }
 
 }

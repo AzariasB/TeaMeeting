@@ -65,7 +65,7 @@ class MeetingController extends Controller {
             $this->saveMeeting($meet);
             $rep->setData(array(
                 'success' => true,
-                'meeting' => json_encode($meet)
+                'meeting' => $meet
             ));
         } else {
             $rep->setData(array(

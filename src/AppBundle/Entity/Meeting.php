@@ -137,8 +137,8 @@ class Meeting implements \JsonSerializable {
         return array(
             'id' => $this->id,
             'room' => $this->room,
-            'date' => json_encode($this->date),
-            'project' => json_encode($this->project)
+            'date' => $this->date,
+            'project' => $this->project
         );
     }
 

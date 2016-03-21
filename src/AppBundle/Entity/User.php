@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @UniqueEntity(fields="username", message="Username already taken")
  */
-class User implements UserInterface {
+class User implements UserInterface, \JsonSerializable {
 
     /**
      * @ORM\Id
@@ -205,6 +205,14 @@ class User implements UserInterface {
     public function eraseCredentials()
     {
         
+    }
+
+    public function jsonSerialize() {
+        return array(
+           'id' => $this->id,
+            'name' => $this->username,
+            'isAdmin' => $this->isAdmin
+        );
     }
 
 }

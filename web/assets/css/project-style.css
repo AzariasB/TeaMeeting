@@ -1,0 +1,16 @@
+
+/* 
+    Created on : 21 mars 2016, 16:29:52
+    Author     : boutina
+*/
+
+#list-roles li .btn,
+#list-meetings li .btn{
+    opacity: 0;
+    transition: all ease-in-out 100ms;
+}
+
+#list-roles li:hover .btn,
+#list-meetings li:hover .btn{
+    opacity: 1;
+}

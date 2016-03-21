@@ -36,3 +36,6 @@ seeprofile:
 add-meeting:
     path: /add-meeting
     defaults: { _controller: AppBundle:Meeting:create }
+add-role:
+    path: /add-role
+    defaults: { _controller: AppBundle:Role:create }

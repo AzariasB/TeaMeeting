@@ -9,6 +9,10 @@
     <script src="{{ asset('assets/js/editProject.js') }}"></script>
 {% endblock %}
 
+{% block stylesheets %}
+    <link href="{{ asset('assets/css/project-style.css') }}" rel="stylesheet" />
+{% endblock %}
+
 {% set formClass = {'attr': {'class':'form-control','disabled':'' } } %}
 
 {% block body %}
@@ -43,7 +47,7 @@
             <div class="col-xs-12 col-sm-6">
                 {% if project.roles|length %}
                     <h3>Other roles :</h3>
-                    <ul class="list-group" >
+                    <ul class="list-group" id='list-roles' >
                         {% for ro in project.roles %}
                             <li class="list-group-item" data-id="{{ ro.id }}" >
                                 <strong>{{ ro.student.username }}</strong> :
@@ -69,7 +73,7 @@
                     <h3>No roles</h3>
                 {% endif %}
                 {% if canEdit %}
-                    <a href="#"
+                    <a href="{{ path('add-role') }}"
                        data-project="{{ project.id }}"
                        id="button-add-role"
                        class="btn btn-default" >
