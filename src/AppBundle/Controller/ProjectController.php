@@ -1,9 +1,7 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This files contains the ProjectController class
  */
 
 namespace AppBundle\Controller;
@@ -11,21 +9,30 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
-use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Project;
 use AppBundle\Form\ProjectType;
-use AppBundle\Form\ProjectRolesType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Form;
-use \Symfony\Component\Form\FormView;
 
 /**
- * Description of ProjectController
+ * This file handle all the project operation : 
+ * deleting, changin, adding, displaying
  *
  * @author boutina
  */
 class ProjectController extends Controller {
 
+    /**
+     * Displays the project with id projId
+     * and if the project is not locked
+     * and the current user is also the leader
+     * allow the editMode on the page
+     * 
+     * @param type $projId
+     * @param Request $req
+     * @return type
+     * @throws NotFoundException
+     */
     public function infoAction($projId, Request $req) {
         $proj = $this->getProject($projId);
         
@@ -73,10 +80,12 @@ class ProjectController extends Controller {
     }
 
     /**
-     * Check the form sended
-     * by ajax
+     * Check if the form is valid
+     * and if the requirements are respected
+     * (leader != secretary)
      * 
-     * @param \Symfony\Component\Form\Form $form
+     * 
+     * @param Form $form
      * @param Project $proj
      * @return JsonResponse
      */
@@ -185,7 +194,6 @@ class ProjectController extends Controller {
     }
 
     /**
-     * 
      * Lock the project
      * 
      * @param integer $proj
@@ -226,7 +234,7 @@ class ProjectController extends Controller {
         if ($success) {
             return $this->redirectToRoute('lobby');
         } else {
-            //return $this->redirectToRoute('Already locked,unlocked');
+            //'Already locked,unlocked';
         }
         return $success;
     }
@@ -243,7 +251,7 @@ class ProjectController extends Controller {
     }
 
     /**
-     * Persist the project
+     * Save the project in the database
      * 
      * @param Project $project
      */

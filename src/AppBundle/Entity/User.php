@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Contains the User Entity
+ */
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,6 +13,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
+ * A user is the main entity of the app.
+ * There are two types of users : the admin, and the standard user
+ * The admin has full access to everything, can create and lock a project
+ * can also create users and assign them to a project.
+ * 
  * @ORM\Entity
  * @UniqueEntity(fields="username", message="Username already taken")
  */

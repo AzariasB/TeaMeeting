@@ -1,9 +1,7 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Contains the roleController
  */
 
 namespace AppBundle\Controller;
@@ -18,13 +16,17 @@ use AppBundle\Form\RoleType;
 use Symfony\Component\Form\Form;
 
 /**
- * Description of RoleController
+ * Handle all the roles actions :
+ * delete,create,update.
  *
  * @author boutina
  */
 class RoleController extends Controller {
 
     /**
+     * Creates a new Role
+     * the request must be made
+     * with ajax otherwise notfound is thrown
      * 
      * @param Request $req
      */
@@ -51,6 +53,16 @@ class RoleController extends Controller {
         throw new NotFoundHttpException("Not found");
     }
 
+    /**
+     * Remove the role with id 'roleId'
+     * from the dataBase
+     * the request must be made in ajax
+     * 
+     * @param type $roleId
+     * @param Request $req
+     * @return JsonReponse
+     * @throws NotFoundHttpException
+     */
     public function removeAction($roleId, Request $req) {
 
         if ($req->isXmlHttpRequest()) {
@@ -66,10 +78,13 @@ class RoleController extends Controller {
     }
 
     /**
+     * Handle the form to create a role
+     * and check wether the form is valid
      * 
      * @param Form $form
      * @param UserRole $role
      * @param integer $projectId
+     * @return JsonResponse
      */
     private function handleForm(Form $form, UserRole $role) {
 
@@ -92,6 +107,7 @@ class RoleController extends Controller {
     }
 
     /**
+     * Save a role in the databse
      * 
      * @param UserRole $role
      */
@@ -102,6 +118,7 @@ class RoleController extends Controller {
     }
 
     /**
+     * Get a project from its id
      * 
      * @param int $projectId
      * @return Project
@@ -111,6 +128,8 @@ class RoleController extends Controller {
     }
 
     /**
+     * Return the form view 
+     * to create a role
      * 
      * @param Form $form
      * @return Response view

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Contains the Project entity
+ */
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,7 +11,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\UserRole;
 
 /**
- * Project
+ * A Project is one of the main components of the application
+ * A project has participants. Each can have multiple roles.
+ * A project also has meetings, a leader and a secretary
+ * 
+ * 
  * @ORM\Entity
  */
 class Project implements \JsonSerializable {

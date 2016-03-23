@@ -1,9 +1,7 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Contains the ChangePassword class
  */
 
 namespace AppBundle\Form\Model;
@@ -11,7 +9,8 @@ namespace AppBundle\Form\Model;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 /**
- * Description of ChangePassword
+ * Tiny model to change a user's password from the old one
+ * to the new one
  *
  * @author boutina
  */

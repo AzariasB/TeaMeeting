@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Contains the UserRole Entity
+ */
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,7 +11,9 @@ use AppBundle\Entity\Project;
 use AppBundle\Entity\User;
 
 /**
- * UserRole
+ * UserRole is a simple entity to represent the roles of a project
+ * a UserRole contains a User and a role name and is associated with a project
+ * 
  * @ORM\Entity
  */
 class UserRole implements \JsonSerializable {

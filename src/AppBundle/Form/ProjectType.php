@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Contains the ProjectType class
+ */
+
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -9,14 +13,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 /**
- * Description of ProjectType
+ * This class build the form to create a project
  *
  * @author boutina
  */
 class ProjectType extends AbstractType {
 
     /**
-     * @todo Add an option to create custom roles
+     * Build the form to create a project.
+     * This forms contains :
+     * <ul>
+     *  <li>The name of the project</li>
+     *  <li>The leader</li>
+     *  <li>The secretary</li>
+     *  <li>The participants</li>
+     * </ul>
+     * For the roles and the meetings, the leader is able to add
+     * the later on when visualising the project
      * 
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -39,6 +52,11 @@ class ProjectType extends AbstractType {
         );
     }
 
+    /**
+     * Set the defaults options
+     * 
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Project'

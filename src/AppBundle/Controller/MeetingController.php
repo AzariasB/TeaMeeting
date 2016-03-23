@@ -1,9 +1,7 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This file contains the MeetingController class
  */
 
 namespace AppBundle\Controller;
@@ -18,15 +16,20 @@ use AppBundle\Entity\Project;
 use AppBundle\Entity\Meeting;
 
 /**
- * Description of MeetingController
+ * Controls the meeting entity.
+ * May create one, delete one or edit/change one
  *
  * @author boutina
  */
 class MeetingController extends Controller {
 
     /**
+     * Creates a meeting
+     * this function is only callable with xmlhttprequest
+     * otherwise it will return not found
      * 
      * @param Request $req
+     * @return Response
      */
     public function createAction(Request $req) {
 
@@ -49,6 +52,17 @@ class MeetingController extends Controller {
         throw new NotFoundHttpException("Not found");
     }
 
+    /**
+     * Remove the meeting with id 'meetingId'
+     * from the database.
+     * Once its done return the jsonresponse
+     * success : true
+     * 
+     * @param int $meetingId
+     * @param Request $req
+     * @return JsonResponse
+     * @throws NotFoundHttpException
+     */
     public function removeAction($meetingId, Request $req){
         
         if($req->isXmlHttpRequest()){
@@ -64,6 +78,11 @@ class MeetingController extends Controller {
     }
     
     /**
+     * Handle the submitted form to create a
+     * meeting.
+     * Will assign the project to the meeting
+     * and return a JsonResponse depending on
+     * wether the form is valid
      * 
      * @param Form $form
      * @param Meeting $meet
@@ -91,6 +110,11 @@ class MeetingController extends Controller {
         return $rep;
     }
 
+    /**
+     * Save a meeting on the database
+     * 
+     * @param Meeting $meet
+     */
     private function saveMeeting(Meeting &$meet) {
         $em = $this->getDoctrine()->getManager();
         $em->persist($meet);
@@ -98,6 +122,7 @@ class MeetingController extends Controller {
     }
 
     /**
+     * Get a project from its id
      * 
      * @param int $projectId
      * @return Project
@@ -107,6 +132,8 @@ class MeetingController extends Controller {
     }
 
     /**
+     * Create the meeting form from
+     * the given form
      * 
      * @param Form $form
      * @return Response view

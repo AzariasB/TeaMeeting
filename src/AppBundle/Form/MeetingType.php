@@ -1,9 +1,7 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Contains the MeetingType class
  */
 
 namespace AppBundle\Form;
@@ -15,26 +13,34 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
-
 /**
- * Description of MeetingType
+ * Build a form to create
+ * a meeting
  *
  * @author boutina
  */
 class MeetingType extends AbstractType {
 
-    //put your code here
+    /**
+     * Build the form
+     * 
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $today = new \DateTime();
-
-        $builder->add('date',  DateTimeType::class,array(
-            'date_widget' => 'single_text',
-            'time_widget' => 'single_text'
-        ))
+        $builder->add('date', DateTimeType::class, array(
+                    'date_widget' => 'single_text',
+                    'time_widget' => 'single_text'
+                ))
                 ->add('room', TextType::class)
-                ->add('project',  HiddenType::class);
+                ->add('project', HiddenType::class);
     }
-    
+
+    /**
+     * Set the default options
+     * 
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Meeting'

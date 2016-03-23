@@ -1,9 +1,7 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Contains the class RoleType
  */
 
 namespace AppBundle\Form;
@@ -21,6 +19,20 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
  */
 class RoleType extends AbstractType {
 
+    /**
+     * Build the form to create a role
+     * Contains :
+     * <ul>
+     *  <li>One student</li>
+     *  <li>The name of the role</li>
+     * </ul>
+     * The particularity of this form, is that the choices
+     * of the user is limited to the participants of the project
+     * and does not contains all the users of the database
+     * 
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $proj = $options['data']->getProject();
         if ($proj) {
@@ -35,6 +47,11 @@ class RoleType extends AbstractType {
                 ->add('roleName', TextType::class);
     }
 
+    /**
+     * Set the default options
+     * 
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\UserRole'
