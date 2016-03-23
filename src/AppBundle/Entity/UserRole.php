@@ -57,6 +57,17 @@ class UserRole implements \JsonSerializable {
     }
 
     /**
+     * Set id
+     * 
+     * @param type $nwId
+     * @return UserRole
+     */
+    public function setId($nwId){
+        $this->id = $nwId;
+        return $this;
+    }
+    
+    /**
      * Set roleName
      *
      * @param string $roleName
@@ -80,11 +91,11 @@ class UserRole implements \JsonSerializable {
     /**
      * Set student
      *
-     * @param User $studentId
+     * @param User $student
      * @return UserRole
      */
-    public function setStudent($studentId) {
-        $this->student = $studentId;
+    public function setStudent(User $student) {
+        $this->student = $student;
 
         return $this;
     }
@@ -101,11 +112,11 @@ class UserRole implements \JsonSerializable {
     /**
      * Set project
      * 
-     * @param Project $projectId
+     * @param Project $project
      * @return UserRole
      */
-    public function setProject($projectId) {
-        $this->project = $projectId;
+    public function setProject(Project $project) {
+        $this->project = $project;
         return $this;
     }
 

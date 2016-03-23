@@ -8,7 +8,9 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+
 use AppBundle\Entity\UserRole;
+use AppBundle\Entity\User;
 
 /**
  * A Project is one of the main components of the application
@@ -43,13 +45,13 @@ class Project implements \JsonSerializable {
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @var int
+     * @var User
      */
     private $leader;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @var int
+     * @var User
      */
     private $secretary;
 
@@ -134,10 +136,10 @@ class Project implements \JsonSerializable {
     /**
      * Set leader
      *
-     * @param integer $leader
+     * @param User $leader
      * @return Project
      */
-    public function setLeader($leader) {
+    public function setLeader(User $leader) {
         $this->leader = $leader;
 
         return $this;
@@ -155,10 +157,10 @@ class Project implements \JsonSerializable {
     /**
      * Set secretary
      *
-     * @param integer $secretary
+     * @param User $secretary
      * @return Project
      */
-    public function setSecretary($secretary) {
+    public function setSecretary(User $secretary) {
         $this->secretary = $secretary;
 
         return $this;
@@ -179,7 +181,7 @@ class Project implements \JsonSerializable {
      * @param ArrayCollection $roles
      * @return Project
      */
-    public function setRoles($roles) {
+    public function setRoles(ArrayCollection $roles) {
         $this->roles = $roles;
 
         return $this;
@@ -201,7 +203,20 @@ class Project implements \JsonSerializable {
      */
     public function removeRole(UserRole $r){
         $this->roles->removeElement($r);
+        return $this;
     }
+    
+    /**
+     * Add role
+     * 
+     * @param UserRole $r
+     * @return Project
+     */
+    public function addRole(UserRole $r){
+        $this->roles->add($r);
+        return $this;
+    }
+    
     
     /**
      * Set participants
@@ -209,7 +224,7 @@ class Project implements \JsonSerializable {
      * @param ArrayCollection $parts
      * @return Project
      */
-    public function setParticipants($parts){
+    public function setParticipants(ArrayCollection $parts){
         $this->participants = $parts;
         
         return $this;
@@ -232,9 +247,20 @@ class Project implements \JsonSerializable {
      * @param User $parts
      * @return Project
      */
-    public function addParticipants($parts){
+    public function addParticipant(User  $parts){
         $this->participants->add($parts);
         
+        return $this;
+    }
+    
+    /**
+     * Remove a participant
+     * 
+     * @param User $part
+     * @return Project
+     */
+    public function removeParticipant(User $part){
+        $this->participants->removeElement($part);
         return $this;
     }
     
@@ -276,7 +302,7 @@ class Project implements \JsonSerializable {
      * @return Project
      */
     public function removeMeeting(Meeting $met){
-        $this->meetings->remove($met);
+        $this->meetings->removeElement($met);
         return $this;
     }
 

@@ -98,6 +98,17 @@ class User implements UserInterface, \JsonSerializable {
     }
 
     /**
+     * Set id
+     * 
+     * @param type $nwId
+     * @return User
+     */
+    public function setId($nwId){
+        $this->id = $nwId;
+        return $this;
+    }
+    
+    /**
      * The salt to add while hashing the password   
      * 
      * @return string
@@ -195,7 +206,7 @@ class User implements UserInterface, \JsonSerializable {
      * @param ArrayCollection $projs
      * @return User
      */
-    public function setProject($projs){
+    public function setProjects($projs){
         $this->projects = $projs;
         
         return $this;
@@ -208,6 +219,28 @@ class User implements UserInterface, \JsonSerializable {
      */
     public function getProjects(){
         return $this->projects;
+    }
+    
+    /**
+     * Add project
+     * 
+     * @param Project $proj
+     * @return User
+     */
+    public function addProject(Project $proj){
+        $this->projects->add($proj);
+        return $this;
+    }
+    
+    /**
+     * Remove a project
+     * 
+     * @param Project $proj
+     * @return User
+     */
+    public function removeProject(Project $proj){
+        $this->projects->removeElement($proj);
+        return $this;
     }
 
     
