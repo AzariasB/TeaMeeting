@@ -49,6 +49,20 @@ class MeetingController extends Controller {
         throw new NotFoundHttpException("Not found");
     }
 
+    public function removeAction($meetingId, Request $req){
+        
+        if($req->isXmlHttpRequest()){
+            $em = $this->getDoctrine()->getManager();
+            $meeting = $em->find(Meeting::class, $meetingId);
+            $em->remove($meeting);
+            $em->flush();
+            $rep = new JsonResponse();
+            return $rep->setData(array('success' => true));
+        }
+        
+        throw new NotFoundHttpException("Not found");
+    }
+    
     /**
      * 
      * @param Form $form

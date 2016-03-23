@@ -9,13 +9,15 @@ $(document).ready(function () {
             'newLine': function (data) {
                 var meeting = data.meeting;
                 var date = new Date(meeting.date.date);
+                var deleteHref = $("#path-remove-meeting").data('href').replace(/__name__/, meeting.id);
                 return $('<li class="list-group-item" data-id="' + meeting.id + '" >' +
                         ' Meeting at ' + this.dateString(date) +
                         ' in room  ' + meeting.room +
                         '<span class="pull-right">' +
                         '<a href="#" class="btn btn-primary btn-xs">' +
                         '<i class="glyphicon glyphicon-pencil"></i> ' +
-                        ' Edit </a> <a href="#" class="btn btn-warning btn-xs btn-remove"> ' +
+                        ' Edit </a> <a href="' + deleteHref +
+                        '" class="btn btn-warning btn-xs btn-remove"> ' +
                         '<i class="glyphicon glyphicon-remove"></i> ' +
                         ' Delete </a></span></li>');
             },
@@ -53,21 +55,17 @@ $(document).ready(function () {
                 firstRequest(url, pId, actions[i]);
             });
         });
-        $("body").on('click','.btn-remove', function (e) {
+
+        $("#close-alert").on('click', hideAlert);
+
+        $("body").on('click', '.btn-remove', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
             var $parent = $(this).parents('li');
 
             //Set timeout to destruction
             var t = setTimeout(function () {
-                hideAlert();
-                $.post(url, {}, function (res) {
-                    if (!res.success) {
-                        //Show problem
-                        showAlert('User not deleted');
-                    }
-                });
-                $parent.remove();
+                confirmedDelete(url, $parent);
             }, 5000);
 
             //Hide object
@@ -79,6 +77,17 @@ $(document).ready(function () {
                 $parent.show();
             });
         });
+    }
+
+    function confirmedDelete(url, $div) {
+        hideAlert();
+        $.post(url, {}, function (res) {
+            if (!res.success) {
+                //Show problem
+                showAlert('User not deleted');
+            }
+        });
+        $div.remove();
     }
 
     function showAlert(removed, action) {

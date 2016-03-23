@@ -42,3 +42,6 @@ add-role:
 remove-role:
     path: /remove-role/{roleId}
     defaults: { _controller: AppBundle:Role:remove }
+remove-meeting:
+    path: /remove-meeting/{meetingId}
+    defaults: { _controller: AppBundle:Meeting:remove }
