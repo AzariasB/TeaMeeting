@@ -9,7 +9,8 @@ $(document).ready(function () {
     var idsDivs = {
         'see-profile': 'admin-profile',
         'see-projects': 'projects-list',
-        'see-users': 'users-list'
+        'see-users': 'users-list',
+        'see-meetings' : 'meetings-list'
     };
 
     function init() {

@@ -7,7 +7,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
+
+
 
 /**
  * 
@@ -31,7 +34,7 @@ class Meeting implements \JsonSerializable {
 
     /**
      *
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      * 
      * @var Date Date AND hour of the meeting
      */
@@ -53,6 +56,34 @@ class Meeting implements \JsonSerializable {
      */
     private $project;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id",referencedColumnName="id")
+     *
+     * @var User
+     */
+    private $chairMan;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id",referencedColumnName="id")
+     *
+     * @var User
+     */
+    private $secretary;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="UserAnswer",mappedBy="meeting",cascade={"persist","remove"})
+     * 
+     * @var ArrayCollection
+     */
+    private $answers;
+
+    
+    public function __construct() {
+        $this->answers = new ArrayCollection;
+    }
+    
     /**
      * Get id
      * 
@@ -134,12 +165,78 @@ class Meeting implements \JsonSerializable {
         return $this->project;
     }
 
+    /**
+     *  Get chair man
+     * 
+     * @return User
+     */
+    public function getChairMan() {
+        return $this->chairMan;
+    }
+
+    /**
+     * Set chair man
+     * 
+     * @param User $chairman
+     * @return Meeting
+     */
+    public function setChairMan(User $chairman) {
+        $this->chairMan = $chairman;
+        return $this;
+    }
+
+    /**
+     * Get secretary
+     * 
+     * @return User
+     */
+    public function getSecretary() {
+        return $this->secretary;
+    }
+
+    /**
+     * Set secretary
+     * 
+     * @param User $secr
+     * @return Meeting
+     */
+    public function setSecretary(User $secr) {
+        $this->secretary = $secr;
+        return $this;
+    }
+    
+    /**
+     * Get answers
+     * 
+     * @return ArrayCollection
+     */
+    public function getAnswers(){
+        return $this->answers;
+    }
+    
+    /**
+     * Set answers
+     * 
+     * @param ArrayCollection $answers
+     */
+    public function setAnswers(ArrayCollection $answers){
+        $this->answers = $answers;
+        return $this;
+    }
+    
+    public function addAnswer(UserAnswer $answ){
+        $this->answers->add($answ);
+    }
+    
+
     public function jsonSerialize() {
         return array(
             'id' => $this->id,
             'room' => $this->room,
             'date' => $this->date,
-            'project' => $this->project
+            'project' => $this->project,
+            'chairMan' => $this->chairMan,
+            'secretary' => $this->secretary
         );
     }
 

@@ -20,7 +20,7 @@
 
 {{ form_start(form,{'attr':{'id':'form-create-meeting'} }) }}
 <div class="modal-body">
-    <div class="row">
+    <div class="row form-group">
         <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.date.date) }}">
             {{ form_row(form.date.date,formClass) }}
         </div>
@@ -31,6 +31,14 @@
             {{ form_row(form.room,formClass) }}
         </div>
         <input id="project-id" name="project-id" type="hidden" value="" />
+    </div>
+    <div class="row form-group">
+        <div class="col-xs-6 {{ s.errorClass(form.chairMan) }}">
+            {{ form_row(form.chairMan,formClass) }}
+        </div>
+        <div class="col-xs-6 {{ s.errorClass(form.chairMan) }} ">
+            {{ form_row(form.secretary,formClass) }}
+        </div>
     </div>
 </div>
 <div class="modal-footer">

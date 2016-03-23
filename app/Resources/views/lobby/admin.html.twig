@@ -23,6 +23,12 @@
                         Users
                     </a>
                 </li>
+                <li class="admin-choice" id="see-meetings" >
+                    <a href="#">
+                        <i class="glyphicon glyphicon-bell"></i>
+                        Meetings
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -53,6 +59,10 @@
                             <i class="glyphicon glyphicon-plus" ></i>
                             Create a user
                         </a>
+                    </div>
+                    <div id="meetings-list" class="hidden admin-item" >
+                        <h3>Meetings list</h3>
+                        {% include 'lobby/meetinglist.html.twig' %}
                     </div>
                 </div>
             </div>

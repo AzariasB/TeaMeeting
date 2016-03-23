@@ -1,0 +1,18 @@
+{% if app.user.projects|length %}
+    <h3>Your meetings  :</h3>
+    <ul class="list-group" >
+        {% for proj in app.user.projects %}
+            {% for meet in proj.meetings %}
+                <li class="list-group-item" >
+{#                    href=seeMeeting#}
+                    <a href="#">
+                        {{ meet.date|date('d/m/Y H:i') }}
+                    </a>
+                </li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+{% else %}
+    <h3>No projects => No meetings</h3>
+{% endif %}

@@ -14,6 +14,7 @@ use Symfony\Component\Form\Form;
 use AppBundle\Form\MeetingType;
 use AppBundle\Entity\Project;
 use AppBundle\Entity\Meeting;
+use AppBundle\Entity\UserAnswer;
 
 /**
  * Controls the meeting entity.
@@ -35,15 +36,17 @@ class MeetingController extends Controller {
 
         // Display creation form
         if ($req->isXmlHttpRequest()) {
+            $projectId = $req->get('project-id');
+            $p = $this->getProjectFromId($projectId);
             $meet = new Meeting();
+            $meet->setProject($p);
             $form = $this->createForm(MeetingType::class, $meet);
 
 
             $form->handleRequest($req);
 
             if ($form->isSubmitted()) {
-                $projectId = $req->get('project-id');
-                return $this->handleForm($form, $meet, $projectId);
+                return $this->handleForm($form, $meet);
             }
 
             return $this->createMeetingForm($form);
@@ -63,9 +66,9 @@ class MeetingController extends Controller {
      * @return JsonResponse
      * @throws NotFoundHttpException
      */
-    public function removeAction($meetingId, Request $req){
-        
-        if($req->isXmlHttpRequest()){
+    public function removeAction($meetingId, Request $req) {
+
+        if ($req->isXmlHttpRequest()) {
             $em = $this->getDoctrine()->getManager();
             $meeting = $em->find(Meeting::class, $meetingId);
             $em->remove($meeting);
@@ -73,10 +76,10 @@ class MeetingController extends Controller {
             $rep = new JsonResponse();
             return $rep->setData(array('success' => true));
         }
-        
+
         throw new NotFoundHttpException("Not found");
     }
-    
+
     /**
      * Handle the submitted form to create a
      * meeting.
@@ -86,16 +89,15 @@ class MeetingController extends Controller {
      * 
      * @param Form $form
      * @param Meeting $meet
-     * @param integer $projectId
      */
-    private function handleForm(Form $form, Meeting $meet, $projectId) {
+    private function handleForm(Form $form, Meeting $meet) {
 
         $rep = new JsonResponse();
 
         if ($form->isValid()) {
-            $p = $this->getProjectFromId($projectId);
-            $meet->setProject($p);
+            $this->addAnswers($meet, $meet->getProject());
             $this->saveMeeting($meet);
+            $meet->getProject()->addMeeting($meet);
             $rep->setData(array(
                 'success' => true,
                 'meeting' => $meet
@@ -108,6 +110,15 @@ class MeetingController extends Controller {
         }
 
         return $rep;
+    }
+
+    private function addAnswers(Meeting &$meet, Project $proj) {
+        foreach ($proj->getParticipants() as $user) {
+            $ans = new UserAnswer();
+            $ans->setUser($user);
+            $ans->setMeeting($meet);
+            $meet->addAnswer($ans);
+        }
     }
 
     /**
