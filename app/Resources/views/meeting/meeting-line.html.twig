@@ -1,0 +1,72 @@
+{# twig #}
+
+{% set answer_object = meet.answerForUser(app.user) %}
+<div class="col-xs-4">
+    <a href="{{ path('see-meeting',{ 'meetingId' : meet.id }) }}">
+        {{ meet.date|date('d/m/Y H:i') }} in 
+        {{ meet.room }}
+    </a>
+</div>
+<div class="col-xs-6">
+    <span id="answered-yes-{{ meet.id }}"
+          {% if answer_object.answer != ANSWER_YES %} hidden="" {% endif %} >
+        You answered yes
+    </span>
+    {% if answer_object.answer != ANSWER_YES %}
+        <div class="col-xs-12" id="radio-answers-{{ meet.id }}" >
+            <label for="presence-no-{{ meet.id }}" class="radio-inline">
+                <input type="radio" 
+                       name="presence-meeting-{{ meet.id }}" 
+                       {% if answer_object.answer == ANSWER_NO %} checked="" {% endif %}
+                       value="{{ ANSWER_NO }}"
+                       id="presence-no-{{ meet.id }}" />
+                No
+
+            </label>
+            <label for="presence-maybe-{{ meet.id }}" class="radio-inline" >
+                <input type="radio" 
+                       name="presence-meeting-{{ meet.id }}" 
+                       value="{{ ANSWER_MAYBE }}"
+                       {% if answer_object.answer == ANSWER_MAYBE %} checked="" {% endif %}
+                       id="presence-maybe-{{ meet.id }}" />
+                Maybe
+
+            </label>
+            <label for="presence-yes-{{ meet.id }}" class="radio-inline" >
+                <input type="radio" 
+                       name="presence-meeting-{{ meet.id }}" 
+                       value="{{ ANSWER_YES }}" 
+                       id="presence-yes-{{ meet.id }}" />
+                Yes
+            </label>
+            <a data-target="{{ meet.id }}"
+               href="{{ path('save-answer', { 'answerId' : answer_object.id  }) }}" 
+               class="btn btn-xs btn-primary save-answer pull-right" >
+                Save!
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+<div class="col-xs-2 text-right" >
+    <div class="col-xs-12">
+        <span class="hidden-badge-item label label-primary" 
+              title="Number of people who did not answered" > 
+            {{ meet.numberOfUnknown() }}
+        </span>
+        <span class="hidden-badge-item label label-success" 
+              title="Number of 'yes' answers" > 
+            {{ meet.numberOfYes() }}
+        </span>
+    </div>
+    <div class="col-xs-12">
+        <span class="hidden-badge-item label label-warning" 
+              title="Number of 'maybe' answers" > 
+            {{ meet.numberOfMaybe() }}
+        </span>
+        <span class="hidden-badge-item label label-danger" 
+              title="Number of 'no' answers" > 
+            {{ meet.numberOfNo() }}
+        </span>
+    </div>
+</div>

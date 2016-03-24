@@ -7,7 +7,8 @@
   ],
   "dependencies": {
     "font-awesome": "4.5.0",
-    "bootstrap": "3.3.6"
+    "bootstrap": "3.3.6",
+    "chartist": "^0.9.7"
   },
   "devDependencies": {}
 }

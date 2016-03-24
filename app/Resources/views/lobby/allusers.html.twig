@@ -1,16 +1,16 @@
 {% if users %}
-    <ul id="user_list" class="list-group" >
+    <ul id="user_list" class="list-group hidden-badge-list" >
         {% for user in users %}
-            <li class="list-group-item clearfix " >
+            <li class="list-group-item clearfix" >
                 <a href="{{ path('seeprofile',{'user':user.id}) }}">
                     {{ user.username }}
                 </a>
                 <span class="pull-right">
-                    <a class="btn btn-sm btn-warning" href="#">
+                    <a class="btn btn-xs btn-warning hidden-badge-item" href="#">
                         <i class="glyphicon glyphicon-refresh" ></i>
                         Reset password
                     </a>
-                    <a class="btn btn-sm btn-danger" href="#">
+                    <a class="btn btn-xs btn-danger hidden-badge-item" href="#">
                         <i class="glyphicon glyphicon-trash" ></i>
                         Delete user
                     </a>

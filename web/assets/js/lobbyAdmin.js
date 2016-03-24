@@ -10,7 +10,7 @@ $(document).ready(function () {
         'see-profile': 'admin-profile',
         'see-projects': 'projects-list',
         'see-users': 'users-list',
-        'see-meetings' : 'meetings-list'
+        'see-meetings': 'meetings-list'
     };
 
     function init() {
@@ -31,15 +31,42 @@ $(document).ready(function () {
 
         var h = window.location.hash.substr(1);
         if (h) {
-            if(idsDivs[h]){
-                $("#"+h).click();
-            }else{
+            if (idsDivs[h]) {
+                $("#" + h).click();
+            } else {
                 changeHash('');
             }
         }
 
         $("#create_user").on('click', launchCreateUserModal);
         $("#create-project").on('click', launchCreateProjectModal);
+        $(".save-answer").on('click', saveAnswer)
+    }
+
+    function saveAnswer(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        var parent = $(this).parent('div');
+        var meetingId = $(this).data('target');
+        var answer = parent.find('input[name=presence-meeting-' + meetingId + ']:checked').val();
+        if (answer) {
+            var data = {
+                'answer': answer
+            };
+            postForm(data, url, answerChanged);
+        }
+    }
+
+    function answerChanged(data) {
+        if(data.success && data.answer){
+           var ans = data.answer;
+           if(ans.answer === "3"){
+               $("#radio-answers-"+ans.meeting.id).hide();
+               $("#answered-yes-"+ans.meeting.id).show();
+           }
+        }else{
+            console.error(data.error);
+        }
     }
 
     function changeHash(nwHash) {

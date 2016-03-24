@@ -1,6 +1,6 @@
 {% if projects %}
     <h5>Projects</h5>
-    <ul id="project_list" class="list-group hidden-badge" >
+    <ul id="project_list" class="list-group hidden-badge-list" >
         {% for proj in projects %}
             <li class="list-group-item clearfix" >
                 <a href="{{ path('seeproject',{'projId':proj.id}) }}">
@@ -8,19 +8,19 @@
                 </a>
                 <span class="pull-right" >
                     {% if proj.locked %}
-                        <a class="btn btn-success btn-xs"  
+                        <a class="btn btn-success btn-xs hidden-badge-item"  
                            href="{{ path('unlockproject',{'proj' : proj.id}) }}">
                             <i class="fa fa-unlock" ></i>
                             Unlock
                         </a>
                     {% else %}
-                        <a class="btn btn-warning btn-xs" 
+                        <a class="btn btn-warning btn-xs hidden-badge-item" 
                            href="{{ path('lockproject',{'proj' : proj.id}) }}">
                             <i class="fa fa-lock" ></i>
                             Lock
                         </a>
                     {% endif %}
-                    <a class="btn btn-danger btn-xs"
+                    <a class="btn btn-danger btn-xs hidden-badge-item"
                        href="{{ path('deleteproject',{'projId' : proj.id}) }}">
                         <i class="glyphicon glyphicon-trash" ></i>
                         Delete

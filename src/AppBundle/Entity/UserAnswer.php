@@ -82,11 +82,10 @@ class UserAnswer implements \JsonSerializable {
      */
     private $answer;
 
-    
     public function __construct() {
         $this->answer = self::NO_ANSWER;
     }
-    
+
     /**
      * Get id
      * 
@@ -171,7 +170,7 @@ class UserAnswer implements \JsonSerializable {
      * @return boolean true if the value was changed, false otherwise
      */
     public function setAnswer($nwAnswer) {
-        if (!isset($this->answer)) {
+        if ($this->answer === self::NO_ANSWER) {
             $this->answer = $nwAnswer;
             return true;
         } else {
@@ -191,6 +190,13 @@ class UserAnswer implements \JsonSerializable {
             'user' => $this->user,
             'answer' => $this->answer
         );
+    }
+
+    public function answerString() {
+        return $this->answer == self::ANSWER_NO ? 'No' :
+                $this->answer == self::ANSWER_YES ? 'Yes' :
+                        $this->answer == self::ANSWER_MAYBE ? 'Maybe' :
+                                'Not answered';
     }
 
 }

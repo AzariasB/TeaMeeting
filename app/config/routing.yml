@@ -45,3 +45,9 @@ remove-role:
 remove-meeting:
     path: /remove-meeting/{meetingId}
     defaults: { _controller: AppBundle:Meeting:remove }
+see-meeting:
+    path: /meeting/{meetingId}
+    defaults: { _controller: AppBundle:Meeting:show }
+save-answer:
+    path: /save-answer/{answerId}
+    defaults: { _controller: AppBundle:Meeting:saveAnswer }

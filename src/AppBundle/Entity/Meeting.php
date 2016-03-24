@@ -9,6 +9,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use AppBundle\Entity\User;
 use DateTime;
 
 /**
@@ -252,22 +253,61 @@ class Meeting implements \JsonSerializable {
         }
     }
 
+    public function answerForUser(User $user) {
+
+        $res = $this->answers->filter(function($answer)use($user) {
+            return $user == $answer->getUser();
+        });
+        if ($res->count() === 0) {
+            return null;
+        } else {
+            return $res->first();
+        }
+    }
+
+    /**
+     * Number of answers 'no' for the meeting
+     * 
+     * @return int
+     */
     public function numberOfNo() {
         return $this->numberOf(UserAnswer::ANSWER_NO);
     }
 
+    /**
+     * Number of answers 'yes' for the meeting
+     * 
+     * @return int
+     */
     public function numberOfYes() {
         return $this->numberOf(UserAnswer::ANSWER_YES);
     }
 
+    /**
+     * Number of answers 'maybe' for the meeting
+     * 
+     * @return int
+     */
     public function numberOfMaybe() {
         return $this->numberOf(UserAnswer::ANSWER_MAYBE);
     }
 
+    /**
+     * Number of answers 'not-answered' for the metting
+     * 
+     * @return int
+     */
     public function numberOfUnknown() {
         return $this->numberOf(UserAnswer::NO_ANSWER);
     }
 
+    /**
+     * Count the number of 'answertype' contained in
+     * the answers array
+     * 
+     * @param int $answerType
+     * @return int
+     */
     private function numberOf($answerType) {
         return $this->answers->filter(function($ans) use($answerType) {
                     return $ans->getAnswer() === $answerType;

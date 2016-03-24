@@ -9,14 +9,12 @@
     color: #e1ffff;
 }
 
-.hidden-badge li .btn,
-.hidden-badge li .label{
+.hidden-badge-list li .hidden-badge-item{
     opacity: 0;
     transition: all ease-in-out 100ms;
 }
 
-.hidden-badge li:hover .btn,
-.hidden-badge li:hover .label{
+.hidden-badge-list li:hover .hidden-badge-item{
     opacity: 1;
 }
 

@@ -24,6 +24,57 @@ use AppBundle\Entity\UserAnswer;
  */
 class MeetingController extends Controller {
 
+    public function saveAnswerAction($answerId, Request $req) {
+
+        if ($req->isXmlHttpRequest()) {
+            $rep = new JsonResponse;
+            $ans = $this->getFromId(UserAnswer::class, $answerId);
+
+            if ($ans) {
+                $answerType = $req->get('answer');
+                if ($ans->setAnswer($answerType)) {
+                    $this->saveEntity($ans);
+                    return $rep->setData(array(
+                                'success' => true,
+                                'answer' => $ans
+                    ));
+                } else {
+                    return $rep->setData(array(
+                                'success' => false,
+                                'error' => 'The answer could not be changed'
+                    ));
+                }
+            } else {
+                return $rep->setData(array(
+                            'success' => false,
+                            'error' => 'Meeting not found'
+                ));
+            }
+        }
+
+        throw $this->createNotFoundException('Not found');
+    }
+
+    /**
+     * Show the meeting with the given Id
+     * 
+     * @param type $meetingId
+     * @param Request $req
+     * @return Response
+     */
+    public function showAction($meetingId, Request $req) {
+
+        $m = $this->getFromId(Meeting::class, $meetingId);
+        if (!$m) {
+            throw new $this->createNotFoundException('Meeting not found');
+        }
+
+
+        return $this->render('meeting/meeting.html.twig', array(
+                    'meeting' => $m
+        ));
+    }
+
     /**
      * Creates a meeting
      * this function is only callable with xmlhttprequest
@@ -37,7 +88,7 @@ class MeetingController extends Controller {
         // Display creation form
         if ($req->isXmlHttpRequest()) {
             $projectId = $req->get('project-id');
-            $p = $this->getProjectFromId($projectId);
+            $p = $this->getFromId(Project::class, $projectId);
             $meet = new Meeting();
             $meet->setProject($p);
             $form = $this->createForm(MeetingType::class, $meet);
@@ -95,7 +146,7 @@ class MeetingController extends Controller {
         $rep = new JsonResponse();
 
         if ($form->isValid()) {
-            $this->saveMeeting($meet);
+            $this->saveEntity($meet);
             $meet->getProject()->addMeeting($meet);
             $rep->setData(array(
                 'success' => true,
@@ -112,24 +163,27 @@ class MeetingController extends Controller {
     }
 
     /**
-     * Save a meeting on the database
+     * Save an object in the database
      * 
-     * @param Meeting $meet
+     * @param Object $entity
      */
-    private function saveMeeting(Meeting &$meet) {
+    private function saveEntity(&$entity) {
         $em = $this->getDoctrine()->getManager();
-        $em->persist($meet);
+        $em->persist($entity);
         $em->flush();
     }
 
+    private function getFromId($className, $id) {
+        return $this->getDoctrine()->getManager()->find($className, $id);
+    }
+
     /**
-     * Get a project from its id
+     * Get the current user
      * 
-     * @param int $projectId
-     * @return Project
+     * @return User
      */
-    private function getProjectFromId($projectId) {
-        return $this->getDoctrine()->getManager()->find(Project::class, $projectId);
+    private function currentUser() {
+        return $this->get('security.token_storage')->getToken()->getUser();
     }
 
     /**

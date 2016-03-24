@@ -1,0 +1,52 @@
+{# twig #}
+
+{% extends "base.html.twig" %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/vendor/chartist/dist/chartist.min.js') }}" ></script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('assets/vendor/chartist/dist/chartist.min.css') }}" rel="stylesheet"  />
+    <link href="{{ asset('assets/css/meeting-style.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_USER') %}
+        {% include 'toolbar.html.twig' %}
+    {% endif %}
+    <div class="col-xs-12 col-sm-6">
+        <ul class="list-group" >
+            {% for ans in meeting.answers %}
+                <li class="list-group-item" >
+                    <strong>{{ ans.user.username }}</strong>:
+                    {{ ans.answerString() }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-xs-12 col-sm-6 text-center">
+        <h3>Statistics for the meeting</h3>
+        <div class="ct-chart" ></div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var data = {
+                labels: ['Yes', 'Maybe', 'No', 'Not answered'],
+                series: [
+        {{ meeting.numberOfYes() }},
+        {{ meeting.numberOfMaybe() }},
+        {{ meeting.numberOfNo() }},
+        {{ meeting.numberOfUnknown() }}
+                    ]
+                };
+                var options = {
+                    'height': 300,
+                    'ignoreEmptyValues': true,
+                    'classNames': {
+                        'label': 'custom-label'
+                    }
+                };
+                new Chartist.Pie('.ct-chart', data, options);
+            });
+    </script>{% endblock %}
