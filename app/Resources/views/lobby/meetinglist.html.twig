@@ -1,13 +1,26 @@
 {% if app.user.projects|length %}
-    <h3>Your meetings  :</h3>
-    <ul class="list-group" >
+    <ul class="list-group hidden-badge" >
         {% for proj in app.user.projects %}
             {% for meet in proj.meetings %}
                 <li class="list-group-item" >
-{#                    href=seeMeeting#}
+                    {#                    href=seeMeeting#}
                     <a href="#">
                         {{ meet.date|date('d/m/Y H:i') }}
                     </a>
+                    <span class="pull-right">
+                        <span class="label label-primary" title="Number of people who did not answered" > 
+                            {{ meet.numberOfUnknown() }}
+                        </span>
+                        <span class="label label-success" title="Number of 'yes' answers" > 
+                            {{ meet.numberOfYes() }}
+                        </span>
+                        <span class="label label-warning" title="Number of 'maybe' answers" > 
+                            {{ meet.numberOfMaybe() }}
+                        </span>
+                        <span class="label label-danger" title="Number of 'no' answers" > 
+                            {{ meet.numberOfNo() }}
+                        </span>
+                    </span>
                 </li>
             {% endfor %}
         {% endfor %}

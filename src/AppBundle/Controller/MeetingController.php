@@ -95,7 +95,6 @@ class MeetingController extends Controller {
         $rep = new JsonResponse();
 
         if ($form->isValid()) {
-            $this->addAnswers($meet, $meet->getProject());
             $this->saveMeeting($meet);
             $meet->getProject()->addMeeting($meet);
             $rep->setData(array(
@@ -110,15 +109,6 @@ class MeetingController extends Controller {
         }
 
         return $rep;
-    }
-
-    private function addAnswers(Meeting &$meet, Project $proj) {
-        foreach ($proj->getParticipants() as $user) {
-            $ans = new UserAnswer();
-            $ans->setUser($user);
-            $ans->setMeeting($meet);
-            $meet->addAnswer($ans);
-        }
     }
 
     /**

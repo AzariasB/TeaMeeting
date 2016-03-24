@@ -8,9 +8,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use DateTime;
-
-
 
 /**
  * 
@@ -71,7 +70,7 @@ class Meeting implements \JsonSerializable {
      * @var User
      */
     private $secretary;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="UserAnswer",mappedBy="meeting",cascade={"persist","remove"})
      * 
@@ -79,11 +78,10 @@ class Meeting implements \JsonSerializable {
      */
     private $answers;
 
-    
     public function __construct() {
         $this->answers = new ArrayCollection;
     }
-    
+
     /**
      * Get id
      * 
@@ -153,6 +151,7 @@ class Meeting implements \JsonSerializable {
      */
     public function setProject(Project $proj) {
         $this->project = $proj;
+        $this->setParticipantsAnswers($proj->getParticipants());
         return $this;
     }
 
@@ -204,30 +203,29 @@ class Meeting implements \JsonSerializable {
         $this->secretary = $secr;
         return $this;
     }
-    
+
     /**
      * Get answers
      * 
      * @return ArrayCollection
      */
-    public function getAnswers(){
+    public function getAnswers() {
         return $this->answers;
     }
-    
+
     /**
      * Set answers
      * 
      * @param ArrayCollection $answers
      */
-    public function setAnswers(ArrayCollection $answers){
+    public function setAnswers(ArrayCollection $answers) {
         $this->answers = $answers;
         return $this;
     }
-    
-    public function addAnswer(UserAnswer $answ){
+
+    public function addAnswer(UserAnswer $answ) {
         $this->answers->add($answ);
     }
-    
 
     public function jsonSerialize() {
         return array(
@@ -238,6 +236,42 @@ class Meeting implements \JsonSerializable {
             'chairMan' => $this->chairMan,
             'secretary' => $this->secretary
         );
+    }
+
+    /**
+     * 
+     * @param ArrayCollection $participants
+     */
+    public function setParticipantsAnswers(Collection $participants) {
+        $this->answers->clear();
+        foreach ($participants as $part) {
+            $ans = new UserAnswer();
+            $ans->setUser($part);
+            $ans->setMeeting($this);
+            $this->addAnswer($ans);
+        }
+    }
+
+    public function numberOfNo() {
+        return $this->numberOf(UserAnswer::ANSWER_NO);
+    }
+
+    public function numberOfYes() {
+        return $this->numberOf(UserAnswer::ANSWER_YES);
+    }
+
+    public function numberOfMaybe() {
+        return $this->numberOf(UserAnswer::ANSWER_MAYBE);
+    }
+
+    public function numberOfUnknown() {
+        return $this->numberOf(UserAnswer::NO_ANSWER);
+    }
+
+    private function numberOf($answerType) {
+        return $this->answers->filter(function($ans) use($answerType) {
+                    return $ans->getAnswer() === $answerType;
+                })->count();
     }
 
 }

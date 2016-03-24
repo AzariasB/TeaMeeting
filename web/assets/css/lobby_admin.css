@@ -9,14 +9,14 @@
     color: #e1ffff;
 }
 
-#project_list li .btn,
-#user_list li .btn{
+.hidden-badge li .btn,
+.hidden-badge li .label{
     opacity: 0;
     transition: all ease-in-out 100ms;
 }
 
-#project_list li:hover .btn,
-#user_list li:hover .btn{
+.hidden-badge li:hover .btn,
+.hidden-badge li:hover .label{
     opacity: 1;
 }
 

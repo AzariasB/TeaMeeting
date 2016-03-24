@@ -46,6 +46,7 @@ class UserAnswer implements \JsonSerializable {
     const ANSWER_NO = 1;
     const ANSWER_MAYBE = 2;
     const ANSWER_YES = 3;
+    const NO_ANSWER = 4;
 
     /**
      * @ORM\Id
@@ -57,7 +58,7 @@ class UserAnswer implements \JsonSerializable {
 
     /**
      * @ORM\ManyToOne(targetEntity="Meeting",inversedBy="answers")
-     * @ORM\JoinColumn(name="user_answsers", referencedColumnName="id",nullable=false)
+     * @ORM\JoinColumn(name="meeting", referencedColumnName="id",nullable=false)
      * 
      * @var Meeting
      */
@@ -83,7 +84,7 @@ class UserAnswer implements \JsonSerializable {
 
     
     public function __construct() {
-        $this->answer = self::ANSWER_NO;
+        $this->answer = self::NO_ANSWER;
     }
     
     /**
