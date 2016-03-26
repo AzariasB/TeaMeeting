@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use AppBundle\Entity\Project;
@@ -31,7 +32,6 @@ class MeetingType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $prot = $this->getProject($options);
-
         $choices = [];
         $leader = null;
         $secr = null;
@@ -41,12 +41,18 @@ class MeetingType extends AbstractType {
             $secr = $prot->getSecretary();
         }
 
+        $oneHour = new \DateTime('2000-01-01 1:0');
+
         $builder->add('date', DateTimeType::class, array(
                     'date_widget' => 'single_text',
                     'time_widget' => 'single_text',
-                    'data' => new \DateTime
+                    'data' => new \DateTime//Set the default to today's date
                 ))
                 ->add('room', TextType::class)
+                ->add('duration', TimeType::class, array(
+                    'widget' => 'single_text',
+                    'data' => $oneHour
+                ))
                 ->add('chairMan', EntityType::class, array(
                     'choice_label' => 'username',
                     'class' => 'AppBundle:User',

@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Agenda;
-
 use DateTime;
 
 /**
@@ -51,6 +50,12 @@ class Meeting implements \JsonSerializable {
     private $room;
 
     /**
+     * @ORM\Column(type="time")
+     * @var DateTime
+     */
+    private $duration;
+
+    /**
      * 
      * @ORM\ManyToOne(targetEntity="Project",inversedBy="meetings")
      * @ORM\JoinColumn(nullable=false)
@@ -80,7 +85,7 @@ class Meeting implements \JsonSerializable {
      * @var ArrayCollection
      */
     private $answers;
-    
+
     /**
      *
      * @ORM\OneToMany(targetEntity="Agenda",mappedBy="meeting",cascade={"persist","remove"})
@@ -156,6 +161,26 @@ class Meeting implements \JsonSerializable {
     }
 
     /**
+     * Get duration
+     * 
+     * @return DateTime
+     */
+    public function getDuration() {
+        return $this->duration;
+    }
+
+    /**
+     * Set Duration
+     * 
+     * @param DateTime $dur
+     * @return Meeting
+     */
+    public function setDuration(DateTime $dur) {
+        $this->duration = $dur;
+        return $this;
+    }
+
+    /**
      * Set project
      * 
      * @param Project $proj
@@ -221,32 +246,32 @@ class Meeting implements \JsonSerializable {
      * 
      * @return ArrayCollection
      */
-    public function getAgendas(){
+    public function getAgendas() {
         return $this->agendas;
     }
-    
+
     /**
      * Set agendas
      * 
      * @param ArrayCollection $agendas
      * @return Meeting
      */
-    public function setAgendas(ArrayCollection $agendas){
+    public function setAgendas(ArrayCollection $agendas) {
         $this->agendas = $agendas;
         return $this;
     }
-    
+
     /**
      * Add agenda
      * 
      * @param Agenda $a
      * @return Meeting
      */
-    public function addAgenda(Agenda $a){
+    public function addAgenda(Agenda $a) {
         $this->agendas->add($a);
         return $this;
     }
-    
+
     /**
      * Get answers
      * 
@@ -275,6 +300,7 @@ class Meeting implements \JsonSerializable {
             'id' => $this->id,
             'room' => $this->room,
             'date' => $this->date,
+            'duration' => $this->duration,
             'project' => $this->project,
             'chairMan' => $this->chairMan,
             'secretary' => $this->secretary

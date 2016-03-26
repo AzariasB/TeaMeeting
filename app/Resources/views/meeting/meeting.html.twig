@@ -11,6 +11,11 @@
     <link href="{{ asset('assets/css/meeting-style.css') }}" rel="stylesheet" />
 {% endblock %}
 
+{% set meetYes   = meeting.numberOfYes()   %}
+{% set meetNo    = meeting.numberOfNo()    %}
+{% set meetMaybe = meeting.numberOfMaybe() %}
+{% set meetUnknk = meeting.numberOfUnknown() %}
+
 {% block body %}
     {% if is_granted('ROLE_USER') %}
         {% include 'toolbar.html.twig' %}
@@ -32,12 +37,13 @@
     <script>
         $(document).ready(function () {
             var data = {
-                labels: ['Yes', 'Maybe', 'No', 'Not answered'],
+                labels: ['Yes ({{ meetYes }})', 'Maybe ({{ meetMaybe }})',
+                    'No ({{ meetNo }})', 'Not answered ({{ meetUnknk }})'],
                 series: [
-        {{ meeting.numberOfYes() }},
-        {{ meeting.numberOfMaybe() }},
-        {{ meeting.numberOfNo() }},
-        {{ meeting.numberOfUnknown() }}
+        {{ meetYes }},
+        {{ meetMaybe }},
+        {{ meetNo }},
+        {{ meetUnknk }}
                     ]
                 };
                 var options = {

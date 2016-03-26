@@ -27,16 +27,19 @@
         <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.date.time) }}">
             {{ form_row(form.date.time,formClass) }}
         </div>
-        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.room) }}">
-            {{ form_row(form.room,formClass) }}
+        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.duration) }}">
+            {{ form_row(form.duration,formClass) }}
         </div>
         <input id="project-id" name="project-id" type="hidden" value="" />
     </div>
     <div class="row form-group">
-        <div class="col-xs-6 {{ s.errorClass(form.chairMan) }}">
+        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.room) }}">
+            {{ form_row(form.room,formClass) }}
+        </div>
+        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.chairMan) }}">
             {{ form_row(form.chairMan,formClass) }}
         </div>
-        <div class="col-xs-6 {{ s.errorClass(form.chairMan) }} ">
+        <div class="col-xs-12 col-sm-4 {{ s.errorClass(form.chairMan) }} ">
             {{ form_row(form.secretary,formClass) }}
         </div>
     </div>

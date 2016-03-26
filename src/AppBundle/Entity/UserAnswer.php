@@ -193,10 +193,16 @@ class UserAnswer implements \JsonSerializable {
     }
 
     public function answerString() {
-        return $this->answer == self::ANSWER_NO ? 'No' :
-                $this->answer == self::ANSWER_YES ? 'Yes' :
-                        $this->answer == self::ANSWER_MAYBE ? 'Maybe' :
-                                'Not answered';
+        switch ($this->answer) {
+            case self::ANSWER_NO:
+                return 'No';
+            case self::ANSWER_YES :
+                return 'Yes';
+            case self::ANSWER_MAYBE :
+                return 'Maybe';
+            default :
+                return 'Not answered';
+        }
     }
 
 }
