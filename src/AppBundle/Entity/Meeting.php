@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Agenda;
+
 use DateTime;
 
 /**
@@ -78,9 +80,18 @@ class Meeting implements \JsonSerializable {
      * @var ArrayCollection
      */
     private $answers;
+    
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="Agenda",mappedBy="meeting",cascade={"persist","remove"})
+     * 
+     * @var ArrayCollection
+     */
+    private $agendas;
 
     public function __construct() {
         $this->answers = new ArrayCollection;
+        $this->agendas = new ArrayCollection;
     }
 
     /**
@@ -205,6 +216,37 @@ class Meeting implements \JsonSerializable {
         return $this;
     }
 
+    /**
+     * Get agendas
+     * 
+     * @return ArrayCollection
+     */
+    public function getAgendas(){
+        return $this->agendas;
+    }
+    
+    /**
+     * Set agendas
+     * 
+     * @param ArrayCollection $agendas
+     * @return Meeting
+     */
+    public function setAgendas(ArrayCollection $agendas){
+        $this->agendas = $agendas;
+        return $this;
+    }
+    
+    /**
+     * Add agenda
+     * 
+     * @param Agenda $a
+     * @return Meeting
+     */
+    public function addAgenda(Agenda $a){
+        $this->agendas->add($a);
+        return $this;
+    }
+    
     /**
      * Get answers
      * 
