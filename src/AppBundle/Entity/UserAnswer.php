@@ -205,4 +205,20 @@ class UserAnswer implements \JsonSerializable {
         }
     }
 
+    public function isNo() {
+        return $this->answer === self::ANSWER_NO;
+    }
+
+    public function isYes() {
+        return $this->answer === self::ANSWER_YES;
+    }
+
+    public function isMaybe() {
+        return $this->answer === self::ANSWER_MAYBE;
+    }
+
+    public function isUnknown() {
+        return $this->answer === self::NO_ANSWER;
+    }
+
 }

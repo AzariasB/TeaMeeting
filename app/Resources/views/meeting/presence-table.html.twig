@@ -1,0 +1,45 @@
+{# twig #}
+{% set check = '<i class="glyphicon glyphicon-check"></i>' %}
+
+<table class="table table-hover" >
+    <thead>
+        <tr>
+            <th>
+                Username
+            </th>
+            <th class="text-center" >
+                Yes
+            </th>
+            <th class="text-center" >
+                Maybe
+            </th>
+            <th class="text-center" >
+                No
+            </th>
+            <th class="text-center" >
+                Not answered
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ans in meeting.answers %}
+            <tr >
+                <td class="text-left" >
+                    <strong>{{ ans.user.username }}</strong>
+                </td>
+                <td class="text-center" >
+                    {{ ans.isYes ? check|raw : '' }}
+                </td>
+                <td class="text-center" >
+                    {{ ans.isMaybe ? check|raw : '' }}
+                </td>
+                <td class="text-center" >
+                    {{ ans.isNo ? check|raw : '' }}
+                </td>
+                <td class="text-center" >
+                    {{ ans.isUnknown ? check|raw : '' }}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
