@@ -59,7 +59,7 @@ class ItemAgenda implements \JsonSerializable {
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="proposer_id",referencedColumnName="id")
      * 
      * @var User

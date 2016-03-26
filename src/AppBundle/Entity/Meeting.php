@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Agenda;
+use Exception;
 use DateTime;
 
 /**
@@ -65,15 +66,15 @@ class Meeting implements \JsonSerializable {
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id",referencedColumnName="id")
+     * @ORM\JoinColumn(name="chairman_id",referencedColumnName="id")
      *
      * @var User
      */
-    private $chairMan;
+    private $chairman;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id",referencedColumnName="id")
+     * @ORM\JoinColumn(name="secretary_id",referencedColumnName="id")
      *
      * @var User
      */
@@ -207,7 +208,7 @@ class Meeting implements \JsonSerializable {
      * @return User
      */
     public function getChairMan() {
-        return $this->chairMan;
+        return $this->chairman;
     }
 
     /**
@@ -217,7 +218,7 @@ class Meeting implements \JsonSerializable {
      * @return Meeting
      */
     public function setChairMan(User $chairman) {
-        $this->chairMan = $chairman;
+        $this->chairman = $chairman;
         return $this;
     }
 
@@ -291,8 +292,22 @@ class Meeting implements \JsonSerializable {
         return $this;
     }
 
+    /**
+     * Add answer
+     * 
+     * @param UserAnswer $answ
+     * @return Meeting
+     */
     public function addAnswer(UserAnswer $answ) {
         $this->answers->add($answ);
+        return $this;
+    }
+
+    public function getCurrentAgenda() {
+       if($this->agendas->isEmpty()){
+           throw new Exception("There should be at least one agenda");
+       }
+       return $this->agendas->last();
     }
 
     public function jsonSerialize() {
@@ -302,7 +317,7 @@ class Meeting implements \JsonSerializable {
             'date' => $this->date,
             'duration' => $this->duration,
             'project' => $this->project,
-            'chairMan' => $this->chairMan,
+            'chairMan' => $this->chairman,
             'secretary' => $this->secretary
         );
     }

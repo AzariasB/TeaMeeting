@@ -45,3 +45,7 @@ THE SOFTWARE.
     fill: #919FFF;
     /* give your pie slices some outline or separate them visually by using the background color here */
 }
+
+.list-group .list-third{
+    width: 33%;
+}

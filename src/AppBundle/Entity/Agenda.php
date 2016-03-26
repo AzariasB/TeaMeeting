@@ -67,8 +67,11 @@ class Agenda implements \JsonSerializable {
      */
     private $items;
 
-    public function __construct() {
+    public function __construct(Meeting &$meet) {
         $this->items = new ArrayCollection;
+        $this->meeting = $meet;
+        $meet->addAgenda($this);
+        $this->createBaseItems();
     }
 
     /**
@@ -77,7 +80,7 @@ class Agenda implements \JsonSerializable {
      * @return int
      */
     public function getId() {
-        return $$this->id;
+        return $this->id;
     }
 
     /**
@@ -131,7 +134,7 @@ class Agenda implements \JsonSerializable {
         return $this;
     }
 
-    public function addItem(Item $it) {
+    public function addItem(ItemAgenda $it) {
         $this->items->add($it);
         return $this;
     }

@@ -163,7 +163,6 @@ $(document).ready(function () {
                 callback(data);
             }
         });
-
     }
 
     init();

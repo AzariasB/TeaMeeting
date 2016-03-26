@@ -39,6 +39,9 @@ add-meeting:
 add-role:
     path: /add-role
     defaults: { _controller: AppBundle:Role:create }
+add-agenda-item:
+    path: /add-item/{agendaId}
+    defaults: { _controller: AppBundle:ItemAgenda:create }
 remove-role:
     path: /remove-role/{roleId}
     defaults: { _controller: AppBundle:Role:remove }
