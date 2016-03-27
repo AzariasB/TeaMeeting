@@ -108,7 +108,7 @@ $(document).ready(function () {
     function firstRequest(url, projectId, obj) {
         $.post(url, {'project-id': projectId}, function (res) {
             $("#modal-main-content").html(res);
-            $("#form-" + obj.formId).on('submit', function (e) {
+            $("#" + obj.formId + "-form").on('submit', function (e) {
                 e.preventDefault();
                 $(this).find("#project-id").val(projectId);
                 formSubmitted(url, this, obj);

@@ -20,7 +20,7 @@ use AppBundle\Form\ChangePasswordType;
  * 
  * @todo move password changin to UserController
  */
-class DefaultController extends Controller {
+class DefaultController extends SuperController {
 
     /**
      * @Route("/", name="homepage")
@@ -100,13 +100,5 @@ class DefaultController extends Controller {
         ));
     }
 
-    /**
-     * Get the current user
-     * 
-     * @return User
-     */
-    private function getCurrentUser() {
-        return $this->get('security.token_storage')->getToken()->getUser();
-    }
 
 }

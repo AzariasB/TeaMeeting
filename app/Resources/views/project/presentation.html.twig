@@ -45,33 +45,29 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-6">
-                {% if project.roles|length %}
-                    <h3>Other roles :</h3>
-                    <ul class="list-group" id='list-roles' >
-                        {% for ro in project.roles %}
-                            <li class="list-group-item" data-id="{{ ro.id }}" >
-                                <strong>{{ ro.student.username }}</strong> :
-                                {{ ro.roleName }}
-                                {% if canEdit %}
-                                    <span class="pull-right">
-                                        <a href="#"
-                                           class="btn btn-primary btn-xs">
-                                            <i class="glyphicon glyphicon-pencil"></i>
-                                            Edit
-                                        </a>
-                                        <a href="{{ path('remove-role',{ 'roleId' : ro.id }) }}"
-                                           class="btn btn-warning btn-xs btn-remove">
-                                            <i class="glyphicon glyphicon-remove"></i>
-                                            Delete
-                                        </a>
-                                    </span>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <h3>No roles</h3>
-                {% endif %}
+                <h3>Other roles :</h3>
+                <ul class="list-group" id='list-roles' >
+                    {% for ro in project.roles %}
+                        <li class="list-group-item" data-id="{{ ro.id }}" >
+                            <strong>{{ ro.student.username }}</strong> :
+                            {{ ro.roleName }}
+                            {% if canEdit %}
+                                <span class="pull-right">
+                                    <a href="#"
+                                       class="btn btn-primary btn-xs">
+                                        <i class="glyphicon glyphicon-pencil"></i>
+                                        Edit
+                                    </a>
+                                    <a href="{{ path('remove-role',{ 'roleId' : ro.id }) }}"
+                                       class="btn btn-warning btn-xs btn-remove">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                        Delete
+                                    </a>
+                                </span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
                 {% if canEdit %}
                     <a href="{{ path('add-role') }}"
                        data-project="{{ project.id }}"
@@ -83,34 +79,30 @@
                 {% endif %}
             </div>
             <div class="col-xs-12 col-sm-6">
-                {% if project.meetings|length %}
-                    <h3>Meetings : </h3>
-                    <ul class="list-group" id="list-meetings" >
-                        {% for meet in project.meetings %} 
-                            <li class="list-group-item" data-id="{{ meet.id }}" >
-                                <a href="{{ path('see-meeting', { 'meetingId' : meet.id }) }}">
-                                    Meeting at  {{ meet.date|date('d/m/Y H:i') }} in room {{ meet.room }}
-                                </a>
-                                {% if canEdit %}
-                                    <span class="pull-right">
-                                        <a href="#"
-                                           class="btn btn-primary btn-xs">
-                                            <i class="glyphicon glyphicon-pencil"></i>
-                                            Edit
-                                        </a>
-                                        <a href="{{  path('remove-meeting',{ 'meetingId' : meet.id }) }}"
-                                           class="btn btn-warning btn-xs btn-remove">
-                                            <i class="glyphicon glyphicon-remove"></i>
-                                            Delete
-                                        </a>
-                                    </span>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <h3>No meetings for this project</h3>
-                {% endif %}
+                <h3>Meetings : </h3>
+                <ul class="list-group" id="list-meetings" >
+                    {% for meet in project.meetings %} 
+                        <li class="list-group-item" data-id="{{ meet.id }}" >
+                            <a href="{{ path('see-meeting', { 'meetingId' : meet.id }) }}">
+                                Meeting at  {{ meet.date|date('d/m/Y H:i') }} in room {{ meet.room }}
+                            </a>
+                            {% if canEdit %}
+                                <span class="pull-right">
+                                    <a href="#"
+                                       class="btn btn-primary btn-xs">
+                                        <i class="glyphicon glyphicon-pencil"></i>
+                                        Edit
+                                    </a>
+                                    <a href="{{  path('remove-meeting',{ 'meetingId' : meet.id }) }}"
+                                       class="btn btn-warning btn-xs btn-remove">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                        Delete
+                                    </a>
+                                </span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
                 {% if canEdit %}
                     <a href="{{ path('add-meeting') }}"
                        data-project="{{ project.id }}"
@@ -148,12 +140,7 @@
         {% endif %}
 
         {% if canEdit %}
-            <div class="modal fade" id="modal-main" tabindex="-1" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content" id="modal-main-content" >
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
+            {% include 'modal.html.twig' %}
             <div class="alert alert-success alert-dismissible" role="alert" id='message-alert'>
                 <button type="button" class="close" id="close-alert"  aria-label="Close">
                     <span aria-hidden="true">&times;</span>

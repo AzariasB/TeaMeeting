@@ -6,7 +6,6 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\User;
 
 /**
@@ -15,7 +14,7 @@ use AppBundle\Entity\User;
  *
  * @author boutina
  */
-class UserController extends Controller {
+class UserController extends SuperController {
 
     /**
      * Shows the profile of a user
@@ -28,7 +27,7 @@ class UserController extends Controller {
      * @return type
      */
     public function infoAction($user) {
-        $u = $this->getUserFromId($user);
+        $u = $this->getEntityFromId(User::class, $user);
         
         if (!$u) {
             throw $this->createNotFoundException();
@@ -39,16 +38,6 @@ class UserController extends Controller {
                     'user' => $u,
                     'roles' => $roles
         ));
-    }
-
-    /**
-     * Get the user from its id
-     * 
-     * @param integer $userId
-     * @return User
-     */
-    private function getUserFromId($userId) {
-        return $this->getDoctrine()->getManager()->find(User::class, $userId);
     }
 
     /**

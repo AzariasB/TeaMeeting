@@ -1,25 +1,13 @@
 
+{% set formId = 'create-role-form' %}
 
-{% set formClass = {'attr': {'class': 'form-control' }} %}
-{% macro errorClass(formpart) %}
-    {% if not formpart.vars.valid %}
-        has-error
-    {% endif %}
-{% endmacro %}
-{% import _self as s %}
+{% extends "modalForm.html.twig" %}
 
-<div class="modal-header">
-    <button type="button" class="close" 
-            data-dismiss="modal" 
-            aria-label="Close">
-        <span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title">
-        Create a Role
-    </h4>
-</div>
+{% block modalTitle %}
+    Create a Role
+{% endblock %}
 
-{{ form_start(form,{'attr':{'id':'form-create-role'} }) }}
-<div class="modal-body">
+{% block modalBody %}
     <div class="row">
         <div class="col-xs-6 {{ s.errorClass(form.student) }}">
             {{ form_row(form.student,formClass) }}
@@ -29,9 +17,4 @@
         </div>
     </div>
     <input id="project-id" name="project-id" type="hidden" value="" />
-</div>
-<div class="modal-footer">
-    <button id="submit-create-project" class="btn btn-default" type="submit">Create</button>
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-</div>
-{{ form_end(form) }}
+{% endblock %}

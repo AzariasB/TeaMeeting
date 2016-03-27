@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @author boutina
  */
-class RegisterController extends Controller {
+class RegisterController extends SuperController {
 
     /**
      * @Route("/register", name="user_registration")

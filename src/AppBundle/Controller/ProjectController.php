@@ -6,7 +6,6 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
 use AppBundle\Entity\Project;
@@ -20,7 +19,7 @@ use Symfony\Component\Form\Form;
  *
  * @author boutina
  */
-class ProjectController extends Controller {
+class ProjectController extends SuperController {
 
     /**
      * Displays the project with id projId
@@ -34,7 +33,7 @@ class ProjectController extends Controller {
      * @throws NotFoundException
      */
     public function infoAction($projId, Request $req) {
-        $proj = $this->getProject($projId);
+        $proj = $this->getEntityFromId(Project::class, $projId);
         
         if (is_null($proj)) {
             throw $this->createNotFoundException('No project found for id ' . $projId);
@@ -106,7 +105,7 @@ class ProjectController extends Controller {
                 $r->setProject($proj);
             }
             $this->addParticipants($proj);
-            $this->saveProject($proj);
+            $this->saveEntity($proj);
             $resp->setData(array(
                 'success' => true,
                 'projectId' => $proj->getId(),
@@ -145,10 +144,10 @@ class ProjectController extends Controller {
         $leader = $proj->getLeader();
         $secretary = $proj->getSecretary();
         if (!$parts->contains($leader)) {
-            $proj->addParticipants($leader);
+            $proj->addParticipant($leader);
         }
         if (!$parts->contains($secretary)) {
-            $proj->addParticipants($secretary);
+            $proj->addParticipant($secretary);
         }
     }
 
@@ -224,12 +223,12 @@ class ProjectController extends Controller {
      * @return boolean
      */
     private function changeProjStateTo($proj, $newState) {
-        $p = $this->getProject($proj);
+        $p = $this->getEntityFromId(Project::class, $proj);
         $success = false;
         if ($p->getLocked() !== $newState) {
             $p->setLocked($newState);
             $success = true;
-            $this->saveProject($p);
+            $this->saveEntity($p);
         }
         if ($success) {
             return $this->redirectToRoute('lobby');
@@ -238,36 +237,4 @@ class ProjectController extends Controller {
         }
         return $success;
     }
-
-    /**
-     * Get the project
-     * with the given id
-     * 
-     * @param integer $projectId
-     * @return Project
-     */
-    private function getProject($projectId) {
-        return $this->getDoctrine()->getManager()->find(Project::class, $projectId);
-    }
-
-    /**
-     * Save the project in the database
-     * 
-     * @param Project $project
-     */
-    private function saveProject($project) {
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($project);
-        $em->flush();
-    }
-
-    /**
-     * Get the current user
-     * 
-     * @return User
-     */
-    private function getCurrentUser() {
-        return $this->get('security.token_storage')->getToken()->getUser();
-    }
-
 }

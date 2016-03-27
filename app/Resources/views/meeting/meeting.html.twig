@@ -68,14 +68,6 @@
         <h3>Statistics for the meeting</h3>
         <div class="ct-chart" ></div>
         {% include 'meeting/presence-table.html.twig' %}
-        {#        <ul class="list-group list-inline" >
-                    {% for ans in meeting.answers %}
-                        <li class="list-group-item list-third" >
-                            <strong>{{ ans.user.username }}</strong>:
-                            {{ ans.answerString() }}
-                        </li>
-                    {% endfor %}
-                </ul>#}
     </div>
     <script>
         $(document).ready(function () {
@@ -105,10 +97,5 @@
         </a> 
     </footer>
 
-    <div class="modal fade" id="modal-main" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content" id="modal-main-content" >
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    {% include 'modal.html.twig' %}
 {% endblock %}

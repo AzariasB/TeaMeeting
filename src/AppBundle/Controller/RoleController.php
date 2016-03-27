@@ -6,7 +6,6 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +20,7 @@ use Symfony\Component\Form\Form;
  *
  * @author boutina
  */
-class RoleController extends Controller {
+class RoleController extends SuperController {
 
     /**
      * Creates a new Role
@@ -35,7 +34,7 @@ class RoleController extends Controller {
         // Display creation form
         if ($req->isXmlHttpRequest()) {
             $projectId = $req->get('project-id');
-            $p = $this->getProjectFromId($projectId);
+            $p = $this->getEntityFromId(Project::class, $projectId);
             $role = new UserRole();
             $role->setProject($p);
             $form = $this->createForm(RoleType::class, $role);
@@ -91,7 +90,7 @@ class RoleController extends Controller {
         $rep = new JsonResponse();
 
         if ($form->isValid()) {
-            $this->saveRole($role);
+            $this->saveEntity($role);
             $rep->setData(array(
                 'success' => true,
                 'role' => $role
@@ -104,27 +103,6 @@ class RoleController extends Controller {
         }
 
         return $rep;
-    }
-
-    /**
-     * Save a role in the databse
-     * 
-     * @param UserRole $role
-     */
-    private function saveRole(UserRole &$role) {
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($role);
-        $em->flush();
-    }
-
-    /**
-     * Get a project from its id
-     * 
-     * @param int $projectId
-     * @return Project
-     */
-    private function getProjectFromId($projectId) {
-        return $this->getDoctrine()->getManager()->find(Project::class, $projectId);
     }
 
     /**
