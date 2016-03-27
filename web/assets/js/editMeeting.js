@@ -1,51 +1,80 @@
 
-$(document).ready(function () {
+var app = angular.module('app', []);
 
-    function init() {
-        $("#add-meeting").on('click', addMeeting);
-    }
+app.config(function ($interpolateProvider) {
+    $interpolateProvider.startSymbol('//');
+    $interpolateProvider.endSymbol('//');
+});
 
+app.controller('controller', function ($scope, $http) {
 
-    function addMeeting(e) {
-        e.preventDefault();
-        var url = $(this).attr('href');
-        postForm({}, url, function (data) {
-            showMeetingForm(data, url);
+    this.items = [];
+    var self = this;
+
+    this.init = function () {
+        var url = $("#items-link").data('href');
+        this.postReq({}, url, initItems);
+    };
+
+    function initItems(data) {
+        self.items = data.data.sort(function (a, b) {
+            return a.position - b.position;
         });
     }
 
-    function showMeetingForm(data, url) {
+    this.swap = function (low, up) {
+        var a = this.items[low];
+        this.items[low] = this.items[up];
+        this.items[up] = a;
+    };
+
+    this.postReq = function (data, url, callback) {
+        $http({
+            method: 'POST',
+            url: url,
+            data: data,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(callback);
+    };
+
+    this.newItem = function (event) {
+        event.preventDefault();
+        var url = $(event.toElement).attr('href');
+        this.postReq({}, url, function (reponse) {
+            showModal(reponse.data, url);
+        });
+    };
+
+    this.saveItems = function (evetn) {
+        event.preventDefault();
+        var url = $(event.toElement).attr('href');
+        this.postReq({'items': this.items}, url, function (reponse) {
+            console.log(reponse.data);
+        });
+    };
+
+    function showModal(data, url) {
         $("#modal-main-content").html(data);
         $("#form-create-item").on('submit', function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            postForm(data, url, function (data) {
+            console.log(data);
+            self.postReq(data, url, function (data) {
                 creationAnswer(data, url);
             });
         });
         $("#modal-main").modal();
     }
 
-    function creationAnswer(data) {
-        console.log(data);
+    function creationAnswer(reponse) {
+        var data = reponse.data;
         if (data.success) {
             $("#modal-main").modal('hide');
-            //Add item to the list
+            self.items.push(data.item);
         } else {
             $("#modal-main-content").html(data.page);
         }
     }
 
-    function postForm(data, url, callback) {
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: data,
-            success: function (data) {
-                callback(data);
-            }
-        });
-    }
-
-    init();
+    this.init();
 });

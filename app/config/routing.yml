@@ -54,3 +54,9 @@ see-meeting:
 save-answer:
     path: /save-answer/{answerId}
     defaults: { _controller: AppBundle:Meeting:saveAnswer }
+agenda-items:
+    path: /agenda/{agendaId}/items
+    defaults: { _controller: AppBundle:Meeting:getItems }
+save-agenda-items:
+    path: /agenda/{agendaId}/save-items
+    defaults: { _controller: AppBundle:Meeting:saveItems }

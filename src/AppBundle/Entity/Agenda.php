@@ -63,6 +63,7 @@ class Agenda implements \JsonSerializable {
     /**
      * 
      * @ORM\OneToMany(targetEntity="ItemAgenda",mappedBy="agenda",cascade={"persist","remove"})
+     * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection 
      */
     private $items;
@@ -135,6 +136,7 @@ class Agenda implements \JsonSerializable {
     }
 
     public function addItem(ItemAgenda $it) {
+        $it->setIndex($this->items->count());
         $this->items->add($it);
         return $this;
     }
@@ -153,9 +155,9 @@ class Agenda implements \JsonSerializable {
             return false;
         } else {
             $pre = $this->meeting->getChairMan();
-            $item1 = new ItemAgenda($this, $pre, 'Missing excuses',  ItemAgenda::STATE_AGREED);
-            $item2 = new ItemAgenda($this, $pre, 'Agenda',ItemAgenda::STATE_AGREED);
-            $item3 = new ItemAgenda($this, $pre, 'Minute action',ItemAgenda::STATE_AGREED);
+            $item1 = new ItemAgenda($this, $pre, 'Missing excuses', ItemAgenda::STATE_AGREED);
+            $item2 = new ItemAgenda($this, $pre, 'Agenda', ItemAgenda::STATE_AGREED);
+            $item3 = new ItemAgenda($this, $pre, 'Minute action', ItemAgenda::STATE_AGREED);
             $this
                     ->addItem($item1)
                     ->addItem($item2)

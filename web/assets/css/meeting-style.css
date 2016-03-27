@@ -49,3 +49,7 @@ THE SOFTWARE.
 .list-group .list-third{
     width: 33%;
 }
+
+.change-order{
+    cursor: pointer;
+}

@@ -84,15 +84,24 @@ class ItemAgenda implements \JsonSerializable {
      * default is pending
      * 
      * @ORM\Column(type="smallint")
-     * @var type 
+     * @var int
      */
     private $state;
+
+    /**
+     * Index of an item in its agenda
+     *
+     * @ORM\Column(type="integer")
+     * @var int 
+     */
+    private $position;
 
     public function __construct(Agenda $ag = null, User $proposer = null, $title = null, $state = self::STATE_PENDING) {
         $this->agenda = $ag;
         $this->proposer = $proposer;
         $this->title = $title;
         $this->state = $state;
+        $this->position = -1;
     }
 
     /**
@@ -186,6 +195,25 @@ class ItemAgenda implements \JsonSerializable {
         $this->state = $nwState;
         return $this;
     }
+    
+    /**
+     * 
+     * 
+     * @return int
+     */
+    public function getPosition(){
+        return $this->position;
+    }
+    
+    /**
+     * 
+     * @param int $position
+     * @return ItemAgenda
+     */
+    public function setPosition($position){
+        $this->position = $position;
+        return $this;
+    }
 
     /**
      * Json serialize
@@ -197,7 +225,9 @@ class ItemAgenda implements \JsonSerializable {
             'id' => $this->id,
             'proposer' => $this->proposer,
             'title' => $this->title,
-            'state' => $this->stateToString()
+            'stateString' => $this->stateToString(),
+            'state' => $this->state,
+            'position' => $this->position
         );
     }
 

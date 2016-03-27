@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% set bower = 'assets/vendor/' %}
-<html>
+<html ng-app="app" >
     <head>
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="{{ asset(bower ~ 'bootstrap/dist/css/bootstrap.min.css') }}" >
@@ -22,7 +22,7 @@
         {% block stylesheets %}
         {% endblock %}
     </head>
-    <body>
+    <body ng-controller="controller as ctrl" >
         {% block body %}
         {% endblock %}
     </body>

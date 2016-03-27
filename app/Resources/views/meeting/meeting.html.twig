@@ -3,11 +3,13 @@
 {% extends "base.html.twig" %}
 
 {% block javascripts %}
+    <script src="{{ asset('assets/vendor/angular/angular.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/chartist/dist/chartist.min.js') }}" ></script>
     <script src='{{ asset('assets/js/editMeeting.js') }}'></script>
 {% endblock %}
 
 {% block stylesheets %}
+    <link href="" rel="stylesheet" />
     <link href="{{ asset('assets/vendor/chartist/dist/chartist.min.css') }}" rel="stylesheet"  />
     <link href="{{ asset('assets/css/meeting-style.css') }}" rel="stylesheet" />
 {% endblock %}
@@ -27,10 +29,16 @@
         {% include 'meeting/item-list.html.twig' %}
         {% if canEdit %}
             <a href="{{ path('add-agenda-item',{'agendaId' : agenda.id }) }}" 
-               class="btn btn-default" 
+               class="btn btn-default"
+               ng-click="ctrl.newItem($event)"
                id="add-meeting" >
                 <i class="glyphicon glyphicon-plus" ></i>
                 Add item
+            </a>
+               <a href="{{ path('save-agenda-items',{'agendaId' :agenda.id }) }}"
+                  class="btn btn-success"
+                  ng-click="ctrl.saveItems($event)">
+                Save changes
             </a>
         {% else %} 
             <a href="#" class="btn btn-default" >
@@ -60,11 +68,11 @@
         {% include 'meeting/presence-table.html.twig' %}
     </div>
     <script>
-        $(document).ready(function () {
-            var data = {
-                labels: ['Yes ({{ meetYes }})', 'Maybe ({{ meetMaybe }})',
-                    'No ({{ meetNo }})', 'Not answered ({{ meetUnknk }})'],
-                series: [
+$(document).ready(function () {
+    var data = {
+        labels: ['Yes ({{ meetYes }})', 'Maybe ({{ meetMaybe }})',
+            'No ({{ meetNo }})', 'Not answered ({{ meetUnknk }})'],
+        series: [
         {{ meetYes }},
         {{ meetMaybe }},
         {{ meetNo }},

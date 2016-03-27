@@ -4,22 +4,33 @@
     {% elseif item.isAgreed() %}
         list-group-item-success
     {% elseif item.isNotedInAgenda() %}
-        list-group-item-active
+        list-group-item-info
     {% else %}
         list-group-item-warning
     {% endif %}
 {% endmacro %}
 
-
-
 <h4>Items : </h4>
 <ul class="list-group" >
-    {% for item in agenda.getItems() %}
-        <li title="{{ item.stateToString() }}" class="list-group-item {{ _self.listStyle(item) }}" >
-            {{ item.title }}
-            <span class="pull-right">
-                Proposed by {{ item.proposer.username }}
-            </span>
-        </li>
-    {% endfor %}
+    <li ng-repeat="item in ctrl.items" 
+        class="list-group-item"
+        ng-class="{ 
+            'list-group-item-danger' : item.state == 1,
+            'list-group-item-success': item.state == 4,
+            'list-group-item-warning': item.state == 2,
+            'list-group-item-info'   : item.state == 3
+        }" 
+        ng-attr-id="// item.id //" >
+        // item.title //
+        <span class="pull-right">
+            Proposed by // item.proposer.name //
+            <span ng-if="$index > 3"
+                  ng-click="ctrl.swap($index-1,$index)"
+                  class="glyphicon glyphicon-chevron-up change-order" ></span>
+            <span ng-if="$index > 2 && !$last" 
+                  ng-click="ctrl.swap($index,$index+1)"
+                  class="glyphicon glyphicon-chevron-down change-order" ></span>
+        </span>
+    </li>
 </ul>
+<span id="items-link" data-href="{{ path('agenda-items',{'agendaId' : agenda.id }) }}" />

@@ -6,12 +6,13 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Form;
+use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Form\MeetingType;
+use AppBundle\Entity\ItemAgenda;
 use AppBundle\Entity\Project;
 use AppBundle\Entity\Meeting;
 use AppBundle\Entity\UserAnswer;
@@ -25,6 +26,32 @@ use AppBundle\Entity\Agenda;
  */
 class MeetingController extends SuperController {
 
+    public function saveItemsAction($agendaId, Request $req) {
+        $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
+
+        $nwAgendaItems = new ArrayCollection;
+
+        $reqItems = json_decode($req->getContent(), true)['items'];
+        foreach ($reqItems as $index => $item) {
+            $itemObj = $this->getEntityFromId(ItemAgenda::class, $item['id']);
+            $itemObj->setPosition($index);
+            $nwAgendaItems->add($itemObj);
+        }
+
+        $agenda->setItems($nwAgendaItems);
+        $this->saveEntity($agenda);
+        $rep = new JsonResponse;
+        return $rep->setData(array('success' => true));
+    }
+
+    /**
+     * Save user answer
+     * 
+     * @param int $answerId
+     * @param Request $req
+     * @return Reponse
+     * @throws Not found
+     */
     public function saveAnswerAction($answerId, Request $req) {
 
         if ($req->isXmlHttpRequest()) {
@@ -54,6 +81,16 @@ class MeetingController extends SuperController {
         }
 
         throw $this->createNotFoundException('Not found');
+    }
+
+    public function getItemsAction($agendaId, Request $req) {
+        $rep = new JsonResponse;
+        $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
+        return $rep->setData($this
+                                ->getDoctrine()
+                                ->getRepository('AppBundle:ItemAgenda')
+                                ->findByAgenda($agenda)
+        );
     }
 
     /**
@@ -165,7 +202,6 @@ class MeetingController extends SuperController {
 
         return $rep;
     }
-
 
     /**
      * Create the meeting form from
