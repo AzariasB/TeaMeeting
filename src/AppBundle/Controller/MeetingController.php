@@ -26,6 +26,14 @@ use AppBundle\Entity\Agenda;
  */
 class MeetingController extends SuperController {
 
+    /**
+     * The id of the agenda
+     * where the items must be updated
+     * 
+     * @param int $agendaId
+     * @param Request $req
+     * @return JsonResponse
+     */
     public function saveItemsAction($agendaId, Request $req) {
         $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
 

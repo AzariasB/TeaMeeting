@@ -92,8 +92,8 @@ class UserRequest implements \JsonSerializable {
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ItemAgenda")
-     * @ORM\JoinColumn(nullable=true,name="item_id",referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="ItemAgenda",cascade={"remove"})
+     * @ORM\JoinColumn(nullable=true,name="item_id",referencedColumnName="id",onDelete="CASCADE")
      * @var ItemAgenda
      */
     private $item;

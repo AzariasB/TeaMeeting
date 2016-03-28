@@ -15,6 +15,16 @@
         <div class="col-xs-6 {{ s.errorClass(form.proposer) }}">
             {{ form_row(form.proposer,formClass) }}
         </div>
+        {% if form.meeting is defined %}
+            <div class="col-xs-12 {{ s.errorClass(form.meeting) }}">
+                {{ form_row(form.meeting,formClass) }}
+            </div>
+        {% endif %}
     </div>
-    <input id="project-id" name="project-id" type="hidden" value="" />
 {% endblock %}
+
+{% if meeting is defined %}
+    {% block buttonConfirm %}
+        Update
+    {% endblock %}
+{% endif %}

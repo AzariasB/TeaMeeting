@@ -45,24 +45,21 @@ use AppBundle\Entity\Project;
 class ItemAgendaType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        
-        $agenda = $options['agenda'];
-        
-        $participants = $agenda->getMeeting()->getProject()->getParticipants();
+
+        $item = $options['data'];
 
         $builder
                 ->add('title', TextType::class)
                 ->add('proposer', EntityType::class, array(
                     'choice_label' => 'username',
                     'class' => 'AppBundle:User',
-                    'choices' => $participants
+                    'choices' => $item->getAgenda()->getMeeting()->getProject()->getParticipants()
         ));
     }
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\ItemAgenda',
-            'agenda' => null
+            'data_class' => 'AppBundle\Entity\ItemAgenda'
         ));
     }
 

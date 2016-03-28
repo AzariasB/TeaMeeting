@@ -73,7 +73,6 @@ class ItemAgenda implements \JsonSerializable {
      */
     private $title;
 
-
     /**
      * Index of an item in its agenda
      *
@@ -82,11 +81,11 @@ class ItemAgenda implements \JsonSerializable {
      */
     private $position;
 
-    public function __construct(Agenda $ag = null, User $proposer = null, $title = null) {
+    public function __construct(Agenda $ag = null, User $proposer = null, $title = null, $position = -1) {
         $this->agenda = $ag;
         $this->proposer = $proposer;
         $this->title = $title;
-        $this->position = -1;
+        $this->position = $position;
     }
 
     /**
@@ -160,24 +159,49 @@ class ItemAgenda implements \JsonSerializable {
         $this->title = $tit;
         return $this;
     }
-    
+
     /**
      * Get position
      * 
      * @return int
      */
-    public function getPosition(){
+    public function getPosition() {
         return $this->position;
     }
-    
+
     /**
      * 
      * @param int $position
      * @return ItemAgenda
      */
-    public function setPosition($position){
+    public function setPosition($position) {
         $this->position = $position;
         return $this;
+    }
+
+    /**
+     * Get Meeting
+     * 
+     * @return Meeting
+     */
+    public function getMeeting() {
+        return $this->agenda->getMeeting();
+    }
+    
+    public function setMeeting(Meeting $nwMeeting){
+        $this->agenda->removeItem($this);
+        $this->agenda = $nwMeeting->getCurrentAgenda();
+        $this->agenda->addItem($this);
+        return $this;
+    }
+
+    /**
+     * Get project
+     * 
+     * @return Project
+     */
+    public function getProject() {
+        return $this->getMeeting()->getProject();
     }
 
     /**

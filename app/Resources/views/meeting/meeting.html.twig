@@ -38,7 +38,7 @@
             <a href="{{ path('save-agenda-items',{'agendaId' :agenda.id }) }}"
                class="btn btn-success"
                ng-click="ctrl.saveItems($event)">
-                Save changes
+                Save order
             </a>
         {% else %} 
             <a href='{{ path('send-request', { 'agendaId' : agenda.id }) }}' 

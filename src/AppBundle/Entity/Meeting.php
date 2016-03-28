@@ -303,6 +303,12 @@ class Meeting implements \JsonSerializable {
         return $this;
     }
 
+    /**
+     * Get the last agenda
+     * 
+     * @return Agenda
+     * @throws Exception
+     */
     public function getCurrentAgenda() {
         if ($this->agendas->isEmpty()) {
             throw new Exception("There should be at least one agenda");

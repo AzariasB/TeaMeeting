@@ -44,11 +44,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 class UserRequestType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $choices = $options['data']->getAgenda()->getItems();
+        $choices = $options['data']->getAgenda()->getItems()->slice(3);
         $builder->add('item', EntityType::class, array(
                     'class' => 'AppBundle:ItemAgenda',
                     'choice_label' => 'title',
-                    'choices' => $choices
+                    'choices' => $choices,
+                    'required' => false,
+                    'data' => ''
                 ))
                 ->add('content', TextareaType::class);
     }

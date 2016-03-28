@@ -30,12 +30,14 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Agenda;
-use AppBundle\Entity\ItemAgenda;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Form\ItemAgendaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Form;
+use AppBundle\Form\ItemAgendaType;
+use AppBundle\Entity\Agenda;
+use AppBundle\Entity\ItemAgenda;
+use AppBundle\Entity\Meeting;
 
 /**
  * Description of ItemAgendaController
@@ -43,6 +45,66 @@ use Symfony\Component\Form\Form;
  * @author boutina
  */
 class ItemAgendaController extends SuperController {
+
+    public function updateAction($itemId, Request $req) {
+        $item = $this->getEntityFromId(ItemAgenda::class, $itemId);
+
+        $form = $this->createForm(ItemAgendaType::class, $item)
+                ->add('meeting', EntityType::class, array(
+            'class' => 'AppBundle:Meeting',
+            'choice_label' => function(Meeting $meeting) {
+                return $meeting->getRoom() . ' - ' .$meeting->getDate()->format('d/M/y');
+            }
+        ));
+        
+        $form->handleRequest($req);
+
+        if ($form->isSubmitted()) {
+            return $this->handleUpdateForm($form, $item);
+        }
+
+        return $this->createFormPage($form);
+    }
+
+    private function handleUpdateForm(Form $form, ItemAgenda $item) {
+        $rep = new JsonResponse;
+        if ($form->isValid()) {
+            $this->saveEntity($item);
+            return $rep->setData(array(
+                        'success' => true,
+                        'item' => $item,
+                        'itemMeeting' => $item->getMeeting() 
+            ));
+        } else {
+            return $rep->setData(array(
+                        'success' => true,
+                        'page' => $this->createFormPage($form)
+            ));
+        }
+    }
+
+    /**
+     * Remove an item
+     * 
+     * @param int $itemId
+     * @param Request $req
+     * @return Reponse
+     */
+    public function removeAction($itemId, Request $req) {
+        $item = $this->getEntityFromId(ItemAgenda::class, $itemId);
+
+        $agenda = $item->getAgenda();
+
+        $agenda->removeItem($item);
+
+        $this->saveEntity($agenda);
+
+        $rep = new JsonResponse;
+        return $rep->setData(array(
+                    'success' => true,
+                    'removed' => $itemId
+        ));
+    }
 
     /**
      * Create the form to create an agenda item
@@ -53,15 +115,10 @@ class ItemAgendaController extends SuperController {
     public function createAction($agendaId, Request $req) {
         $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
 
-        if (!$agenda) {
-            throw $this->createNotFoundException('Agenda not found');
-        }
-
         $item = new ItemAgenda;
+        $item->setAgenda($agenda);
 
-        $form = $this->createForm(ItemAgendaType::class, $item,array(
-            'agenda' => $agenda
-        ));
+        $form = $this->createForm(ItemAgendaType::class, $item);
 
         $form->handleRequest($req);
 

@@ -66,3 +66,9 @@ get-agenda-json:
 update-request:
     path: /update-request/{requestId}
     defaults: { _controller: AppBundle:UserRequest:updateRequest }
+update-item:
+    path: /update-item/{itemId}
+    defaults: { _controller: AppBundle:ItemAgenda:update }
+remove-item:
+    path: /remove-item/{itemId}
+    defaults: { _controller: AppBundle:ItemAgenda:remove }

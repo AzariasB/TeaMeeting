@@ -167,11 +167,22 @@ class Agenda implements \JsonSerializable {
     }
 
     public function addItem(ItemAgenda $it) {
-        $it->setIndex($this->items->count());
+        $it->setPosition($this->items->count());
         $this->items->add($it);
         return $this;
     }
 
+    /**
+     * Remove an item from the agenda
+     * 
+     * @param ItemAgenda $it
+     * @return Agenda
+     */
+    public function removeItem(ItemAgenda $it){
+        $this->items->removeElement($it);
+        return $this;
+    }
+    
     /**
      * Create the three basic items of an agenda :
      * 1. missing excuses
@@ -186,9 +197,9 @@ class Agenda implements \JsonSerializable {
             return false;
         } else {
             $pre = $this->meeting->getChairMan();
-            $item1 = new ItemAgenda($this, $pre, 'Missing excuses');
-            $item2 = new ItemAgenda($this, $pre, 'Agenda');
-            $item3 = new ItemAgenda($this, $pre, 'Minute action');
+            $item1 = new ItemAgenda($this, $pre, 'Missing excuses',0);
+            $item2 = new ItemAgenda($this, $pre, 'Agenda',1);
+            $item3 = new ItemAgenda($this, $pre, 'Minute action',2);
             $this
                     ->addItem($item1)
                     ->addItem($item2)

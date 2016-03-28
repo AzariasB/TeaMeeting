@@ -1,5 +1,6 @@
 
 var app = angular.module('app', []);
+var meetingId = window.location.pathname.split('/').reverse()[0];
 
 app.config(function ($interpolateProvider) {
     $interpolateProvider.startSymbol('//');
@@ -105,11 +106,55 @@ app.controller('controller', function ($scope, $http) {
         });
     }
 
+    function itemUpdated(data) {
+        var updated = data.item;
+        var meeting = data.itemMeeting;
+        self.items = self.items.map(function (itm) {
+            if (itm.id === updated.id) {
+                if ((meeting.id | 0) !== (meetingId | 0)) {
+                    return null;
+                } else {
+                    return updated;
+                }
+            } else {
+                return itm;
+            }
+        }).filter(function (val) {
+            return !!val;
+        });
+    }
+
     this.updateRequest = function (event, reqId) {
         event.preventDefault();
         var url = $("#path-update-request").data("href").replace(/__name__/, reqId);
         this.postReq({}, url, function (response) {
             showModal('form-update-request', response.data, url, stateUpdated);
+        });
+    };
+
+    this.updateItem = function (event, itemId) {
+        event.preventDefault();
+        var url = $("#path-update-item").data('href').replace(/__name__/, itemId);
+        this.postReq({}, url, function (response) {
+            showModal('form-create-item', response.data, url, itemUpdated);
+        });
+    };
+
+    this.removeItem = function (removedItemId) {
+        this.items = this.items.filter(function (it) {
+            return it.id !== removedItemId;
+        });
+    };
+
+
+    this.removeItemAction = function (event, itemId) {
+        event.preventDefault();
+        var url = $("#path-remove-item").data('href').replace(/__name__/, itemId);
+        this.postReq({}, url, function (response) {
+            var data = response.data;
+            if (data.success) {
+                self.removeItem(data.removed);
+            }
         });
     };
 

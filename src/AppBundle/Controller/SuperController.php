@@ -58,8 +58,18 @@ class SuperController extends Controller {
         $em->flush();
     }
 
+    protected function removeEntity($entity){
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($entity);
+        $em->flush();
+    }
+    
     protected function getEntityFromId($className, $id) {
-        return $this->getDoctrine()->getManager()->find($className, $id);
+        $entity = $this->getDoctrine()->getManager()->find($className, $id);
+        if(!$entity){
+            throw $this->createNotFoundException('Entity not found');
+        }
+        return $entity;
     }
 
 }
