@@ -45,7 +45,7 @@ app.controller('controller', function ($scope, $http) {
         });
     };
 
-    this.saveItems = function (evetn) {
+    this.saveItems = function (event) {
         event.preventDefault();
         var url = $(event.toElement).attr('href');
         this.postReq({'items': this.items}, url, function (reponse) {

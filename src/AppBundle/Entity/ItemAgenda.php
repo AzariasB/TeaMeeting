@@ -41,11 +41,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class ItemAgenda implements \JsonSerializable {
 
-    const STATE_PENDING = 1;
-    const STATE_NOTED_NO_CHANGE = 2;
-    const STATE_NOTED_ON_AGENDA = 3;
-    const STATE_AGREED = 4;
-
     /**
      * 
      * @ORM\Id
@@ -79,14 +74,6 @@ class ItemAgenda implements \JsonSerializable {
      */
     private $title;
 
-    /**
-     * State of the item in the agenda
-     * default is pending
-     * 
-     * @ORM\Column(type="smallint")
-     * @var int
-     */
-    private $state;
 
     /**
      * Index of an item in its agenda
@@ -96,11 +83,10 @@ class ItemAgenda implements \JsonSerializable {
      */
     private $position;
 
-    public function __construct(Agenda $ag = null, User $proposer = null, $title = null, $state = self::STATE_PENDING) {
+    public function __construct(Agenda $ag = null, User $proposer = null, $title = null) {
         $this->agenda = $ag;
         $this->proposer = $proposer;
         $this->title = $title;
-        $this->state = $state;
         $this->position = -1;
     }
 
@@ -175,29 +161,9 @@ class ItemAgenda implements \JsonSerializable {
         $this->title = $tit;
         return $this;
     }
-
-    /**
-     * Get state
-     * 
-     * @return int
-     */
-    public function getState() {
-        return $this->state;
-    }
-
-    /**
-     * Set state
-     * 
-     * @param int $nwState
-     * @return ItemAgenda
-     */
-    public function setState($nwState) {
-        $this->state = $nwState;
-        return $this;
-    }
     
     /**
-     * 
+     * Get position
      * 
      * @return int
      */
@@ -225,44 +191,8 @@ class ItemAgenda implements \JsonSerializable {
             'id' => $this->id,
             'proposer' => $this->proposer,
             'title' => $this->title,
-            'stateString' => $this->stateToString(),
-            'state' => $this->state,
             'position' => $this->position
         );
-    }
-
-    /**
-     * Current state to string
-     * 
-     * @return string
-     */
-    public function stateToString() {
-        switch ($this->state) {
-            case self::STATE_AGREED:
-                return 'Agreed';
-            case self::STATE_NOTED_NO_CHANGE:
-                return 'Noted, not changed in the agenda';
-            case self::STATE_NOTED_ON_AGENDA:
-                return 'Noted, changed on the agenda';
-            case self::STATE_PENDING:
-                return 'Pending';
-        }
-    }
-
-    public function isPending() {
-        return $this->state === self::STATE_PENDING;
-    }
-
-    public function isAgreed() {
-        return $this->state === self::STATE_AGREED;
-    }
-
-    public function isNotedInAgenda() {
-        return $this->state === self::STATE_NOTED_ON_AGENDA;
-    }
-
-    public function isNotInAgenda() {
-        return $this->state === self::STATE_NOTED_NO_CHANGE;
     }
 
 }

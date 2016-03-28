@@ -14,12 +14,6 @@
 <ul class="list-group" >
     <li ng-repeat="item in ctrl.items" 
         class="list-group-item"
-        ng-class="{ 
-            'list-group-item-danger' : item.state == 1,
-            'list-group-item-success': item.state == 4,
-            'list-group-item-warning': item.state == 2,
-            'list-group-item-info'   : item.state == 3
-        }" 
         ng-attr-id="// item.id //" >
         // item.title //
         <span class="pull-right">
