@@ -141,6 +141,7 @@ app.controller('controller', function ($scope, $http) {
     };
 
     this.removeItem = function (removedItemId) {
+        removedItemId = removedItemId|0;
         this.items = this.items.filter(function (it) {
             return it.id !== removedItemId;
         });
@@ -155,6 +156,7 @@ app.controller('controller', function ($scope, $http) {
             if (data.success) {
                 self.removeItem(data.removed);
             }
+
         });
     };
 

@@ -93,11 +93,7 @@ class ItemAgendaController extends SuperController {
     public function removeAction($itemId, Request $req) {
         $item = $this->getEntityFromId(ItemAgenda::class, $itemId);
 
-        $agenda = $item->getAgenda();
-
-        $agenda->removeItem($item);
-
-        $this->saveEntity($agenda);
+        $this->removeEntity($item);
 
         $rep = new JsonResponse;
         return $rep->setData(array(
