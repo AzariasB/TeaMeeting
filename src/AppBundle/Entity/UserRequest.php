@@ -68,7 +68,7 @@ class UserRequest implements \JsonSerializable {
     /**
      * The agenda to which the request is made
      *
-     * @ORM\ManyToOne(targetEntity="Agenda")
+     * @ORM\ManyToOne(targetEntity="Agenda",inversedBy="requests")
      * @ORM\JoinColumn(name="agenda_id",referencedColumnName="id")
      * @var Agenda
      */
@@ -97,6 +97,13 @@ class UserRequest implements \JsonSerializable {
      * @var ItemAgenda
      */
     private $item;
+    
+    /**
+     * 
+     * @ORM\Column(type="text")
+     * @var string
+     */
+    private $content;
 
     public function __construct($state = self::STATE_PENDING) {
         $this->date = new \DateTime;
@@ -222,6 +229,26 @@ class UserRequest implements \JsonSerializable {
         $this->item = $item;
         return $this;
     }
+    
+    /**
+     * Get content
+     * 
+     * @return string
+     */
+    public function getContent(){
+        return $this->content;
+    }
+    
+    /**
+     * Set content
+     * 
+     * @param string $cont
+     * @return UserRequest
+     */
+    public function setContent($cont){
+        $this->content = $cont;
+        return $this;
+    }
 
     public function jsonSerialize() {
         return array(
@@ -229,8 +256,9 @@ class UserRequest implements \JsonSerializable {
             'state' => $this->state,
             'stateString' => $this->stateToString(),
             'sender' => $this->sender,
-            'date' => $this->date,
-            'item' => $this->item
+            'date' => $this->date->getTimestamp()*1000,
+            'item' => $this->item,
+            'content' => $this->content
         );
     }
 

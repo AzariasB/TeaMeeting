@@ -1,14 +1,3 @@
-{% macro listStyle(item) %}
-    {% if item.isPending() %}
-        list-group-item-danger
-    {% elseif item.isAgreed() %}
-        list-group-item-success
-    {% elseif item.isNotedInAgenda() %}
-        list-group-item-info
-    {% else %}
-        list-group-item-warning
-    {% endif %}
-{% endmacro %}
 
 <h4>Items : </h4>
 <ul class="list-group" >
@@ -16,15 +5,16 @@
         class="list-group-item"
         ng-attr-id="// item.id //" >
         // item.title //
-        <span class="pull-right">
-            Proposed by // item.proposer.name //
-            <span ng-if="$index > 3"
-                  ng-click="ctrl.swap($index-1,$index)"
-                  class="glyphicon glyphicon-chevron-up change-order" ></span>
-            <span ng-if="$index > 2 && !$last" 
-                  ng-click="ctrl.swap($index,$index+1)"
-                  class="glyphicon glyphicon-chevron-down change-order" ></span>
-        </span>
+        {% if canEdit %}
+            <span class="pull-right">
+                Proposed by // item.proposer.name //
+                <span ng-if="$index > 3"
+                      ng-click="ctrl.swap($index-1,$index)"
+                      class="glyphicon glyphicon-chevron-up change-order" ></span>
+                <span ng-if="$index > 2 && !$last" 
+                      ng-click="ctrl.swap($index,$index+1)"
+                      class="glyphicon glyphicon-chevron-down change-order" ></span>
+            </span>
+        {% endif %}
     </li>
 </ul>
-<span id="items-link" data-href="{{ path('agenda-items',{'agendaId' : agenda.id }) }}" />

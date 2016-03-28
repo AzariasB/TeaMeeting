@@ -200,8 +200,8 @@ class Agenda implements \JsonSerializable {
     public function jsonSerialize() {
         return array(
             'id' => $this->id,
-            'items' => $this->items,
-            'requests' => $this->requests
+            'items' => $this->items->toArray(),
+            'requests' => $this->requests->toArray()
         );
     }
 

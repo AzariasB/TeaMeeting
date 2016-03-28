@@ -9,17 +9,20 @@ app.config(function ($interpolateProvider) {
 app.controller('controller', function ($scope, $http) {
 
     this.items = [];
+    this.requests = [];
     var self = this;
 
     this.init = function () {
-        var url = $("#items-link").data('href');
+        var url = $("#agenda-json").data('href');
         this.postReq({}, url, initItems);
     };
 
-    function initItems(data) {
-        self.items = data.data.sort(function (a, b) {
+    function initItems(response) {
+        var data = response.data;
+        self.items = data.items.sort(function (a, b) {
             return a.position - b.position;
         });
+        self.requests = data.requests;
     }
 
     this.swap = function (low, up) {
@@ -41,7 +44,9 @@ app.controller('controller', function ($scope, $http) {
         event.preventDefault();
         var url = $(event.toElement).attr('href');
         this.postReq({}, url, function (reponse) {
-            showModal(reponse.data, url);
+            showModal("form-create-item", reponse.data, url, function (dt) {
+                self.items.push(dt.item);
+            });
         });
     };
 
@@ -53,28 +58,46 @@ app.controller('controller', function ($scope, $http) {
         });
     };
 
-    function showModal(data, url) {
+    function showModal(formId, data, url, callback) {
         $("#modal-main-content").html(data);
-        $("#form-create-item").on('submit', function (e) {
+        $("#" + formId).on('submit', function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            console.log(data);
-            self.postReq(data, url, function (data) {
-                creationAnswer(data, url);
+            console.log(decodeURIComponent(data), url);
+            self.postReq(data, url, function (response) {
+                var dt = response.data;
+                updateModal(dt);
+                if (dt.success && callback) {
+                    callback.call(null, dt);
+                }
             });
         });
         $("#modal-main").modal();
     }
 
-    function creationAnswer(reponse) {
-        var data = reponse.data;
+    function updateModal(data) {
         if (data.success) {
             $("#modal-main").modal('hide');
-            self.items.push(data.item);
         } else {
             $("#modal-main-content").html(data.page);
         }
     }
+
+    this.newRequest = function (data) {
+        self.requests.push(data.request);
+    };
+
+    this.showRequestForm = function (data, url) {
+        showModal("form-send-request", data, url, this.newRequest);
+    };
+
+    this.sendRequest = function (event) {
+        event.preventDefault();
+        var url = $(event.toElement).attr('href');
+        this.postReq({}, url, function (response) {
+            self.showRequestForm(response.data, url);
+        });
+    };
 
     this.init();
 });

@@ -83,15 +83,6 @@ class MeetingController extends SuperController {
         throw $this->createNotFoundException('Not found');
     }
 
-    public function getItemsAction($agendaId, Request $req) {
-        $rep = new JsonResponse;
-        $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
-        return $rep->setData($this
-                                ->getDoctrine()
-                                ->getRepository('AppBundle:ItemAgenda')
-                                ->findByAgenda($agenda)
-        );
-    }
 
     /**
      * Show the meeting with the given Id

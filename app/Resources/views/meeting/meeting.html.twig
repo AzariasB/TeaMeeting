@@ -35,17 +35,24 @@
                 <i class="glyphicon glyphicon-plus" ></i>
                 Add item
             </a>
-               <a href="{{ path('save-agenda-items',{'agendaId' :agenda.id }) }}"
-                  class="btn btn-success"
-                  ng-click="ctrl.saveItems($event)">
+            <a href="{{ path('save-agenda-items',{'agendaId' :agenda.id }) }}"
+               class="btn btn-success"
+               ng-click="ctrl.saveItems($event)">
                 Save changes
             </a>
         {% else %} 
-            <a href="#" class="btn btn-default" >
+            <a href='{{ path('send-request', { 'agendaId' : agenda.id }) }}' 
+               class="btn btn-default"
+               ng-click="ctrl.sendRequest($event)" >
                 <i class="glyphicon glyphicon-send" > </i>
                 Send a request to the chairman
             </a>
         {% endif %}
+        <h3>Requests :</h3>
+        {% include 'meeting/request-list.html.twig' %}
+        <span hidden="" 
+              id="agenda-json" 
+              data-href="{{ path('get-agenda-json', { 'agendaId' : agenda.id }) }}" />
     </div>
     <div class="col-xs-12 col-sm-6 text-center">
         <h3>Meeting's informations : </h3>

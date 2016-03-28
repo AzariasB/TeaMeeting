@@ -25,77 +25,80 @@
  */
 
 /**
- * Contains the class ItemAgendaController
+ * Contains the controller AgendaController
  */
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Agenda;
-use AppBundle\Entity\ItemAgenda;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Form\ItemAgendaType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Form;
+use AppBundle\Form\UserRequestType;
+use AppBundle\Entity\Agenda;
+use AppBundle\Entity\UserRequest;
 
 /**
- * Description of ItemAgendaController
+ * Controlls the access to the agenda entity
  *
  * @author boutina
  */
-class ItemAgendaController extends SuperController {
+class AgendaController extends SuperController {
 
-    /**
-     * Create the form to create an agenda item
-     * 
-     * @param int $agendaId
-     * @param Request $req
-     */
-    public function createAction($agendaId, Request $req) {
+    public function sendRequestAction($agendaId, Request $req) {
         $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
 
         if (!$agenda) {
             throw $this->createNotFoundException('Agenda not found');
         }
 
-        $item = new ItemAgenda;
+        $userReq = new UserRequest;
+        $userReq->setAgenda($agenda);
+        $userReq->setSender($this->getCurrentUser());
 
-        $form = $this->createForm(ItemAgendaType::class, $item,array(
-            'agenda' => $agenda
-        ));
+        $form = $this->createForm(UserRequestType::class, $userReq);
 
         $form->handleRequest($req);
 
         if ($form->isSubmitted()) {
-            return $this->handleForm($form, $agenda, $item);
+            return $this->handleForm($form, $userReq);
         }
 
-        return $this->createFormPage($form);
+        return $this->sendRequestView($form);
     }
 
-    private function handleForm(Form $form, Agenda $ag, ItemAgenda $item) {
+    private function handleForm(Form $form, UserRequest $userReq) {
         $rep = new JsonResponse;
         if ($form->isValid()) {
-            $item->setAgenda($ag);
-            $this->saveEntity($item);
+            $this->saveEntity($userReq);
             return $rep->setData(array(
                         'success' => true,
-                        'item' => $item
+                        'request' => $userReq
             ));
         } else {
             return $rep->setData(array(
                         'success' => false,
-                        'page' => $this->createFormPage($form)
+                        'page' => $this->sendRequestView($form)
             ));
         }
     }
 
     /**
+     * Return the agenda in json format
      * 
-     * @param Form $form
-     * @return type
+     * @param int $agendaId
+     * @param Request $req
+     * @return JsonReponse
      */
-    private function createFormPage(Form $form) {
-        return $this->render('meeting/item-form.html.twig', array(
+    public function getAgendaAction($agendaId, Request $req) {
+        $rep = new JsonResponse;
+        $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
+        $agenda->getItems();
+        $agenda->getRequests();
+        return $rep->setData($agenda);
+    }
+
+    private function sendRequestView(Form $form) {
+        return $this->render('meeting/request-form.html.twig', array(
                     'form' => $form->createView()
         ));
     }
