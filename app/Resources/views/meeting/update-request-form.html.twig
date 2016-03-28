@@ -1,0 +1,23 @@
+
+
+{% set formId = 'form-update-request' %}
+{% extends "modalForm.html.twig" %}
+
+{% block modalTitle %}
+    Update the state
+{% endblock %}
+
+{% block modalBody %}
+    <div class="row">
+        <div class="col-xs-12 {{ s.errorClass(form.state) }}">
+            {{ form_row(form.state,formClass) }}
+        </div>
+        <div class="col-xs-12 {{ s.errorClass(form.content) }}">
+            {{ form_row(form.content,formClass) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block buttonConfirm %}
+    Update
+{% endblock %}

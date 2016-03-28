@@ -58,8 +58,11 @@ save-agenda-items:
     path: /agenda/{agendaId}/save-items
     defaults: { _controller: AppBundle:Meeting:saveItems }
 send-request:
-    path: /send-request/{agendaId}
+    path: /agenda/{agendaId}/send-request
     defaults: { _controller: AppBundle:Agenda:sendRequest }
 get-agenda-json:
     path: /agenda/{agendaId}/json
     defaults: { _controller: AppBundle:Agenda:getAgenda }
+update-request:
+    path: /update-request/{requestId}
+    defaults: { _controller: AppBundle:UserRequest:updateRequest }

@@ -25,9 +25,15 @@
     {% endblock %}
 </div>
 <div class="modal-footer">
-    {% block modalFooter %}
-        <button id="submit-create-project" class="btn btn-default" type="submit">Create</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    {% endblock %}
+    <button id="submit-create-project" class="btn btn-default" type="submit">
+        {% block buttonConfirm %}
+            Create
+        {% endblock %}
+    </button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        {% block buttonCancel %}
+            Close
+        {% endblock %}
+    </button>
 </div>
 {{ form_end(form) }}

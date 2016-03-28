@@ -25,37 +25,47 @@
  */
 
 /**
- * Contains the controller AgendaController
+ * Contains the class UserRequestController
  */
 
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Form\Form;
-use AppBundle\Form\UserRequestType;
-use AppBundle\Entity\Agenda;
 use AppBundle\Entity\UserRequest;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Controlls the access to the agenda entity
+ * Description of UserRequestController
  *
  * @author boutina
  */
-class AgendaController extends SuperController {
+class UserRequestController extends SuperController {
 
-    public function sendRequestAction($agendaId, Request $req) {
-        $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
+    public function updateRequestAction($requestId, Request $req) {
+        $userReq = $this->getEntityFromId(UserRequest::class, $requestId);
 
-        if (!$agenda) {
-            throw $this->createNotFoundException('Agenda not found');
+        if (!$userReq) {
+            throw $this->createNotFoundException('Request not found');
         }
 
-        $userReq = new UserRequest;
-        $userReq->setAgenda($agenda);
-        $userReq->setSender($this->getCurrentUser());
-
-        $form = $this->createForm(UserRequestType::class, $userReq);
+        $form = $this->createFormBuilder()
+                ->add('state', ChoiceType::class, array(
+                    'choices' => array(
+                        UserRequest::STATE_AGREED => 'Agreed',
+                        UserRequest::STATE_NOTED_ON_AGENDA => 'Noted on agenda',
+                        UserRequest::STATE_NOTED_NO_CHANGE => 'Noted, agenda not changed',
+                        UserRequest::STATE_PENDING => 'Pending'
+                    ),
+                    'data' => $userReq->getState()
+                ))
+                ->add('content', TextareaType::class, array(
+                    'data' => $userReq->getContent(),
+                    'disabled' => true
+                ))
+                ->getForm();
 
         $form->handleRequest($req);
 
@@ -63,49 +73,29 @@ class AgendaController extends SuperController {
             return $this->handleForm($form, $userReq);
         }
 
-        return $this->sendRequestView($form);
+        return $this->createUpdateForm($form);
     }
 
     private function handleForm(Form $form, UserRequest $userReq) {
-        $rep = new JsonResponse;
+        $resp = new JsonResponse;
         if ($form->isValid()) {
+            $nwState = $form->get('state')->getData();
+            $userReq->setState($nwState);
             $this->saveEntity($userReq);
-            return $rep->setData(array(
+            return $resp->setData(array(
                         'success' => true,
                         'request' => $userReq
             ));
         } else {
-            return $rep->setData(array(
+            return $resp->setData(array(
                         'success' => false,
-                        'page' => $this->sendRequestView($form)
+                        'page' => $this->createUpdateForm($form)
             ));
         }
     }
 
-    /**
-     * Return the agenda in json format
-     * 
-     * @param int $agendaId
-     * @param Request $req
-     * @return JsonReponse
-     */
-    public function getAgendaAction($agendaId, Request $req) {
-        $rep = new JsonResponse;
-        $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
-        $agenda->getItems();
-        $agenda->getRequests();
-        return $rep->setData($agenda);
-    }
-
-
-    /**
-     * Create the view to create a request
-     * 
-     * @param Form $form
-     * @return Response
-     */
-    private function sendRequestView(Form $form) {
-        return $this->render('meeting/request-form.html.twig', array(
+    private function createUpdateForm(Form $form) {
+        return $this->render('meeting/update-request-form.html.twig', array(
                     'form' => $form->createView()
         ));
     }

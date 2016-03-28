@@ -63,7 +63,6 @@ app.controller('controller', function ($scope, $http) {
         $("#" + formId).on('submit', function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            console.log(decodeURIComponent(data), url);
             self.postReq(data, url, function (response) {
                 var dt = response.data;
                 updateModal(dt);
@@ -96,6 +95,21 @@ app.controller('controller', function ($scope, $http) {
         var url = $(event.toElement).attr('href');
         this.postReq({}, url, function (response) {
             self.showRequestForm(response.data, url);
+        });
+    };
+
+    function stateUpdated(data) {
+        var r = data.request;
+        self.requests = self.requests.map(function (req) {
+            return req.id === r.id ? r : req;
+        });
+    }
+
+    this.updateRequest = function (event, reqId) {
+        event.preventDefault();
+        var url = $("#path-update-request").data("href").replace(/__name__/, reqId);
+        this.postReq({}, url, function (response) {
+            showModal('form-update-request', response.data, url, stateUpdated);
         });
     };
 
