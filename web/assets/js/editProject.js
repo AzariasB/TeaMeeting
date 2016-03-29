@@ -1,4 +1,9 @@
 
+var app = angular.module('app',[]);
+
+app.controller('controller',function(){
+    
+});
 
 $(document).ready(function () {
 

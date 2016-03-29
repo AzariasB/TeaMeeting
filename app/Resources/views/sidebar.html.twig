@@ -1,38 +1,45 @@
 <div class="nav-side-menu">
     <div class="menu-list">
         <ul id="menu-content" class="menu-content collapse out">
-            <li class="admin-choice" >
+            <li class="sidebar-choice" >
                 <a href="{{ path('lobby') }}">
                     <i class="glyphicon glyphicon-home"></i>
                     Lobby
                 </a>
             </li>
-            <li class="admin-choice" id="see-meetings" >
-                <a href="#">
+            <li class="sidebar-choice">
+                <a href="{{ path('my-projects') }}">
                     <i class="glyphicon glyphicon-book"></i>
                     My Projects
                 </a>
             </li>
-            <li class="admin-choice" id="see-meetings" >
-                <a href="#">
+            <li class="sidebar-choice">
+                <a href="{{ path('my-meetings') }}">
                     <i class="glyphicon glyphicon-bell"></i>
                     My Meetings
                 </a>
             </li>
-            <li class="nav-divider"></li>
-            <li class="admin-choice" id="see-projects" >
-                <a href="#">
-                    <i class="glyphicon glyphicon-book"></i> 
-                    All Projects
-                </a>
-            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-divider"></li>
+                <li>
+                    <h4>
+                        Admin part
+                    </h4>
+                </li>
+                <li class="sidebar-choice">
+                    <a href="{{ path('all-projects') }}">
+                        <i class="glyphicon glyphicon-book"></i> 
+                        All Projects
+                    </a>
+                </li>
 
-            <li class="admin-choice" id="see-users" >
-                <a href="#" >
-                    <i class="glyphicon glyphicon-user"></i>
-                    All Users
-                </a>
-            </li>
+                <li class="sidebar-choice">
+                    <a href='{{ path('all-users') }}' >
+                        <i class="glyphicon glyphicon-user"></i>
+                        All Users
+                    </a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </div>

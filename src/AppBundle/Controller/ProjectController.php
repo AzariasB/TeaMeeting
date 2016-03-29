@@ -21,6 +21,13 @@ use Symfony\Component\Form\Form;
  */
 class ProjectController extends SuperController {
 
+    public function allAction(Request $req) {
+        $projects = $this->getAllFromClass(Project::class);
+        return $this->render('lobby/allprojects.html.twig', array(
+                    'projects' => $projects
+        ));
+    }
+
     /**
      * Displays the project with id projId
      * and if the project is not locked
@@ -34,7 +41,7 @@ class ProjectController extends SuperController {
      */
     public function infoAction($projId, Request $req) {
         $proj = $this->getEntityFromId(Project::class, $projId);
-        
+
         if (is_null($proj)) {
             throw $this->createNotFoundException('No project found for id ' . $projId);
         }
@@ -54,7 +61,7 @@ class ProjectController extends SuperController {
      * @param boolean $canEdit
      * @return Response
      */
-    private function infoProjectPage(Project $project,$canEdit = false) {
+    private function infoProjectPage(Project $project, $canEdit = false) {
         return $this->render('project/presentation.html.twig', array(
                     'project' => $project,
                     'canEdit' => $canEdit
@@ -237,4 +244,5 @@ class ProjectController extends SuperController {
         }
         return $success;
     }
+
 }

@@ -62,35 +62,24 @@ class MeetingController extends SuperController {
      */
     public function saveAnswerAction($answerId, Request $req) {
 
-        if ($req->isXmlHttpRequest()) {
-            $rep = new JsonResponse;
-            $ans = $this->getEntityFromId(UserAnswer::class, $answerId);
+        $rep = new JsonResponse;
+        $ans = $this->getEntityFromId(UserAnswer::class, $answerId);
 
-            if ($ans) {
-                $answerType = $req->get('answer');
-                if ($ans->setAnswer($answerType)) {
-                    $this->saveEntity($ans);
-                    return $rep->setData(array(
-                                'success' => true,
-                                'answer' => $ans
-                    ));
-                } else {
-                    return $rep->setData(array(
-                                'success' => false,
-                                'error' => 'The answer could not be changed'
-                    ));
-                }
-            } else {
-                return $rep->setData(array(
-                            'success' => false,
-                            'error' => 'Meeting not found'
-                ));
-            }
+        $answerType = $req->get('answer');
+        if ($ans->setAnswer($answerType)) {
+            $this->saveEntity($ans);
+            return $rep->setData(array(
+                        'success' => true,
+                        'answer' => $ans
+            ));
+        } else {
+            return $rep->setData(array(
+                        'success' => false,
+                        'anwser' => $ans,
+                        'error' => 'The answer could not be changed'
+            ));
         }
-
-        throw $this->createNotFoundException('Not found');
     }
-
 
     /**
      * Show the meeting with the given Id

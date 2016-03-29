@@ -100,6 +100,10 @@ class Meeting implements \JsonSerializable {
         $this->agendas = new ArrayCollection;
     }
 
+    public function __toString() {
+        return $this->room.'-'.$this->date->format('d/M/y');
+    }
+    
     /**
      * Get id
      * 

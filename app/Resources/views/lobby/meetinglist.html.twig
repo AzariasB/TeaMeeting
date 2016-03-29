@@ -1,28 +1,36 @@
 
+{% extends "lobby-base.html.twig" %}
+
 {% set ANSWER_NO = constant('AppBundle\\Entity\\UserAnswer::ANSWER_NO') %}
 {% set ANSWER_YES = constant('AppBundle\\Entity\\UserAnswer::ANSWER_YES') %}
 {% set ANSWER_MAYBE = constant('AppBundle\\Entity\\UserAnswer::ANSWER_MAYBE') %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/meeting.js') }}" ></script>
+{% endblock %}
 
-{% if app.user.projects|length %}
-    <div class="container-fluid">
-        <ul class="list-group hidden-badge-list" >
-            {% for proj in app.user.projects %}
-                <div class="panel panel-default container-fluid">
-                    <div class="panel-heading row">
-                        {{ proj.projectName }}
+{% block content %}
+
+    <div id="meetings-list">
+        <h3>Meetings list</h3>
+        <div class="container-fluid">
+            <ul class="list-group hidden-badge-list" >
+                {% for proj in app.user.projects %}
+                    <div class="panel panel-default container-fluid">
+                        <div class="panel-heading row">
+                            {{ proj.projectName }}
+                        </div>
+                        <ul class="list-group hidden-badge-list">
+                            {% for meet in proj.meetings %}
+                                <li class="list-group-item list-group-item-text row" >
+                                    {% include 'meeting/meeting-line.html.twig' %}
+                                </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <ul class="list-group hidden-badge-list">
-                        {% for meet in proj.meetings %}
-                            <li class="list-group-item list-group-item-text row" >
-                                {% include 'meeting/meeting-line.html.twig' %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endfor %}
-        </ul>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-{% else %}
-    <h3>No projects => No meetings</h3>
-{% endif %}
+{% endblock %}

@@ -54,40 +54,38 @@ class User implements UserInterface, \JsonSerializable {
      * @var boolean  
      */
     private $isAdmin;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Project",mappedBy="participants",cascade={"persist","remove"})
      * @var ArrayCollection
      */
     private $projects;
-    
 
-    
     public function __construct() {
         $this->projects = new ArrayCollection();
     }
-    
+
     /**
      * Set if is admin
      * 
      * @param boolean $nwIsAdmin
      * @return User
      */
-    public function setIsAdmin($nwIsAdmin){
+    public function setIsAdmin($nwIsAdmin) {
         $this->isAdmin = $nwIsAdmin;
-        
+
         return $this;
     }
-    
+
     /**
      * Get is Admin
      * 
      * @return boolean
      */
-    public function getIsAdmin(){
+    public function getIsAdmin() {
         return $this->isAdmin;
     }
-    
+
     /**
      * Get id
      *
@@ -103,11 +101,11 @@ class User implements UserInterface, \JsonSerializable {
      * @param type $nwId
      * @return User
      */
-    public function setId($nwId){
+    public function setId($nwId) {
         $this->id = $nwId;
         return $this;
     }
-    
+
     /**
      * The salt to add while hashing the password   
      * 
@@ -127,7 +125,7 @@ class User implements UserInterface, \JsonSerializable {
      */
     public function getRoles() {
         $roles = array('ROLE_USER');
-        if($this->isAdmin){
+        if ($this->isAdmin) {
             $roles[] = 'ROLE_ADMIN';
         }
         return $roles;
@@ -199,59 +197,92 @@ class User implements UserInterface, \JsonSerializable {
     public function getPassword() {
         return $this->password;
     }
-    
+
     /**
      * Set projects
      * 
      * @param ArrayCollection $projs
      * @return User
      */
-    public function setProjects($projs){
+    public function setProjects($projs) {
         $this->projects = $projs;
-        
+
         return $this;
     }
-    
+
     /**
      * Get projects
      * 
      * @return ArrayCollection
      */
-    public function getProjects(){
+    public function getProjects() {
         return $this->projects;
     }
-    
+
     /**
      * Add project
      * 
      * @param Project $proj
      * @return User
      */
-    public function addProject(Project $proj){
+    public function addProject(Project $proj) {
         $this->projects->add($proj);
         return $this;
     }
-    
+
     /**
      * Remove a project
      * 
      * @param Project $proj
      * @return User
      */
-    public function removeProject(Project $proj){
+    public function removeProject(Project $proj) {
         $this->projects->removeElement($proj);
         return $this;
     }
 
+    /**
+     * Get all the meetings for all the projects
+     * 
+     * @return ArrayCollection
+     */
+    public function getAllMeetings() {
+        $meetings = new ArrayCollection;
+        foreach ($this->projects as $proj) {
+            $meetings = new ArrayCollection(
+                    array_merge($meetings->toArray(), $proj->getMeetings()->toArray())
+            );
+        }
+        return $meetings;
+    }
+
+    /**
+     * Return the answer for all the meetings
+     * of all the projects
+     * 
+     * @return Answers
+     */
+    public function getAllAnswers() {
+        $meetings = $this->getAllMeetings();
+        return $meetings->map(function($meeting){
+            return $meeting->answerForUser($this);
+        });
+    }
     
-    public function eraseCredentials()
-    {
+    public function getUnansweredAnswers(){
+        $answers = $this->getAllAnswers();
+        return $answers->filter(function($ans){
+            return $ans->isUnknown();
+        });
+    }
+
+    public function eraseCredentials() {
         
     }
 
     public function jsonSerialize() {
         return array(
-           'id' => $this->id,
+            'id' => $this->id,
             'name' => $this->username,
             'isAdmin' => $this->isAdmin
         );

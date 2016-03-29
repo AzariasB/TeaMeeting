@@ -7,6 +7,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Manage the user's CRUD operations
@@ -28,7 +29,7 @@ class UserController extends SuperController {
      */
     public function infoAction($user) {
         $u = $this->getEntityFromId(User::class, $user);
-        
+
         if (!$u) {
             throw $this->createNotFoundException();
         }
@@ -53,4 +54,10 @@ class UserController extends SuperController {
         return $roles;
     }
 
+    public function allAction(Request $req){
+        $users = $this->getAllFromClass(User::class);
+        return $this->render('lobby/allusers.html.twig',array(
+            'users' => $users
+        ));
+    }
 }

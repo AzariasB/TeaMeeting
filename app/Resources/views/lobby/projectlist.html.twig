@@ -1,16 +1,18 @@
-{% if app.user.projects|length %}
-    <h3>Your projects  :</h3>
-    <ul class="list-group" >
-        {% for proj in app.user.projects %}
-            <li class="list-group-item" >
-                <a href="{{ path('seeproject',{'projId':proj.id}) }}">{{ proj.projectName }}</a>
-                <span class="badge" title="Number of participants" >
-                    {{ proj.participants|length }}
-                </span>
-            </li>
-        {% endfor %}
-    </ul>
 
-{% else %}
-    <h3>No projects</h3>
-{% endif %}
+{% extends "lobby-base.html.twig" %}
+
+{% block content %}
+    <div class="container-fluid" >
+        <h2>Your projects  :</h2>
+        <ul class="list-group" >
+            {% for proj in app.user.projects %}
+                <li class="list-group-item" >
+                    <a href="{{ path('seeproject',{'projId':proj.id}) }}">{{ proj.projectName }}</a>
+                    <span class="badge" title="Number of participants" >
+                        {{ proj.participants|length }}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

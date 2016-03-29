@@ -72,3 +72,19 @@ update-item:
 remove-item:
     path: /remove-item/{itemId}
     defaults: { _controller: AppBundle:ItemAgenda:remove }
+my-projects:
+    path: /my-projects
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    lobby/projectlist.html.twig
+my-meetings:
+    path: /my-meetings
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: lobby/meetinglist.html.twig
+all-projects:
+    path: /all-projects
+    defaults: { _controller: AppBundle:Project:all }
+all-users:
+    path: /all-users
+    defaults: { _controller: AppBundle:User:all }

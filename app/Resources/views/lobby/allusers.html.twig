@@ -1,24 +1,34 @@
-{% if users %}
-    <ul id="user_list" class="list-group hidden-badge-list" >
-        {% for user in users %}
-            <li class="list-group-item clearfix" >
-                <a href="{{ path('seeprofile',{'user':user.id}) }}">
-                    {{ user.username }}
-                </a>
-                <span class="pull-right">
-                    <a class="btn btn-xs btn-warning hidden-badge-item" href="#">
-                        <i class="glyphicon glyphicon-refresh" ></i>
-                        Reset password
+
+{% extends 'lobby-base.html.twig' %}
+
+{% block content %}
+    <div  id="users-list" >
+        <h3>Users list</h3>
+        <ul id="user_list" class="list-group hidden-badge-list" >
+            {% for user in users %}
+                <li class="list-group-item clearfix" >
+                    <a href="{{ path('seeprofile',{'user':user.id}) }}">
+                        {{ user.username }}
                     </a>
-                    <a class="btn btn-xs btn-danger hidden-badge-item" href="#">
-                        <i class="glyphicon glyphicon-trash" ></i>
-                        Delete user
-                    </a>
-                </span>
-            </li>
-        {% endfor %}
-    </ul>
-    <span id="profilePath" hidden="">{{ path('seeprofile',{'user':'__number__'}) }}</span>
-{% else %}
-    <h5>No users</h5>
-{% endif %}
+                    <span class="pull-right">
+                        <a class="btn btn-xs btn-warning hidden-badge-item" href="#">
+                            <i class="glyphicon glyphicon-refresh" ></i>
+                            Reset password
+                        </a>
+                        <a class="btn btn-xs btn-danger hidden-badge-item" href="#">
+                            <i class="glyphicon glyphicon-trash" ></i>
+                            Delete user
+                        </a>
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+        <span id="profilePath" hidden="">
+            {{ path('seeprofile',{'user':'__number__'}) }}
+        </span>       
+        <a id="create_user"  class="btn btn-default" href="{{ path('register') }}">
+            <i class="glyphicon glyphicon-plus" ></i>
+            Create a user
+        </a>
+    </div>
+{% endblock %}
