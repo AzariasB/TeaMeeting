@@ -1,14 +1,15 @@
 {# twig #}
 
-{% extends "base.html.twig" %}
+{% extends "lobby-base.html.twig" %}
 
 {% block javascripts %}
-    <script src="{{ asset('assets/vendor/angular/angular.min.js') }}"></script>
+    {{ parent() }}
     <script src="{{ asset('assets/vendor/chartist/dist/chartist.min.js') }}" ></script>
     <script src='{{ asset('assets/js/editMeeting.js') }}'></script>
 {% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <link href="{{ asset('assets/css/lobby_admin.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/vendor/chartist/dist/chartist.min.css') }}" rel="stylesheet"  />
     <link href="{{ asset('assets/css/meeting-style.css') }}" rel="stylesheet" />
@@ -20,11 +21,41 @@
 {% set meetUnknk = meeting.numberOfUnknown() %}
 {% set agenda    = meeting.getCurrentAgenda() %}
 
-{% block body %}
-    {% if is_granted('ROLE_USER') %}
-        {% include 'toolbar.html.twig' %}
-    {% endif %}
-    <div class="col-xs-12 col-sm-6">
+{% block content %}
+    <div class="col-xs-12 col-sm-4">
+        <h3>Meeting's informations : </h3>
+        <ul class="list-unstyled list-group" >
+            <li title="chairman" class="list-group-item" >
+                <span class="fa fa-magic" ></span>
+                {{ meeting.chairman.username }}
+            </li>
+            <li title="secretary" class="list-group-item" >
+                <span class="fa fa-pencil"></span>
+                {{ meeting.secretary.username }}
+            </li>
+            <li title="date"  class="list-group-item" >
+                <span class="fa fa-calendar-check-o"></span>
+                {{ meeting.date|date('d/m/Y H:i') }}
+            </li>
+            <li title="duration" class="list-group-item" >
+                <span class="fa fa-clock-o"></span>
+                {{ meeting.duration|date('H:i') }}
+            </li>
+            <li title="room" class="list-group-item" >
+                <span class="fa fa-map-marker"></span>
+                {{ meeting.room }}
+            </li>
+        </ul>
+
+        <h3>Statistics for the meeting</h3>
+        <div class="ct-chart" ></div>
+        {% include 'meeting/presence-table.html.twig' %}
+        <a class="btn btn-default"
+           href="{{ path('seeproject', { 'projId' : meeting.project.id}) }}">
+            See the project
+        </a> 
+    </div>
+    <div class="col-xs-12 col-sm-8">
         <h3>Current agenda</h3>
         {% include 'meeting/item-list.html.twig' %}
         {% if canEdit %}
@@ -48,31 +79,10 @@
                 Send a request to the chairman
             </a>
         {% endif %}
-        <h3>Requests :</h3>
         {% include 'meeting/request-list.html.twig' %}
         <span hidden="" 
               id="agenda-json" 
               data-href="{{ path('get-agenda-json', { 'agendaId' : agenda.id }) }}" />
-    </div>
-    <div class="col-xs-12 col-sm-6 text-center">
-        <h3>Meeting's informations : </h3>
-        <p>
-            <strong>Chairman :</strong> {{ meeting.chairman.username }}
-            -
-            <strong>Secretary :</strong> {{ meeting.secretary.username }}
-        </p>
-        <p>
-            <strong>Date : </strong> {{ meeting.date|date('d/m/Y H:i') }}
-            -
-            <strong>Duration :</strong> {{ meeting.duration|date('H:i') }}
-        </p>
-        <p>
-            <strong>Room : </strong> {{ meeting.room }}
-        </p>
-
-        <h3>Statistics for the meeting</h3>
-        <div class="ct-chart" ></div>
-        {% include 'meeting/presence-table.html.twig' %}
     </div>
     <script>
 $(document).ready(function () {
@@ -96,11 +106,5 @@ $(document).ready(function () {
                 new Chartist.Pie('.ct-chart', data, options);
             });
     </script>
-    <footer>
-        <a href="{{ path('seeproject', { 'projId' : meeting.project.id}) }}">
-            Back to the project
-        </a> 
-    </footer>
-
     {% include 'modal.html.twig' %}
 {% endblock %}

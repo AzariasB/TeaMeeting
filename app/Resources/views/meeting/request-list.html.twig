@@ -1,25 +1,48 @@
-<ul class="list-group hidden-badge-list" >
-    <li ng-repeat="request in ctrl.requests" 
-        class="list-group-item"
-        ng-class="{ 
+<div class="panel-group" id="requestsAccordion" role="tablist">
+    <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="meetingsPanel">
+            <h4 class="panel-title">
+                <a role="button" 
+                   data-toggle="collapse" 
+                   data-parent="#requestsAccordion" 
+                   href="#collapseAccoridion" 
+                   aria-controls="requestsPanel">
+                    Requests
+                </a>
+            </h4>
+        </div>
+        <div id="collapseAccoridion" 
+             class="panel-collapse collapse" 
+             role="tabpanel" 
+             aria-labelledby="requestsPanel">
+            <ul class="list-group" id="list-meetings" >
+                <li ng-repeat="request in ctrl.requests" 
+                    class="list-group-item"
+                    ng-class="{ 
             'list-group-item-danger' : request.state == 1,
             'list-group-item-success': request.state == 4,
             'list-group-item-warning': request.state == 2,
             'list-group-item-info'   : request.state == 3
         }" 
-        ng-attr-id="// item.id //" >
-        Proposed by // request.sender.name //   the // request.date | date : 'dd/MM/yyyy' //
-        {% if canEdit %}
-            <span class="pull-right hidden-badge-item" ng-if="ctrl.items.length > 3" >
-                <a href="#" 
-                   ng-click='ctrl.updateRequest($event,request.id)'
-                   class="btn btn-xs btn-default">
-                    <i class="glyphicon glyphicon-refresh"></i>
-                    Update
-                </a>
-            </span>
-        {% endif %}
-    </li>
+                    ng-attr-id="// item.id //" >
+                    Proposed by // request.sender.name //   the // request.date | date : 'dd/MM/yyyy' //
+                    {% if canEdit %}
+                        <span class="pull-right hidden-badge-item" ng-if="ctrl.items.length > 3" >
+                            <a href="#" 
+                               ng-click='ctrl.updateRequest($event,request.id)'
+                               class="btn btn-xs btn-default">
+                                <i class="glyphicon glyphicon-refresh"></i>
+                                Update
+                            </a>
+                        </span>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<ul class="list-group hidden-badge-list" >
 </ul>
 <span data-href="{{ path('update-request',{ 'requestId' : '__name__' }) }}" 
       id="path-update-request" />

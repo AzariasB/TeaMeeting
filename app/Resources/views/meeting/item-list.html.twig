@@ -1,40 +1,60 @@
 
-<h4>Items : </h4>
-<ul class="list-group hidden-badge-list" >
-    <li ng-repeat="item in ctrl.items" 
-        class="list-group-item"
-        ng-attr-id="// item.id //" >
-        <strong>// item.title //</strong>
-        Proposed by // item.proposer.name //
-        {% if canEdit %}
-            <span class="pull-right hidden-badge-item" ng-if="$index > 2">
-                <a title="Remove"
-                   href="#"
-                   ng-click="ctrl.removeItemAction($event,item.id)"
-                   class="btn btn-xs btn-default">
-                    <span class="glyphicon glyphicon-remove" />
+<div class="panel-group" id="panels" role="tablist">
+    <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="panelItems">
+            <h4 class="panel-title">
+                <a role="button" 
+                   data-toggle="collapse" 
+                   data-parent="#panelItems" 
+                   href="#itemAccordion" 
+                   aria-controls="requestsPanel">
+                    Items
                 </a>
+            </h4>
+        </div>
+        <div id="itemAccordion" 
+             class="panel-collapse collapse in" 
+             role="tabpanel" 
+             aria-labelledby="requestsPanel">
+            <ul class="list-group hidden-badge-list" >
+                <li ng-repeat="item in ctrl.items" 
+                    class="list-group-item"
+                    ng-attr-id="// item.id //" >
+                    <strong>// item.title //</strong>
+                    Proposed by // item.proposer.name //
+                    {% if canEdit %}
+                        <span class="pull-right hidden-badge-item" ng-if="$index > 2">
+                            <a title="Remove"
+                               href="#"
+                               ng-click="ctrl.removeItemAction($event,item.id)"
+                               class="btn btn-xs btn-default">
+                                <span class="glyphicon glyphicon-remove" />
+                            </a>
 
-                <a title="Update"
-                   href="#"
-                   ng-click="ctrl.updateItem($event,item.id)"
-                   class="btn btn-default btn-xs" >
-                    <span class="glyphicon glyphicon-pencil" />
-                </a>
-                <button ng-disabled="$index === ctrl.items.length || $index === 3"
-                        ng-click="ctrl.swap($index-1,$index)"
-                        class="change-order btn btn-xs btn-default">
-                    <span class="glyphicon glyphicon-chevron-up" />
-                </button>
-                <button ng-disabled="$index < 3 || $last" 
-                        ng-click="ctrl.swap($index,$index+1)"
-                        class="change-order btn btn-xs btn-default" >
-                    <span class="glyphicon glyphicon-chevron-down" />
-                </button>
-            </span>
-        {% endif %}
-    </li>
-</ul>
+                            <a title="Update"
+                               href="#"
+                               ng-click="ctrl.updateItem($event,item.id)"
+                               class="btn btn-default btn-xs" >
+                                <span class="glyphicon glyphicon-pencil" />
+                            </a>
+                            <button ng-disabled="$index === ctrl.items.length || $index === 3"
+                                    ng-click="ctrl.swap($index-1,$index)"
+                                    class="change-order btn btn-xs btn-default">
+                                <span class="glyphicon glyphicon-chevron-up" />
+                            </button>
+                            <button ng-disabled="$index < 3 || $last" 
+                                    ng-click="ctrl.swap($index,$index+1)"
+                                    class="change-order btn btn-xs btn-default" >
+                                <span class="glyphicon glyphicon-chevron-down" />
+                            </button>
+                        </span>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <span id="path-update-item"
       data-href="{{ path('update-item',{ 'itemId' : '__name__'}) }}" />
 <span id="path-remove-item"
