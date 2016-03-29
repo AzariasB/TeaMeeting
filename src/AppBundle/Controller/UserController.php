@@ -8,6 +8,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Manage the user's CRUD operations
@@ -54,10 +55,43 @@ class UserController extends SuperController {
         return $roles;
     }
 
-    public function allAction(Request $req){
-        $users = $this->getAllFromClass(User::class);
-        return $this->render('lobby/allusers.html.twig',array(
-            'users' => $users
+    public function resetPasswordAction($userId, Request $req) {
+        $user = $this->getEntityFromId(User::class, $userId);
+        $randPwd = base64_encode(random_bytes(6));
+
+        $password = $this->get('security.password_encoder')
+                ->encodePassword($user, $randPwd);
+        $user->setPassword($password);
+        $this->saveEntity($user);
+
+        $resp = new JsonResponse;
+        return $resp->setData(array(
+                    'success' => true,
+                    'password' => $randPwd
         ));
     }
+
+    /**
+     * Return all the users in the database
+     * 
+     * @param Request $req
+     * @return JsonResponse
+     */
+    public function getAllAction(Request $req) {
+        $users = $this->getAllFromClass(User::class);
+        $resp = new JsonResponse;
+        return $resp->setData($users);
+    }
+
+    /**
+     * Returns the page to display all the users
+     * the user list is returned asynchronously
+     * 
+     * @param Request $req
+     * @return Response
+     */
+    public function allAction(Request $req) {
+        return $this->render('lobby/allusers.html.twig');
+    }
+
 }

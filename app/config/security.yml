@@ -42,6 +42,7 @@ security:
         - { path: ^/unlock, roles: ROLE_ADMIN }
         - { path: ^/all-users, roles: ROLE_ADMIN }
         - { path: ^/all-projects, roles: ROLE_ADMIN }
+        - { path: ^/reset-password, roles: ROLE_ADMIN }
         - { path: ^/delete/project, roles: ROLE_ADMIN }
         - { path: ^/lobby, roles: ROLE_USER }
         - { path: ^/my-meetings, roles: ROLE_USER }

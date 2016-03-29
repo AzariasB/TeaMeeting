@@ -1,34 +1,40 @@
 
 {% extends 'lobby-base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/allUsers.js') }}" ></script>
+{% endblock %}
+
 {% block content %}
     <div  id="users-list" >
         <h3>Users list</h3>
         <ul id="user_list" class="list-group hidden-badge-list" >
-            {% for user in users %}
-                <li class="list-group-item clearfix" >
-                    <a href="{{ path('seeprofile',{'user':user.id}) }}">
-                        {{ user.username }}
+            <li ng-repeat="user in ctrl.users"
+                class="list-group-item clearfix" >
+                <a href="{{ path('seeprofile',{'user': '__name__'}) }}">
+                    // user.name //
+                </a>
+                <span class="pull-right">
+                    <a class="btn btn-xs btn-warning hidden-badge-item" 
+                       ng-click="ctrl.resetPassword($event,user.id)"
+                       href="{{ path('reset-password',{'userId':'__name__'}) }}">
+                        <i class="glyphicon glyphicon-refresh" ></i>
+                        Reset password
                     </a>
-                    <span class="pull-right">
-                        <a class="btn btn-xs btn-warning hidden-badge-item" href="#">
-                            <i class="glyphicon glyphicon-refresh" ></i>
-                            Reset password
-                        </a>
-                        <a class="btn btn-xs btn-danger hidden-badge-item" href="#">
-                            <i class="glyphicon glyphicon-trash" ></i>
-                            Delete user
-                        </a>
-                    </span>
-                </li>
-            {% endfor %}
-        </ul>
-        <span id="profilePath" hidden="">
-            {{ path('seeprofile',{'user':'__number__'}) }}
-        </span>       
+                    <a class="btn btn-xs btn-danger hidden-badge-item" href="#">
+                        <i class="glyphicon glyphicon-trash" ></i>
+                        Delete user
+                    </a>
+                </span>
+            </li>
+        </ul>      
         <a id="create_user"  class="btn btn-default" href="{{ path('register') }}">
             <i class="glyphicon glyphicon-plus" ></i>
             Create a user
         </a>
+        <span id="all-users-path" data-href="{{ path('all-users-json') }}" ></span>
     </div>
+
+    {% include 'modal.html.twig' %}
 {% endblock %}
