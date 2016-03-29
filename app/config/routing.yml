@@ -85,6 +85,9 @@ my-meetings:
 all-projects:
     path: /all-projects
     defaults: { _controller: AppBundle:Project:all }
+all-projects-json:
+    path: /all-projects/json
+    defaults: { _controller: AppBundle:Project:getAll }
 all-users:
     path: /all-users
     defaults: { _controller: AppBundle:User:all }

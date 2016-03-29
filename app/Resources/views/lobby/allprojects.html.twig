@@ -1,51 +1,58 @@
 
 {% extends "lobby-base.html.twig" %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/allProjects.js') }}" ></script>
+{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
         <h2>Projects</h2>
-        <ul id="project_list" class="list-group hidden-badge-list" >
-            {% for proj in projects %}
-                <li class="list-group-item clearfix" >
-                    <a href="{{ path('seeproject',{'projId':proj.id}) }}">
-                        {{ proj.projectName }}
+        <ul id="project_list" 
+            class="list-group hidden-badge-list" >
+            <li ng-repeat="project in ctrl.projects"
+                class="list-group-item clearfix" >
+                <a href="{{ path('seeproject',{'projId': '__name__'}) }}">
+                    // project.name //
+                </a>
+                <span class="pull-right" >
+                    <a  ng-if="project.locked"
+                        ng-click="ctrl.lockProject($event,project.id,false)"
+                        class="btn btn-success btn-xs hidden-badge-item"  
+                        href="{{ path('unlockproject',{'proj' : '__name__'}) }}">
+                        <i class="fa fa-unlock" ></i>
+                        Unlock
                     </a>
-                    <span class="pull-right" >
-                        {% if proj.locked %}
-                            <a class="btn btn-success btn-xs hidden-badge-item"  
-                               href="{{ path('unlockproject',{'proj' : proj.id}) }}">
-                                <i class="fa fa-unlock" ></i>
-                                Unlock
-                            </a>
-                        {% else %}
-                            <a class="btn btn-warning btn-xs hidden-badge-item" 
-                               href="{{ path('lockproject',{'proj' : proj.id}) }}">
-                                <i class="fa fa-lock" ></i>
-                                Lock
-                            </a>
-                        {% endif %}
-                        <a class="btn btn-danger btn-xs hidden-badge-item"
-                           href="{{ path('deleteproject',{'projId' : proj.id}) }}">
-                            <i class="glyphicon glyphicon-trash" ></i>
-                            Delete
-                        </a>
-                    </span>
-                </li>
-            {% endfor %}
+                    <a ng-if="!project.locked"
+                       ng-click="ctrl.lockProject($event,project.id,true)"
+                       class="btn btn-warning btn-xs hidden-badge-item" 
+                       href="{{ path('lockproject',{'proj' : '__name__' }) }}">
+                        <i class="fa fa-lock" ></i>
+                        Lock
+                    </a>
+                    <a ng-click="ctrl.deleteProject($event,project.id)"
+                        class="btn btn-danger btn-xs hidden-badge-item"
+                        href="{{ path('deleteproject',{'projId' : '__name__'}) }}">
+                        <i class="glyphicon glyphicon-trash" ></i>
+                        Delete
+                    </a>
+                </span>
+            </li>
         </ul>
-        <span id="seeProjectPath" 
-              data-href="{{ path('seeproject',{'projId':'__number__'}) }}" 
-              hidden="" ></span>
-        <span id="lockProjectPath"
-              hidden=""
-              data-href="{{ path('lockproject',{'proj' : '__number__'}) }}" >
-        </span>
-        <span id="deleteProjectPath" 
-              hidden=""
-              data-href="{{ path('deleteproject',{'projId' : '__number__'}) }}">
-
+        {% if is_granted('ROLE_ADMIN') %}
+            <a  id="create-project"
+                class="btn btn-default"
+                ng-click="ctrl.projectModal($event)"
+                href="{{ path('newproject') }}">
+                <i class="glyphicon glyphicon-plus"></i>
+                Create a project
+            </a>
+        {% endif %}
+        <span data-href="{{ path('all-projects-json') }}" 
+             id="all-projects-path"
+             hidden="">
         </span>
     </div>
-
+    {% include 'modal.html.twig' %}
 {% endblock %}

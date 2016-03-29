@@ -309,7 +309,12 @@ class Project implements \JsonSerializable {
     public function jsonSerialize() {
         return array(
             'id' => $this->id,
-            'name' => $this->projectName//Maybe add some more ?
+            'name' => $this->projectName,
+            'locked' => $this->locked,
+            'meetings' => $this->meetings,
+            'roles' => $this->roles,
+            'leader' => $this->leader,
+            'secretary' => $this->secretary
         );
     }
 

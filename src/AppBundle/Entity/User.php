@@ -264,16 +264,25 @@ class User implements UserInterface, \JsonSerializable {
      */
     public function getAllAnswers() {
         $meetings = $this->getAllMeetings();
-        return $meetings->map(function($meeting){
-            return $meeting->answerForUser($this);
-        });
+        return $meetings->map(function($meeting) {
+                    return $meeting->answerForUser($this);
+                });
     }
-    
-    public function getUnansweredAnswers(){
+
+    /**
+     * Return all the answers where the answer is 'unknown'
+     * 
+     * @return ArrayCollection
+     */
+    public function getUnansweredAnswers() {
         $answers = $this->getAllAnswers();
-        return $answers->filter(function($ans){
-            return $ans->isUnknown();
-        });
+        return $answers->filter(function($ans) {
+                    return $ans->isUnknown();
+                });
+    }
+
+    public function answeredThisMeeting(Meeting $meeting) {
+        return $meeting->answerForUser($this)->getAnswer() !== UserAnswer::NO_ANSWER;
     }
 
     public function eraseCredentials() {

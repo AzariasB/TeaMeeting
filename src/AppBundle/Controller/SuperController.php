@@ -72,6 +72,13 @@ class SuperController extends Controller {
         return $entity;
     }
     
+    /**
+     * Find all the entity
+     * of a given class
+     * 
+     * @param string $className
+     * @return ArrayCollection
+     */
     protected function getAllFromClass($className){
         return $this->getDoctrine()->getRepository($className)->findAll();
     }

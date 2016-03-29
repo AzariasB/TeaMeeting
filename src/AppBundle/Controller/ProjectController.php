@@ -21,11 +21,21 @@ use Symfony\Component\Form\Form;
  */
 class ProjectController extends SuperController {
 
-    public function allAction(Request $req) {
+    public function getAllAction(Request $req) {
         $projects = $this->getAllFromClass(Project::class);
-        return $this->render('lobby/allprojects.html.twig', array(
-                    'projects' => $projects
-        ));
+        $resp = new JsonResponse;
+        return $resp->setData($projects);
+    }
+
+    /**
+     * Show the page with all the projects
+     * (projects loaded asynchronously)
+     * 
+     * @param Request $req
+     * @return Response
+     */
+    public function allAction(Request $req) {
+        return $this->render('lobby/allprojects.html.twig');
     }
 
     /**
@@ -79,7 +89,7 @@ class ProjectController extends SuperController {
         $form = $this->createForm(ProjectType::class, $proj);
 
         $form->handleRequest($req);
-        if ($form->isSubmitted() && $req->isXmlHttpRequest()) {
+        if ($form->isSubmitted()) {
             return $this->handleCreateXmlRequest($form, $proj);
         }
         return $this->createProjectPage($form);
@@ -115,8 +125,7 @@ class ProjectController extends SuperController {
             $this->saveEntity($proj);
             $resp->setData(array(
                 'success' => true,
-                'projectId' => $proj->getId(),
-                'projectName' => $proj->getProjectName()
+                'project' => $proj
             ));
             return $resp;
         }
@@ -134,9 +143,13 @@ class ProjectController extends SuperController {
      * @param int $projId
      * @return Response
      */
-    public function deleteAction($projId) {
+    public function deleteAction($projId, Request $req) {
         $this->deleteProject($projId);
-        return $this->redirectToRoute('lobby');
+        $resp = new JsonResponse;
+        return $resp->setData(array(
+                    'success' => true,
+                    'projectId' => $projId
+        ));
     }
 
     /**
@@ -180,7 +193,7 @@ class ProjectController extends SuperController {
      * @return Response
      */
     private function createProjectPage($form) {
-        return $this->render('project/create.html.twig', array(
+        return $this->render('project/project-form.html.twig', array(
                     'form' => $form->createView()
         ));
     }
@@ -205,8 +218,8 @@ class ProjectController extends SuperController {
      * @param integer $proj
      * @return Response
      */
-    public function lockAction($proj) {
-        return $this->changeProjStateTo($proj, true);
+    public function lockAction($proj, Request $req) {
+        return $this->changeProjStateTo($proj, true, $req);
     }
 
     /**
@@ -215,8 +228,8 @@ class ProjectController extends SuperController {
      * @param integer $proj
      * @return Response
      */
-    public function unlockAction($proj) {
-        return $this->changeProjStateTo($proj, false);
+    public function unlockAction($proj, Request $req) {
+        return $this->changeProjStateTo($proj, false, $req);
     }
 
     /**
@@ -229,7 +242,7 @@ class ProjectController extends SuperController {
      * @param boolean $newState
      * @return boolean
      */
-    private function changeProjStateTo($proj, $newState) {
+    private function changeProjStateTo($proj, $newState, Request $rq) {
         $p = $this->getEntityFromId(Project::class, $proj);
         $success = false;
         if ($p->getLocked() !== $newState) {
@@ -237,12 +250,12 @@ class ProjectController extends SuperController {
             $success = true;
             $this->saveEntity($p);
         }
-        if ($success) {
-            return $this->redirectToRoute('lobby');
-        } else {
-            //'Already locked,unlocked';
-        }
-        return $success;
+
+        $res = new JsonResponse;
+        return $res->setData(array(
+                    'success' => $success,
+                    'project' => $p
+        ));
     }
 
 }

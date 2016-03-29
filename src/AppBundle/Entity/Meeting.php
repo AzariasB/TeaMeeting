@@ -346,6 +346,12 @@ class Meeting implements \JsonSerializable {
         }
     }
 
+    /**
+     * Get the answer given by the user
+     * 
+     * @param User $user
+     * @return UserAnswer
+     */
     public function answerForUser(User $user) {
 
         $res = $this->answers->filter(function($answer)use($user) {
