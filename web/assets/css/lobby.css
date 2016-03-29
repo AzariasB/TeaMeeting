@@ -75,3 +75,7 @@
 .nav-side-menu{
     overflow: hidden;
 }
+
+#lobby-content{
+    margin-left: 230px;
+}

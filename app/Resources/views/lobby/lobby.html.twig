@@ -1,0 +1,21 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Lobby
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('assets/css/lobby_admin.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/toolbar.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/lobbyAdmin.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    {% include 'toolbar.html.twig' %}
+    {% include 'sidebar.html.twig' %}
+    {% include 'lobby/admin.html.twig' %}
+{% endblock %}

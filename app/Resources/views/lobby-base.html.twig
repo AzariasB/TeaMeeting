@@ -1,0 +1,22 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Lobby
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('assets/css/lobby.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/toolbar.css') }}" rel="stylesheet" />
+{% endblock %}
+
+
+{% block body %}
+    {% include 'toolbar.html.twig' %}
+    {% include 'sidebar.html.twig' %}
+
+    <div id="lobby-content" >
+        {% block content %} {% endblock %}
+    </div>
+
+{% endblock %}

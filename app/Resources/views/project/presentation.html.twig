@@ -1,73 +1,115 @@
 
-{% extends 'base.html.twig' %}
+{% extends 'lobby-base.html.twig' %}
 
 {% block title %}
     {{ project.projectName }}
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     <script src="{{ asset('assets/js/editProject.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <link href="{{ asset('assets/css/project-style.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% set formClass = {'attr': {'class':'form-control','disabled':'' } } %}
 
-{% block body %}
-    {% if is_granted('ROLE_USER') %}
-        {% include 'toolbar.html.twig' %}
-    {% endif %}
+{% block content %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-2 text-center">
-                <h2>Project "{{ project.projectName }}" </h2>
-            </div>
-            <div class="col-xs-2 text-center" >
-                <h4>
-                    Leader : {{ project.leader.username }} 
-                </h4>
-                <h4>
-                    Secretary : {{ project.secretary.username }}
-                </h4>
-            </div>
-            <div class="col-xs-8">
-                <h3>Participants :</h3>
-                <ul class="list-group list-inline" >
-                    {% for part in project.participants %}
-                        <li class="list-group-item" >
-                            {{ part.username }}
-                        </li>
-                    {% endfor %}
-                </ul>
+            <div class="col-xs-12 text-left">
+                <h1>Project "{{ project.projectName }}" </h1>
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 col-sm-6">
-                <h3>Other roles :</h3>
-                <ul class="list-group" id='list-roles' >
-                    {% for ro in project.roles %}
-                        <li class="list-group-item" data-id="{{ ro.id }}" >
-                            <strong>{{ ro.student.username }}</strong> :
-                            {{ ro.roleName }}
-                            {% if canEdit %}
-                                <span class="pull-right">
-                                    <a href="#"
-                                       class="btn btn-primary btn-xs">
-                                        <i class="glyphicon glyphicon-pencil"></i>
-                                        Edit
-                                    </a>
-                                    <a href="{{ path('remove-role',{ 'roleId' : ro.id }) }}"
-                                       class="btn btn-warning btn-xs btn-remove">
-                                        <i class="glyphicon glyphicon-remove"></i>
-                                        Delete
-                                    </a>
-                                </span>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
+            <div class="col-xs-6 text-left" >
+                <h3>
+                    Leader : {{ project.leader.username }} 
+                </h3>
+                <h3>
+                    Secretary : {{ project.secretary.username }}
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+                        <div class="col-xs-12 col-sm-3">
+                <div class="panel-group" id="participantsAccordion" role="tablist">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" role="tab" id="meetingsPanel">
+                            <h4 class="panel-title">
+                                <a role="button" 
+                                   data-toggle="collapse" 
+                                   data-parent="#participantsAccordion" 
+                                   href="#collapseParticipants" 
+                                   aria-controls="collapseParticipants">
+                                    {{ project.participants.count() }} Participants
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseParticipants" 
+                             class="panel-collapse collapse" 
+                             role="tabpanel" 
+                             aria-labelledby="meetingsPanel">
+                            <ul class="list-group" id="list-meetings" >
+                                {% for part in project.participants %} 
+                                    <li class="list-group-item" data-id="{{ part.id }}" >
+                                        <a href="#">
+                                            {{ part.username }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a role="button" 
+                                   data-toggle="collapse" 
+                                   data-parent="#accordion" 
+                                   href="#collapseOne" 
+                                   aria-expanded="true" 
+                                   aria-controls="collapseOne">
+                                    {{ project.roles.count() }} roles
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" 
+                             class="panel-collapse collapse in" 
+                             role="tabpanel" 
+                             aria-labelledby="headingOne">
+                            <ul class="list-group" id='list-roles' >
+                                {% for ro in project.roles %}
+                                    <li class="list-group-item" data-id="{{ ro.id }}" >
+                                        <strong>{{ ro.student.username }}</strong> :
+                                        {{ ro.roleName }}
+                                        {% if canEdit %}
+                                            <span class="pull-right">
+                                                <a href="#"
+                                                   class="btn btn-primary btn-xs">
+                                                    <i class="glyphicon glyphicon-pencil"></i>
+                                                    Edit
+                                                </a>
+                                                <a href="{{ path('remove-role',{ 'roleId' : ro.id }) }}"
+                                                   class="btn btn-warning btn-xs btn-remove">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                    Delete
+                                                </a>
+                                            </span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 {% if canEdit %}
                     <a href="{{ path('add-role') }}"
                        data-project="{{ project.id }}"
@@ -78,31 +120,51 @@
                     </a>
                 {% endif %}
             </div>
-            <div class="col-xs-12 col-sm-6">
-                <h3>Meetings : </h3>
-                <ul class="list-group" id="list-meetings" >
-                    {% for meet in project.meetings %} 
-                        <li class="list-group-item" data-id="{{ meet.id }}" >
-                            <a href="{{ path('see-meeting', { 'meetingId' : meet.id }) }}">
-                                Meeting at  {{ meet.date|date('d/m/Y H:i') }} in room {{ meet.room }}
-                            </a>
-                            {% if canEdit %}
-                                <span class="pull-right">
-                                    <a href="#"
-                                       class="btn btn-primary btn-xs">
-                                        <i class="glyphicon glyphicon-pencil"></i>
-                                        Edit
-                                    </a>
-                                    <a href="{{  path('remove-meeting',{ 'meetingId' : meet.id }) }}"
-                                       class="btn btn-warning btn-xs btn-remove">
-                                        <i class="glyphicon glyphicon-remove"></i>
-                                        Delete
-                                    </a>
-                                </span>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
+            <div class="col-xs-12 col-sm-5">
+                <div class="panel-group" id="meetingAccordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" role="tab" id="meetingsPanel">
+                            <h4 class="panel-title">
+                                <a role="button" 
+                                   data-toggle="collapse" 
+                                   data-parent="#meetingAccordion" 
+                                   href="#collapseMeeting" 
+                                   aria-expanded="true" 
+                                   aria-controls="collapseMeeting">
+                                    {{ project.meetings.count() }} meetings
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseMeeting" 
+                             class="panel-collapse collapse in" 
+                             role="tabpanel" 
+                             aria-labelledby="meetingsPanel">
+                            <ul class="list-group" id="list-meetings" >
+                                {% for meet in project.meetings %} 
+                                    <li class="list-group-item" data-id="{{ meet.id }}" >
+                                        <a href="{{ path('see-meeting', { 'meetingId' : meet.id }) }}">
+                                            Meeting at  {{ meet.date|date('d/m/Y H:i') }} in room {{ meet.room }}
+                                        </a>
+                                        {% if canEdit %}
+                                            <span class="pull-right">
+                                                <a href="#"
+                                                   class="btn btn-primary btn-xs">
+                                                    <i class="glyphicon glyphicon-pencil"></i>
+                                                    Edit
+                                                </a>
+                                                <a href="{{  path('remove-meeting',{ 'meetingId' : meet.id }) }}"
+                                                   class="btn btn-warning btn-xs btn-remove">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                    Delete
+                                                </a>
+                                            </span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 {% if canEdit %}
                     <a href="{{ path('add-meeting') }}"
                        data-project="{{ project.id }}"

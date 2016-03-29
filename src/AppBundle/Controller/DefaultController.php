@@ -61,7 +61,7 @@ class DefaultController extends SuperController {
         
         $users =  $em->getRepository('AppBundle:User')->findAll();
         $projects = $em->getRepository('AppBundle:Project')->findAll();
-        return $this->render('default/lobby.html.twig',array(
+        return $this->render('lobby/lobby.html.twig',array(
             'users' => $users,
             'projects' => $projects
         ));
