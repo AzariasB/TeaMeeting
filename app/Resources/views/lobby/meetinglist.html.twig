@@ -23,7 +23,8 @@
                         </div>
                         <ul class="list-group hidden-badge-list">
                             {% for meet in proj.meetings %}
-                                <li class="list-group-item list-group-item-text row" >
+                                <li class="list-group-item list-group-item-text row
+                                    {{ meet.isOutdated() ? 'disabled':'' }}" >
                                     {% include 'meeting/meeting-line.html.twig' %}
                                 </li>
                             {% endfor %}

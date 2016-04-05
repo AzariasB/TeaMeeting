@@ -33,6 +33,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\Form;
 use AppBundle\Form\ItemAgendaType;
 use AppBundle\Entity\Agenda;
@@ -49,14 +50,20 @@ class ItemAgendaController extends SuperController {
     public function updateAction($itemId, Request $req) {
         $item = $this->getEntityFromId(ItemAgenda::class, $itemId);
 
+        $arrayMeetings = new ArrayCollection($this->getAllFromClass(Meeting::class));
+        $meetings = $arrayMeetings->filter(function($meet) {
+                    return !$meet->isOutdated();
+                })->toArray();
+
         $form = $this->createForm(ItemAgendaType::class, $item)
                 ->add('meeting', EntityType::class, array(
             'class' => 'AppBundle:Meeting',
+            'choices' => $meetings,
             'choice_label' => function(Meeting $meeting) {
-                return $meeting->getRoom() . ' - ' .$meeting->getDate()->format('d/M/y');
+                return $meeting->getRoom() . ' - ' . $meeting->getDate()->format('d/M/y');
             }
         ));
-        
+
         $form->handleRequest($req);
 
         if ($form->isSubmitted()) {
@@ -73,7 +80,7 @@ class ItemAgendaController extends SuperController {
             return $rep->setData(array(
                         'success' => true,
                         'item' => $item,
-                        'itemMeeting' => $item->getMeeting() 
+                        'itemMeeting' => $item->getMeeting()
             ));
         } else {
             return $rep->setData(array(

@@ -58,20 +58,20 @@ class SuperController extends Controller {
         $em->flush();
     }
 
-    protected function removeEntity($entity){
+    protected function removeEntity($entity) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($entity);
         $em->flush();
     }
-    
+
     protected function getEntityFromId($className, $id) {
         $entity = $this->getDoctrine()->getManager()->find($className, $id);
-        if(!$entity){
+        if (!$entity) {
             throw $this->createNotFoundException('Entity not found');
         }
         return $entity;
     }
-    
+
     /**
      * Find all the entity
      * of a given class
@@ -79,8 +79,14 @@ class SuperController extends Controller {
      * @param string $className
      * @return ArrayCollection
      */
-    protected function getAllFromClass($className){
+    protected function getAllFromClass($className) {
         return $this->getDoctrine()->getRepository($className)->findAll();
+    }
+
+    protected function getFromClass($className, $predicate) {
+        return $this->getDoctrine()
+                        ->getRepository($className)
+                        ->findBy($predicate);
     }
 
 }

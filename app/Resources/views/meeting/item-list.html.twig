@@ -22,7 +22,7 @@
                     ng-attr-id="// item.id //" >
                     <strong>// item.title //</strong>
                     Proposed by // item.proposer.name //
-                    {% if canEdit %}
+                    {% if canEdit and not meeting.isOutdated() %}
                         <span class="pull-right hidden-badge-item" ng-if="$index > 2">
                             <a title="Remove"
                                href="#"

@@ -21,7 +21,7 @@
 {% set agenda    = meeting.getCurrentAgenda() %}
 
 {% block content %}
-    {% if not app.user.answeredThisMeeting(meeting) %}
+    {% if not app.user.answeredThisMeeting(meeting) and not meeting.isOutdated() %}
         <div class="alert alert-info">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -29,6 +29,17 @@
             You did not answered to this meeting yet.
             <a href="{{ path('my-meetings') }}" class="alert-link" >
                 Give my answer
+            </a>
+        </div>
+    {% endif %}
+    {% if meeting.isOutdated() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            This meeting is outdated.
+            <a href="#" class="alert-link" >
+                See the report
             </a>
         </div>
     {% endif %}
@@ -70,26 +81,30 @@
             <h3>Current agenda</h3>
             {% include 'meeting/item-list.html.twig' %}
             {% include 'meeting/request-list.html.twig' %}
-            {% if canEdit %}
-                <a href="{{ path('add-agenda-item',{'agendaId' : agenda.id }) }}" 
-                   class="btn btn-default"
-                   ng-click="ctrl.newItem($event)"
-                   id="add-meeting" >
-                    <i class="glyphicon glyphicon-plus" ></i>
-                    Add item
-                </a>
-                <a href="{{ path('save-agenda-items',{'agendaId' :agenda.id }) }}"
-                   class="btn btn-success"
-                   ng-click="ctrl.saveItems($event)">
-                    Save order
-                </a>
-            {% else %} 
-                <a href='{{ path('send-request', { 'agendaId' : agenda.id }) }}' 
-                   class="btn btn-default"
-                   ng-click="ctrl.sendRequest($event)" >
-                    <i class="glyphicon glyphicon-send" > </i>
-                    Send a request to the chairman
-                </a>
+            {% if meeting.isOutdated() %}
+                {#                Add link to the report#}
+            {% else %}
+                {% if canEdit %}
+                    <a href="{{ path('add-agenda-item',{'agendaId' : agenda.id }) }}" 
+                       class="btn btn-default"
+                       ng-click="ctrl.newItem($event)"
+                       id="add-meeting" >
+                        <i class="glyphicon glyphicon-plus" ></i>
+                        Add item
+                    </a>
+                    <a href="{{ path('save-agenda-items',{'agendaId' :agenda.id }) }}"
+                       class="btn btn-success"
+                       ng-click="ctrl.saveItems($event)">
+                        Save order
+                    </a>
+                {% else %} 
+                    <a href='{{ path('send-request', { 'agendaId' : agenda.id }) }}' 
+                       class="btn btn-default"
+                       ng-click="ctrl.sendRequest($event)" >
+                        <i class="glyphicon glyphicon-send" > </i>
+                        Send a request to the chairman
+                    </a>
+                {% endif %}
             {% endif %}
             <span hidden="" 
                   id="agenda-json" 

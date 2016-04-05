@@ -101,9 +101,9 @@ class Meeting implements \JsonSerializable {
     }
 
     public function __toString() {
-        return $this->room.'-'.$this->date->format('d/M/y');
+        return $this->room . '-' . $this->date->format('d/M/y');
     }
-    
+
     /**
      * Get id
      * 
@@ -362,6 +362,15 @@ class Meeting implements \JsonSerializable {
         } else {
             return $res->first();
         }
+    }
+
+    /**
+     * Return true if the meeting is outdated
+     * 
+     * @return boolean
+     */
+    public function isOutdated() {
+        return $this->date < new \DateTime;
     }
 
     /**

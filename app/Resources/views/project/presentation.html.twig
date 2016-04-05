@@ -141,11 +141,11 @@
                              aria-labelledby="meetingsPanel">
                             <ul class="list-group" id="list-meetings" >
                                 {% for meet in project.meetings %} 
-                                    <li class="list-group-item" data-id="{{ meet.id }}" >
+                                    <li class="list-group-item {{ meet.isOutdated() ? 'disabled':'' }}" data-id="{{ meet.id }}" >
                                         <a href="{{ path('see-meeting', { 'meetingId' : meet.id }) }}">
                                             Meeting at  {{ meet.date|date('d/m/Y H:i') }} in room {{ meet.room }}
                                         </a>
-                                        {% if canEdit %}
+                                        {% if canEdit and not meet.isOutDated() %}
                                             <span class="pull-right">
                                                 <a href="#"
                                                    class="btn btn-primary btn-xs">
