@@ -34,10 +34,10 @@ seeprofile:
     path: /user/{user}
     defaults: { _controller: AppBundle:User:info }
 add-meeting:
-    path: /add-meeting
+    path: /project/{projId}/add-meeting
     defaults: { _controller: AppBundle:Meeting:create }
 add-role:
-    path: /add-role
+    path: /project/{projId}/add-role
     defaults: { _controller: AppBundle:Role:create }
 add-agenda-item:
     path: /add-item/{agendaId}
@@ -101,3 +101,6 @@ all-users:
 reset-password:
     path: /reset-password/{userId}
     defaults: { _controller: AppBundle:User:resetPassword }
+get-project-json:
+    path: project/{projId}/json
+    defaults: { _controller: AppBundle:Project:getJson }

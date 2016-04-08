@@ -8,7 +8,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use AppBundle\Entity\UserRole;
 use AppBundle\Entity\User;
 
@@ -60,14 +59,14 @@ class Project implements \JsonSerializable {
      * @var ArrayCollection
      */
     private $roles;
-    
+
     /**
      *
      * @ORM\OneToMany(targetEntity="Meeting",mappedBy="project",cascade={"persist","remove"})
      * @var ArrayCollection
      */
     private $meetings;
-    
+
     /**
      *
      * @ORM\ManyToMany(targetEntity="User",inversedBy="projects")
@@ -76,13 +75,12 @@ class Project implements \JsonSerializable {
      */
     private $participants;
 
-    
     public function __construct() {
         $this->roles = new ArrayCollection();
         $this->participants = new ArrayCollection();
         $this->meetings = new ArrayCollection();
     }
-    
+
     /**
      * Get id
      *
@@ -201,44 +199,43 @@ class Project implements \JsonSerializable {
      * 
      * @param UserRole $r
      */
-    public function removeRole(UserRole $r){
+    public function removeRole(UserRole $r) {
         $this->roles->removeElement($r);
         return $this;
     }
-    
+
     /**
      * Add role
      * 
      * @param UserRole $r
      * @return Project
      */
-    public function addRole(UserRole $r){
+    public function addRole(UserRole $r) {
         $this->roles->add($r);
         return $this;
     }
-    
-    
+
     /**
      * Set participants
      * 
      * @param ArrayCollection $parts
      * @return Project
      */
-    public function setParticipants(ArrayCollection $parts){
+    public function setParticipants(ArrayCollection $parts) {
         $this->participants = $parts;
-        
+
         return $this;
     }
-    
+
     /**
      * Get participants
      * 
      * @return ArrayCollection
      */
-    public function getParticipants(){
+    public function getParticipants() {
         return $this->participants;
     }
-    
+
     /**
      * 
      * Add participant to
@@ -247,61 +244,61 @@ class Project implements \JsonSerializable {
      * @param User $parts
      * @return Project
      */
-    public function addParticipant(User  $parts){
+    public function addParticipant(User $parts) {
         $this->participants->add($parts);
-        
+
         return $this;
     }
-    
+
     /**
      * Remove a participant
      * 
      * @param User $part
      * @return Project
      */
-    public function removeParticipant(User $part){
+    public function removeParticipant(User $part) {
         $this->participants->removeElement($part);
         return $this;
     }
-    
+
     /**
      * Set meetings
      * 
      * @param ArrayCollection $meetings
      * @return Project
      */
-    public function setMeetings(ArrayCollection $meetings){
+    public function setMeetings(ArrayCollection $meetings) {
         $this->meetings = $meetings;
         return $this;
     }
-    
+
     /**
      * Get meetings
      * 
      * @return ArrayCollection
      */
-    public function getMeetings(){
+    public function getMeetings() {
         return $this->meetings;
-    }    
-    
+    }
+
     /**
      * Add a meeting
      * 
      * @param Meeting $me
      * @return Project
      */
-    public function addMeeting(Meeting $me){
+    public function addMeeting(Meeting $me) {
         $this->meetings->add($me);
         return $this;
     }
-    
+
     /**
      * Remove a meeting
      * 
      * @param Meeting $met
      * @return Project
      */
-    public function removeMeeting(Meeting $met){
+    public function removeMeeting(Meeting $met) {
         $this->meetings->removeElement($met);
         return $this;
     }
@@ -311,8 +308,9 @@ class Project implements \JsonSerializable {
             'id' => $this->id,
             'name' => $this->projectName,
             'locked' => $this->locked,
-            'meetings' => $this->meetings,
-            'roles' => $this->roles,
+            'meetings' => $this->meetings->toArray(),
+            'roles' => $this->roles->toArray(),
+            'participants' => $this->participants->toArray(),
             'leader' => $this->leader,
             'secretary' => $this->secretary
         );

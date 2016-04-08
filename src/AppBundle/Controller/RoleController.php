@@ -29,27 +29,20 @@ class RoleController extends SuperController {
      * 
      * @param Request $req
      */
-    public function createAction(Request $req) {
-
-        // Display creation form
-        if ($req->isXmlHttpRequest()) {
-            $projectId = $req->get('project-id');
-            $p = $this->getEntityFromId(Project::class, $projectId);
-            $role = new UserRole();
-            $role->setProject($p);
-            $form = $this->createForm(RoleType::class, $role);
+    public function createAction($projId,Request $req) {
+        $p = $this->getEntityFromId(Project::class, $projId);
+        $role = new UserRole();
+        $role->setProject($p);
+        $form = $this->createForm(RoleType::class, $role);
 
 
-            $form->handleRequest($req);
+        $form->handleRequest($req);
 
-            if ($form->isSubmitted()) {
-                return $this->handleForm($form, $role);
-            }
-
-            return $this->createRoleForm($form);
+        if ($form->isSubmitted()) {
+            return $this->handleForm($form, $role);
         }
 
-        throw new NotFoundHttpException("Not found");
+        return $this->createRoleForm($form);
     }
 
     /**
@@ -63,17 +56,15 @@ class RoleController extends SuperController {
      * @throws NotFoundHttpException
      */
     public function removeAction($roleId, Request $req) {
-
-        if ($req->isXmlHttpRequest()) {
-            $rep = new JsonResponse();
-            $em = $this->getDoctrine()->getManager();
-            $role = $em->find(UserRole::class, $roleId);
-            $em->remove($role);
-            $em->flush();
-            return $rep->setData(array('success' => true));
-        }
-
-        throw new NotFoundHttpException("Not found");
+        $rep = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $role = $em->find(UserRole::class, $roleId);
+        $em->remove($role);
+        $em->flush();
+        return $rep->setData(array(
+                    'success' => true,
+                    'id' => $roleId
+        ));
     }
 
     /**

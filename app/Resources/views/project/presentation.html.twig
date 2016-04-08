@@ -18,6 +18,10 @@
 {% set formClass = {'attr': {'class':'form-control','disabled':'' } } %}
 
 {% block content %}
+    <span id="get-project-path"
+          hidden="" 
+          data-project-id="{{ project.id }}"
+          data-href="{{ path('get-project-json',{'projId':project.id}) }}"></span>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-12 text-left">
@@ -54,13 +58,12 @@
                              role="tabpanel" 
                              aria-labelledby="meetingsPanel">
                             <ul class="list-group" id="list-meetings" >
-                                {% for part in project.participants %} 
-                                    <li class="list-group-item" data-id="{{ part.id }}" >
-                                        <a href="#">
-                                            {{ part.username }}
-                                        </a>
-                                    </li>
-                                {% endfor %}
+                                <li class="list-group-item" 
+                                    ng-repeat="part in ctrl.participants" >
+                                    <a href="#">
+                                        // part.name //
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -86,34 +89,35 @@
                              role="tabpanel" 
                              aria-labelledby="headingOne">
                             <ul class="list-group" id='list-roles' >
-                                {% for ro in project.roles %}
-                                    <li class="list-group-item" data-id="{{ ro.id }}" >
-                                        <strong>{{ ro.student.username }}</strong> :
-                                        {{ ro.roleName }}
-                                        {% if canEdit %}
-                                            <span class="pull-right">
-                                                <a href="#"
-                                                   class="btn btn-primary btn-xs">
-                                                    <i class="glyphicon glyphicon-pencil"></i>
-                                                    Edit
-                                                </a>
-                                                <a href="{{ path('remove-role',{ 'roleId' : ro.id }) }}"
-                                                   class="btn btn-warning btn-xs btn-remove">
-                                                    <i class="glyphicon glyphicon-remove"></i>
-                                                    Delete
-                                                </a>
-                                            </span>
-                                        {% endif %}
-                                    </li>
-                                {% endfor %}
+                                <li ng-repeat="ro in ctrl.roles" class="list-group-item" >
+                                    <strong> // ro.student.name // </strong> :
+                                    // ro.name //
+                                    {% if canEdit %}
+                                        <span class="pull-right">
+                                            <a href="#path"
+                                               ng-click="ctrl.editRole($event,ro.id)"
+                                               class="btn btn-primary btn-xs">
+                                                <i class="glyphicon glyphicon-pencil"></i>
+                                                Edit
+                                            </a>
+                                            <a href="{{ path('remove-role',{ 'roleId' : '__id__' }) }}"
+                                               ng-click="ctrl.deleteRole($event,ro.id)"
+                                               class="btn btn-warning btn-xs btn-remove">
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                                Delete
+                                            </a>
+                                        </span>
+                                    {% endif %}
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 {% if canEdit %}
-                    <a href="{{ path('add-role') }}"
+                    <a href="{{ path('add-role',{'projId':project.id}) }}"
                        data-project="{{ project.id }}"
                        id="button-add-role"
+                       ng-click="ctrl.addRole($event)"
                        class="btn btn-default" >
                         <i class="glyphicon glyphicon-plus"></i>
                         Add role
@@ -140,33 +144,38 @@
                              role="tabpanel" 
                              aria-labelledby="meetingsPanel">
                             <ul class="list-group" id="list-meetings" >
-                                {% for meet in project.meetings %} 
-                                    <li class="list-group-item {{ meet.isOutdated() ? 'disabled':'' }}" data-id="{{ meet.id }}" >
-                                        <a href="{{ path('see-meeting', { 'meetingId' : meet.id }) }}">
-                                            Meeting at  {{ meet.date|date('d/m/Y H:i') }} in room {{ meet.room }}
-                                        </a>
-                                        {% if canEdit and not meet.isOutDated() %}
-                                            <span class="pull-right">
-                                                <a href="#"
-                                                   class="btn btn-primary btn-xs">
-                                                    <i class="glyphicon glyphicon-pencil"></i>
-                                                    Edit
-                                                </a>
-                                                <a href="{{  path('remove-meeting',{ 'meetingId' : meet.id }) }}"
-                                                   class="btn btn-warning btn-xs btn-remove">
-                                                    <i class="glyphicon glyphicon-remove"></i>
-                                                    Delete
-                                                </a>
-                                            </span>
-                                        {% endif %}
-                                    </li>
-                                {% endfor %}
+                                <li ng-repeat="meet in ctrl.meetings"
+                                    ng-class="{'disabled' : meet.outdated}"
+                                    class="list-group-item" >
+                                    <a ng-click="ctrl.seeMeeting($event,meet.id)"
+                                       href="{{ path('see-meeting', { 'meetingId' : '__id__' }) }}">
+                                        Meeting at  // meet.date | date : 'dd/MM/yyyy HH:mm' //
+                                        in room // meet.room //
+                                    </a>
+                                    {% if canEdit %}
+                                        <span ng-if="!meet.outdated" class="pull-right">
+                                            <a href="#"
+                                               ng-click="ctrl.editMeeting($event)"
+                                               class="btn btn-primary btn-xs">
+                                                <i class="glyphicon glyphicon-pencil"></i>
+                                                Edit
+                                            </a>
+                                            <a ng-click="ctrl.deleteMeeting($event,meet.id)"
+                                               href="{{ path('remove-meeting',{ 'meetingId':'__id__'}) }}"
+                                               class="btn btn-warning btn-xs btn-remove">
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                                Delete
+                                            </a>
+                                        </span>
+                                    {% endif %}
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 {% if canEdit %}
-                    <a href="{{ path('add-meeting') }}"
+                    <a href="{{ path('add-meeting',{'projId':project.id}) }}"
+                       ng-click="ctrl.addMeeting($event)"
                        data-project="{{ project.id }}"
                        id="button-add-meeting"
                        class="btn btn-default">

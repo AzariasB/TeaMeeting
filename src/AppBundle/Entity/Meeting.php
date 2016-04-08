@@ -324,9 +324,9 @@ class Meeting implements \JsonSerializable {
         return array(
             'id' => $this->id,
             'room' => $this->room,
-            'date' => $this->date,
+            'date' => $this->date->getTimestamp()*1000,
+            'outdated' => $this->isOutdated(),
             'duration' => $this->duration,
-            'project' => $this->project,
             'chairMan' => $this->chairman,
             'secretary' => $this->secretary
         );

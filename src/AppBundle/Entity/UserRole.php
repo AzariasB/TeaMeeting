@@ -133,8 +133,7 @@ class UserRole implements \JsonSerializable {
         return array(
             'id' => $this->id,
             'name' => $this->roleName,
-            'student' => $this->student,
-            'project' => $this->project
+            'student' => $this->student
         );
     }
 

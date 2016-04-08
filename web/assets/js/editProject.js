@@ -1,142 +1,115 @@
 
-var app = angular.module('app',[]);
+var app = angular.module('app', []);
 
-app.controller('controller',function(){
-    
+app.config(function ($interpolateProvider) {
+    $interpolateProvider.startSymbol('//');
+    $interpolateProvider.endSymbol('//');
 });
 
-$(document).ready(function () {
 
-    var actions = {
-        'add-meeting': {
-            'formId': 'create-meeting',
-            'listId': 'list-meetings',
-            'newLine': function (data) {
-                var meeting = data.meeting;
-                var date = new Date(meeting.date.date);
-                var deleteHref = $("#path-remove-meeting").data('href').replace(/__name__/, meeting.id);
-                return $('<li class="list-group-item" data-id="' + meeting.id + '" >' +
-                        ' Meeting at ' + this.dateString(date) +
-                        ' in room  ' + meeting.room +
-                        '<span class="pull-right">' +
-                        '<a href="#" class="btn btn-primary btn-xs">' +
-                        '<i class="glyphicon glyphicon-pencil"></i> ' +
-                        ' Edit </a> <a href="' + deleteHref +
-                        '" class="btn btn-warning btn-xs btn-remove"> ' +
-                        '<i class="glyphicon glyphicon-remove"></i> ' +
-                        ' Delete </a></span></li>');
-            },
-            'dateString': function (date) {
-                return date.getDate() + '/' + date.getMonth() + '/' +
-                        date.getFullYear() + ' ' + date.getHours() + 1 + ':' + date.getMinutes();
-            }
-        },
-        'add-role': {
-            'formId': 'create-role',
-            'listId': 'list-roles',
-            'newLine': function (data) {
-                var role = data.role;
-                var deleteHref = $("#path-remove-role").data('href').replace(/__name__/, role.id);
-                return  $('<li class="list-group-item" data-id="' + role.id + '" >' +
-                        '<strong>' + role.student.name + '</strong> : ' +
-                        role.name + '<span class="pull-right">' +
-                        '<a href="#" class="btn btn-primary btn-xs">' +
-                        '<i class="glyphicon glyphicon-pencil"></i> ' +
-                        ' Edit </a> \n <a href="' + deleteHref +
-                        '" class="btn btn-warning btn-xs btn-remove">' +
-                        '<i class="glyphicon glyphicon-remove"></i> ' +
-                        ' Delete </a></span></li>');
-            }
-        }
+app.controller('controller', function ($scope, $http) {
+
+    var projectId = $("#get-project-path").data('project-id');
+
+    this.participants = [];
+    this.roles = [];
+    this.meetings = [];
+
+    var self = this;
+
+    this.postReq = function (data, url, callback) {
+        $http({
+            method: 'POST',
+            url: url,
+            data: data,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(callback);
     };
 
     function init() {
-        Object.keys(actions).forEach(function (i) {
-            var id = "button-" + i;
-            $("#" + id).on('click', function (e) {
-                e.preventDefault();
-                var url = $(this).attr('href');
-                var pId = $(this).data('project');
-                firstRequest(url, pId, actions[i]);
+        var href = $("#get-project-path").data('href');
+        self.postReq({}, href, initArrays);
+    }
+
+    function initArrays(response) {
+        var data = response.data;
+        self.participants = data.participants;
+        self.roles = data.roles;
+        self.meetings = data.meetings;
+    }
+
+
+
+    
+    this.seeMeeting = function ($event, meetinId) {
+        $event.preventDefault();
+        var url = $(event.toElement).attr('href').replace(/__id__/, meetinId);
+        window.location = url;
+    };
+
+    this.deleteRole = function ($event, roleId) {
+        $event.preventDefault();
+        var url = $($event.toElement).attr('href').replace(/__id__/, roleId);
+        console.log(url);
+        self.postReq({}, url, roleDeleted);
+    };
+
+    function roleDeleted(response) {
+        var data = response.data;
+        if (data.success) {
+            self.meetings = self.meetings.filter(function (meeting) {
+                return (meeting.id | 0) !== (data.id | 0);
             });
+        }
+    }
+
+    this.editRole = function ($event, roleId) {
+        $event.preventDefault();
+    };
+
+    this.addRole = function ($event) {
+        $event.preventDefault();
+        var url = $($event.toElement).attr('href');
+        this.postReq({}, url, function (response) {
+            var data = response.data;
+            showModalForm(data, 'create-role-form', url,roleAdded);
         });
+    };
 
-        $("#close-alert").on('click', hideAlert);
+    this.addMeeting = function ($event) {
+        $event.preventDefault();
+        var url = $(event.toElement).attr('href');
+        this.postReq({}, url, function (response) {
+            var data = response.data;
+            showModalForm(data, 'create-meeting-form', url,meetingAdded);
+        });
+    };
 
-        $("body").on('click', '.btn-remove', function (e) {
+    function showModalForm(res, formId, url,callback) {
+        $("#modal-main-content").html(res);
+        $("#" + formId).on('submit', function (e) {
             e.preventDefault();
-            var url = $(this).attr('href');
-            var $parent = $(this).parents('li');
-
-            //Set timeout to destruction
-            var t = setTimeout(function () {
-                confirmedDelete(url, $parent);
-            }, 5000);
-
-            //Hide object
-            $parent.hide();
-
-            //Show alert to the user
-            showAlert("user", function () {
-                clearTimeout(t);
-                $parent.show();
-            });
+            self.postReq($(this).serialize(), url, callback);
         });
+        $("#modal-main").modal();
+    }
+    
+    function meetingAdded(response){
+        var data = response.data;
+        if(data.success){
+            self.meetings.push(data.meeting);
+            $("#modal-main").modal('hide');
+        }
     }
 
-    function confirmedDelete(url, $div) {
-        hideAlert();
-        $.post(url, {}, function (res) {
-            if (!res.success) {
-                //Show problem
-                showAlert('User not deleted');
-            }
-        });
-        $div.remove();
-    }
-
-    function showAlert(removed, action) {
-        $("#removed-object").text(removed);
-        $("#message-alert").addClass('show');
-        $("#cancel-action").on('click', function (e) {
-            e.preventDefault();
-            action.call();
-            hideAlert();
-            $(this).off('click');
-        });
-    }
-
-    function hideAlert() {
-        $("#message-alert").removeClass('show');
-    }
-
-    function firstRequest(url, projectId, obj) {
-        $.post(url, {'project-id': projectId}, function (res) {
-            $("#modal-main-content").html(res);
-            $("#" + obj.formId + "-form").on('submit', function (e) {
-                e.preventDefault();
-                $(this).find("#project-id").val(projectId);
-                formSubmitted(url, this, obj);
-            });
-            $("#modal-main").modal();
-        });
-    }
-
-    function addLineTo(listId, newLine) {
-        $("#" + listId).append(newLine);
-    }
-
-    function formSubmitted(url, form, obj) {
-        var $form = $(form);
-        $.post(url, $form.serialize(), function (data) {
-            if (data.success) {
-                addLineTo(obj.listId, obj.newLine.call(obj, data));
-                $("#modal-main").modal('hide');
-            } else {
-                $("#modal-main-content").html(data.page);
-            }
-        });
+    function roleAdded(response) {
+        var data = response.data;
+        if (data.success) {
+            self.roles.push(data.role);
+            $("#modal-main").modal('hide');
+        }
     }
 
     init();
+
 });

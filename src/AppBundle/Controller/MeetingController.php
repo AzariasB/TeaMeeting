@@ -111,27 +111,20 @@ class MeetingController extends SuperController {
      * @param Request $req
      * @return Response
      */
-    public function createAction(Request $req) {
-
-        // Display creation form
-        if ($req->isXmlHttpRequest()) {
-            $projectId = $req->get('project-id');
-            $p = $this->getEntityFromId(Project::class, $projectId);
-            $meet = new Meeting();
-            $meet->setProject($p);
-            $form = $this->createForm(MeetingType::class, $meet);
+    public function createAction($projId,Request $req) {
+        $p = $this->getEntityFromId(Project::class, $projId);
+        $meet = new Meeting();
+        $meet->setProject($p);
+        $form = $this->createForm(MeetingType::class, $meet);
 
 
-            $form->handleRequest($req);
+        $form->handleRequest($req);
 
-            if ($form->isSubmitted()) {
-                return $this->handleForm($form, $meet);
-            }
-
-            return $this->createMeetingForm($form);
+        if ($form->isSubmitted()) {
+            return $this->handleForm($form, $meet);
         }
 
-        throw new NotFoundHttpException("Not found");
+        return $this->createMeetingForm($form);
     }
 
     /**
