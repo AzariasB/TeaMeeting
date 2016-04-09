@@ -24,7 +24,6 @@ app.controller('controller', function ($scope, $http) {
     this.projectModal = function (event) {
         event.preventDefault();
         var url = $(event.toElement).attr('href');
-        console.log(url);
         this.postReq({}, url, function (response) {
             showModal(url, "create-project-form", response.data, confirmCreation);
         });
@@ -50,10 +49,16 @@ app.controller('controller', function ($scope, $http) {
             var data = response.data;
             if (data.success) {
                 self.projects = self.projects.filter(function (proj) {
-                    return (proj.id|0) !== (data.projectId|0);
+                    return (proj.id | 0) !== (data.projectId | 0);
                 });
             }
         });
+    };
+
+    this.seeProject = function ($event, projId) {
+        $event.preventDefault();
+        var url = $($event.toElement).attr('href').replace(/__name__/, projId);
+        window.location = url;
     };
 
 

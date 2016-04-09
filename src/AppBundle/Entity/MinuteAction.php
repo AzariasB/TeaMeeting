@@ -58,7 +58,7 @@ class MinuteAction implements \JsonSerializable {
     
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="ItemMinute",inversedBy="action")
+     * @ORM\ManyToOne(targetEntity="ItemMinute",inversedBy="actions")
      * @ORM\JoinColumn(name="item_id",referencedColumnName="id")
      * @var ItemMinute
      */

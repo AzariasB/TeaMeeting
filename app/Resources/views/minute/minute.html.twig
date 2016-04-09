@@ -2,14 +2,56 @@
 
 {% extends "lobby-base.html.twig" %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/minute.js') }}"></script>
+{% endblock %}
+
 {% block title %}
     Meeting minute
 {% endblock %}
 
 {% block content %}
-    {% if minute %}
-        Here is the minute
-    {% else %}
-        No minute created
-    {% endif %}
+    <span hidden="" 
+          id="minute-json-path" 
+          data-href="{{ path('minute-json',{'meetingId':minute.meeting.id }) }}" ></span>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>Meeting minute</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <ul class="list-group hidden-badge-list row" >
+                    <li class="list-group-item col-xs-12"
+                        ng-attr-title="// presence.wasPresent ? 'Present':'Absent' //"
+                        ng-class="presence.wasPresent ? 'list-group-item-success' : 'list-group-item-warning'"
+                        ng-repeat="presence in ctrl.presenceList" >
+                        <strong> // presence.user.name // </strong>  :
+                        // presence.string //
+                        {% if canEdit %}
+                            <span class="pull-right hidden-badge-item">
+                                <a ng-click='ctrl.editPresence($event,presence.id)'
+                                    class="btn btn-primary btn-xs"
+                                    href='{{ path('edit-presence',{'presenceId':'__id__'}) }}'>
+                                    <i class="glyphicon glyphicon-pencil" ></i>
+                                    Update
+                                </a>
+                            </span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <ul class="list-group hidden-badge-list">
+                    <li class="list-group-item"
+                        ng-repeat="item in ctlr.items">
+                        // item //
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% include 'modal.html.twig' %}
 {% endblock %}

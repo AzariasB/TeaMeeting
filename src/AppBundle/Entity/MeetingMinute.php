@@ -32,6 +32,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Description of MeetingMinute
@@ -76,12 +77,12 @@ class MeetingMinute implements \JsonSerializable {
      * @var ArrayCollection
      */
     private $comments;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Meeting",inversedBy="minutes")
      * @ORM\JoinColumn(name="meeting_id",referencedColumnName="id")
      * 
-     * @var type 
+     * @var Meeting 
      */
     private $meeting;
 
@@ -158,6 +159,17 @@ class MeetingMinute implements \JsonSerializable {
     }
 
     /**
+     * Add a user presence
+     * 
+     * @param UserPresence $pres
+     * @return MeetingMinute
+     */
+    public function addUserPresence(UserPresence $pres) {
+        $this->presenceList->add($pres);
+        return $this;
+    }
+
+    /**
      * Set items
      * 
      * @param ArrayCollection $items
@@ -189,35 +201,61 @@ class MeetingMinute implements \JsonSerializable {
         $this->comments = $comments;
         return $this;
     }
-    
+
     /**
      * Get meeting
      * 
      * @return Meeting
      */
-    public function getMeeting(){
+    public function getMeeting() {
         return $this->meeting;
     }
-    
+
     /**
      * Set meeting
      * 
      * @param Meeting $meet
      * @return MeetingMinute
      */
-    public function setMeeting(Meeting $meet){
+    public function setMeeting(Meeting $meet) {
         $this->meeting = $meet;
         $this->agenda = $meet->getCurrentAgenda();
+        $participants = $meet->getProject()->getParticipants();
+        $this->initUserPresence($participants);
         return $this;
+    }
+
+    private function initUserPresence(Collection $participants) {
+        foreach ($participants as $parts) {
+            $presence = new UserPresence($this, $parts);
+            $this->addUserPresence($presence);
+        }
+    }
+
+    /**
+     * 
+     * Check if the given user was marked
+     * as present to the meeting
+     * 
+     * @param User $user
+     * @return boolean
+     */
+    public function userWasPresent(User $user) {
+        foreach ($this->presenceList as $presence) {
+            if ($presence->getUser() == $user) {
+                return $presence->wasPresent();
+            }
+        }
+        return false;
     }
 
     public function jsonSerialize() {
         return array(
             'id' => $this->id,
-            'comments' => $this->comments,
+            'comments' => $this->comments->toArray(),
             'agenda' => $this->agenda,
-            'presenceList' => $this->presenceList,
-            'items' => $this->items
+            'presenceList' => $this->presenceList->toArray(),
+            'items' => $this->items->toArray()
         );
     }
 

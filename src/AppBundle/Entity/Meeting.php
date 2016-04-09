@@ -423,6 +423,14 @@ class Meeting implements \JsonSerializable {
         return $this->date < new \DateTime;
     }
 
+    public function userIsSecretary(User $user){
+        return $this->secretary == $user;
+    }
+    
+    public function userIsChairMan(User $user){
+        return $this->chairman == $user;
+    }
+    
     /**
      * Number of answers 'no' for the meeting
      * 

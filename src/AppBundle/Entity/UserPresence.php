@@ -62,7 +62,7 @@ class UserPresence implements \JsonSerializable {
     /**
      * The meeting relied to the presence
      *
-     * @ORM\ManyToOne(targetEntity="MeetingMinute",inversedBy="presentUsers")
+     * @ORM\ManyToOne(targetEntity="MeetingMinute",inversedBy="presenceList")
      * @ORM\JoinColumn(name="meeting_id",referencedColumnName="id")
      * @var MeetingMinute
      */
@@ -86,8 +86,10 @@ class UserPresence implements \JsonSerializable {
      */
     private $state;
 
-    public function __construct() {
+    public function __construct(MeetingMinute $meeting = null, User $user = null) {
         $this->state = self::ABSENT_NO_APOLOGIES;
+        $this->meetingMinute = $meeting;
+        $this->user = $user;
     }
 
     /**
@@ -182,8 +184,35 @@ class UserPresence implements \JsonSerializable {
         return array(
             'id' => $this->id,
             'state' => $this->state,
-            'user' => $this->user
+            'user' => $this->user,
+            'string' => $this->stateToString(),
+            'wasPresent' => $this->wasPresent()
         );
+    }
+
+    public function stateToString() {
+        if ($this->state === self::PRESENT_FOR_WHOLE_MEETING) {
+            return 'For whole meeting';
+        } else if ($this->wasPresent()) {
+            $res = '';
+            if ($this->state & self::PRESENT_ARRIVED_LATE) {
+                $res += 'Arrived late';
+            }
+            if ($this->state & self::PRESENT_LEFT_EARLY) {
+                if (!empty($res)) {
+                    $res += ' and left early';
+                } else {
+                    $res = 'Left early';
+                }
+            }
+            return $res;
+        } else if ($this->state === self::ABSENT_NO_APOLOGIES) {
+            return 'No apologies';
+        }else if ($this->state === self::ABSENT_APOLOGIES_RECEIVED_BEFORE_MEETING){
+            return 'Received before the meeting';
+        }else{
+            return 'Received after the meeting';
+        }
     }
 
 }

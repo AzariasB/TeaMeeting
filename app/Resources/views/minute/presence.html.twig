@@ -1,0 +1,17 @@
+{# twig #}
+
+{% set formId = 'update-presence-form' %}
+
+{% extends "modalForm.html.twig" %}
+
+{% block modalTitle %}
+    Update the user presence
+{% endblock %}
+
+{% block modalBody %}
+    {{ form_row(form.state,formClass) }}
+{% endblock %}
+
+{% block buttonConfirm %}
+    Update
+{% endblock %}

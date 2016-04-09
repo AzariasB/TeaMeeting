@@ -113,3 +113,9 @@ update-meeting:
 see-meeting-minute:
     path: /meeting/{meetingId}/minute
     defaults: { _controller: AppBundle:Minute:index }
+minute-json:
+    path: /meeting/{meetingId}/minute/json
+    defaults: { _controller: AppBundle:Minute:minuteJson }
+edit-presence:
+    path: /edit-presence/{presenceId}
+    defaults: { _controller: AppBundle:Minute:editPresence }

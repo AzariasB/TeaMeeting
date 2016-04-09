@@ -52,7 +52,7 @@ class MinuteComment implements \JsonSerializable {
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="MeetingMinute")
+     * @ORM\ManyToOne(targetEntity="MeetingMinute",inversedBy="comments")
      * @ORM\JoinColumn(name="meeting_minute_id",referencedColumnName="id")
      * @var MeetingMinute
      */
