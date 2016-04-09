@@ -65,13 +65,6 @@ class MeetingMinute implements \JsonSerializable {
     private $items;
 
     /**
-     * @ORM\OneToOne(targetEntity="Agenda")
-     * @ORM\JoinColumn(name="agenda_id", referencedColumnName="id")
-     * @var Agenda
-     */
-    private $agenda;
-
-    /**
      *
      * @ORM\OneToMany(targetEntity="MinuteComment",mappedBy="meetingMinute",cascade={"persist","remove"})
      * @var ArrayCollection
@@ -89,6 +82,7 @@ class MeetingMinute implements \JsonSerializable {
     public function __construct() {
         $this->presenceList = new ArrayCollection;
         $this->comments = new ArrayCollection;
+        $this->items = new ArrayCollection;
     }
 
     /**
@@ -222,14 +216,34 @@ class MeetingMinute implements \JsonSerializable {
         $this->agenda = $meet->getCurrentAgenda();
         $participants = $meet->getProject()->getParticipants();
         $this->initUserPresence($participants);
+
+        $agendaItems = $meet->getCurrentAgenda()->getItems();
+        $this->initItemMinute($agendaItems);
         return $this;
     }
 
     private function initUserPresence(Collection $participants) {
-        foreach ($participants as $parts) {
-            $presence = new UserPresence($this, $parts);
+        $this->presenceList->clear();
+        foreach ($participants as $part) {
+            $answerGiven = $this->meeting->answerForUser($part);
+            $presence = new UserPresence($this, $part);
+            if ($answerGiven->isYes()) {
+                $presence->setState(UserPresence::PRESENT_FOR_WHOLE_MEETING);
+            }
             $this->addUserPresence($presence);
         }
+    }
+
+    private function initItemMinute(Collection $agendaItems) {
+        $this->items->clear();
+        foreach ($agendaItems as $agendaItem) {
+            $item = new ItemMinute($this, $agendaItem);
+            $this->addItem($item);
+        }
+    }
+
+    public function addItem(ItemMinute $item) {
+        $this->items->add($item);
     }
 
     /**
@@ -253,7 +267,6 @@ class MeetingMinute implements \JsonSerializable {
         return array(
             'id' => $this->id,
             'comments' => $this->comments->toArray(),
-            'agenda' => $this->agenda,
             'presenceList' => $this->presenceList->toArray(),
             'items' => $this->items->toArray()
         );

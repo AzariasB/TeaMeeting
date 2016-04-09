@@ -22,7 +22,7 @@ app.controller('controller', function ($scope, $http) {
         var minute = response.data.minute;
         self.items = minute.items;
         self.presenceList = minute.presenceList;
-        console.log(self.presenceList);
+        console.log(self.items);
     }
 
     function postReq(data, url, callback) {

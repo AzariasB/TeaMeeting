@@ -30,9 +30,9 @@
 
 namespace AppBundle\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Description of ItemMinute
  *
@@ -68,7 +68,7 @@ class ItemMinute implements \JsonSerializable {
 
     /**
      * 
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text",nullable=true)
      * @var string
      */
     private $comment;
@@ -85,6 +85,13 @@ class ItemMinute implements \JsonSerializable {
      * @var boolean
      */
     private $postponed;
+
+    public function __construct(MeetingMinute $meetMing = null, ItemAgenda $itemAgenda = null) {
+        $this->actions = new ArrayCollection;
+        $this->meetingMinute = $meetMing;
+        $this->itemAgenda = $itemAgenda;
+        $this->postponed = false;
+    }
 
     /**
      * Get id
@@ -150,7 +157,7 @@ class ItemMinute implements \JsonSerializable {
         $this->id = $id;
         return $this;
     }
-    
+
     /**
      * Set meeting minute
      * 
@@ -206,9 +213,13 @@ class ItemMinute implements \JsonSerializable {
         return $this;
     }
 
-        
     public function jsonSerialize() {
         return array(
+            'id' => $this->id,
+            'agendaItem' => $this->itemAgenda,
+            'comment' => $this->comment,
+            'postponed' => $this->postponed,
+            'actions' => $this->actions
         );
     }
 
