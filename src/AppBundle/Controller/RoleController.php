@@ -23,16 +23,40 @@ use Symfony\Component\Form\Form;
 class RoleController extends SuperController {
 
     /**
+     * Used to update a role
+     * 
+     * @param type $roleId
+     * @param Request $req
+     * @return Reponse
+     */
+    public function updateAction($roleId, Request $req) {
+        $role = $this->getEntityFromId(UserRole::class, $roleId);
+        return $this->createRoleForm($role,$req);
+    }
+
+    /**
      * Creates a new Role
      * the request must be made
      * with ajax otherwise notfound is thrown
      * 
      * @param Request $req
      */
-    public function createAction($projId,Request $req) {
+    public function createAction($projId, Request $req) {
         $p = $this->getEntityFromId(Project::class, $projId);
         $role = new UserRole();
         $role->setProject($p);
+        return $this->createRoleForm($role,$req);
+    }
+
+    /**
+     * Common function to update and create
+     * 
+     * 
+     * @param UserRole $role
+     * @param Request $req
+     * @return Response
+     */
+    private function createRoleForm(UserRole $role,  Request $req) {
         $form = $this->createForm(RoleType::class, $role);
 
 
@@ -42,7 +66,7 @@ class RoleController extends SuperController {
             return $this->handleForm($form, $role);
         }
 
-        return $this->createRoleForm($form);
+        return $this->renderFormView($form);
     }
 
     /**
@@ -89,7 +113,7 @@ class RoleController extends SuperController {
         } else {
             $rep->setData(array(
                 'success' => false,
-                'page' => $this->createRoleForm($form)
+                'page' => $this->renderFormView($form)
             ));
         }
 
@@ -103,7 +127,7 @@ class RoleController extends SuperController {
      * @param Form $form
      * @return Response view
      */
-    private function createRoleForm(Form $form) {
+    private function renderFormView(Form $form) {
         return $this->render('project/roleForm.html.twig', array(
                     'form' => $form->createView()
         ));

@@ -22,7 +22,7 @@ use Symfony\Component\Form\Form;
 class ProjectController extends SuperController {
 
     public function getAllAction(Request $req) {
-        $projects = $this->getFromClass(Project::class, [], ['date' => 'ASC']);
+        $projects = $this->getAllFromClass(Project::class);
         $resp = new JsonResponse;
         return $resp->setData($projects);
     }

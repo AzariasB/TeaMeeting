@@ -63,6 +63,7 @@ class Project implements \JsonSerializable {
     /**
      *
      * @ORM\OneToMany(targetEntity="Meeting",mappedBy="project",cascade={"persist","remove"})
+     * @ORM\OrderBy({"date" = "ASC"})
      * @var ArrayCollection
      */
     private $meetings;

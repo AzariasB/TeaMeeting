@@ -104,3 +104,9 @@ reset-password:
 get-project-json:
     path: project/{projId}/json
     defaults: { _controller: AppBundle:Project:getJson }
+update-role:
+    path: /update-role/{roleId}
+    defaults: { _controller: AppBundle:Role:update }
+update-meeting:
+    path: /update-meeting/{meetingId}
+    defaults: { _controller: AppBundle:Meeting:update }

@@ -80,7 +80,7 @@
                                    href="#collapseOne" 
                                    aria-expanded="true" 
                                    aria-controls="collapseOne">
-                                    {{ project.roles.count() }} roles
+                                    // ctrl.roles.length // roles
                                 </a>
                             </h4>
                         </div>
@@ -94,7 +94,7 @@
                                     // ro.name //
                                     {% if canEdit %}
                                         <span class="pull-right">
-                                            <a href="#path"
+                                            <a href="{{ path('update-role',{'roleId':'__id__'}) }}"
                                                ng-click="ctrl.editRole($event,ro.id)"
                                                class="btn btn-primary btn-xs">
                                                 <i class="glyphicon glyphicon-pencil"></i>
@@ -135,7 +135,7 @@
                                    href="#collapseMeeting" 
                                    aria-expanded="true" 
                                    aria-controls="collapseMeeting">
-                                    {{ project.meetings.count() }} meetings
+                                    // ctrl.meetings.length // meetings
                                 </a>
                             </h4>
                         </div>
@@ -154,17 +154,11 @@
                                     </a>
                                     {% if canEdit %}
                                         <span ng-if="!meet.outdated" class="pull-right">
-                                            <a href="#"
-                                               ng-click="ctrl.editMeeting($event)"
+                                            <a href="{{ path('update-meeting',{'meetingId':'__id__'}) }}"
+                                               ng-click="ctrl.editMeeting($event,meet.id)"
                                                class="btn btn-primary btn-xs">
                                                 <i class="glyphicon glyphicon-pencil"></i>
                                                 Edit
-                                            </a>
-                                            <a ng-click="ctrl.deleteMeeting($event,meet.id)"
-                                               href="{{ path('remove-meeting',{ 'meetingId':'__id__'}) }}"
-                                               class="btn btn-warning btn-xs btn-remove">
-                                                <i class="glyphicon glyphicon-remove"></i>
-                                                Delete
                                             </a>
                                         </span>
                                     {% endif %}

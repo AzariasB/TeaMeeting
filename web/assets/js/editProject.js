@@ -39,11 +39,9 @@ app.controller('controller', function ($scope, $http) {
     }
 
 
-
-    
     this.seeMeeting = function ($event, meetinId) {
         $event.preventDefault();
-        var url = $(event.toElement).attr('href').replace(/__id__/, meetinId);
+        var url = $($event.toElement).attr('href').replace(/__id__/, meetinId);
         window.location = url;
     };
 
@@ -57,14 +55,28 @@ app.controller('controller', function ($scope, $http) {
     function roleDeleted(response) {
         var data = response.data;
         if (data.success) {
-            self.meetings = self.meetings.filter(function (meeting) {
-                return (meeting.id | 0) !== (data.id | 0);
+            self.roles = self.roles.filter(function (meet) {
+                return (meet.id | 0) !== (data.id | 0);
             });
         }
     }
 
     this.editRole = function ($event, roleId) {
         $event.preventDefault();
+        var url = $($event.toElement).attr('href').replace(/__id__/, roleId);
+        this.postReq({}, url, function (response) {
+            var data = response.data;
+            showModalForm(data, 'create-role-form', url, roleUpdated);
+        });
+    };
+
+    this.editMeeting = function ($event, meetingId) {
+        $event.preventDefault();
+        var url = $($event.toElement).attr('href').replace(/__id__/, meetingId);
+        this.postReq({}, url, function (response) {
+            var data = response.data;
+            showModalForm(data, 'create-meeting-form', url, meetingUpdated);
+        });
     };
 
     this.addRole = function ($event) {
@@ -72,20 +84,20 @@ app.controller('controller', function ($scope, $http) {
         var url = $($event.toElement).attr('href');
         this.postReq({}, url, function (response) {
             var data = response.data;
-            showModalForm(data, 'create-role-form', url,roleAdded);
+            showModalForm(data, 'create-role-form', url, roleAdded);
         });
     };
 
     this.addMeeting = function ($event) {
         $event.preventDefault();
-        var url = $(event.toElement).attr('href');
+        var url = $($event.toElement).attr('href');
         this.postReq({}, url, function (response) {
             var data = response.data;
-            showModalForm(data, 'create-meeting-form', url,meetingAdded);
+            showModalForm(data, 'create-meeting-form', url, meetingAdded);
         });
     };
 
-    function showModalForm(res, formId, url,callback) {
+    function showModalForm(res, formId, url, callback) {
         $("#modal-main-content").html(res);
         $("#" + formId).on('submit', function (e) {
             e.preventDefault();
@@ -93,10 +105,10 @@ app.controller('controller', function ($scope, $http) {
         });
         $("#modal-main").modal();
     }
-    
-    function meetingAdded(response){
+
+    function meetingAdded(response) {
         var data = response.data;
-        if(data.success){
+        if (data.success) {
             self.meetings.push(data.meeting);
             $("#modal-main").modal('hide');
         }
@@ -110,6 +122,31 @@ app.controller('controller', function ($scope, $http) {
         }
     }
 
+    function roleUpdated(response) {
+        var data = response.data;
+        if (data.success) {
+            var nwRole = data.role;
+            self.roles = updateArray(self.roles, nwRole);
+            $("#modal-main").modal('hide');
+        }
+    }
+
+    function meetingUpdated(response) {
+        var data = response.data;
+        if (data.success) {
+            var meeting = data.meeting;
+            self.meetings = updateArray(self.meetings, meeting);
+            $("#modal-main").modal('hide');
+        }
+    }
+
     init();
 
 });
+
+
+function updateArray(array, nwItem) {
+    return array.map(function (oldItem) {
+        return (oldItem.id | 0) !== (nwItem.id | 0) ? oldItem : nwItem;
+    });
+}

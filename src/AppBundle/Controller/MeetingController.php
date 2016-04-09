@@ -104,6 +104,17 @@ class MeetingController extends SuperController {
     }
 
     /**
+     * Update an existing meeting
+     * 
+     * @param int $meetingId
+     * @param Request $req
+     */
+    public function updateAction($meetingId, Request $req) {
+        $meeting = $this->getEntityFromId(Meeting::class, $meetingId);
+        return $this->createMeetingForm($meeting, $req);
+    }
+
+    /**
      * Creates a meeting
      * this function is only callable with xmlhttprequest
      * otherwise it will return not found
@@ -111,10 +122,14 @@ class MeetingController extends SuperController {
      * @param Request $req
      * @return Response
      */
-    public function createAction($projId,Request $req) {
+    public function createAction($projId, Request $req) {
         $p = $this->getEntityFromId(Project::class, $projId);
         $meet = new Meeting();
         $meet->setProject($p);
+        return $this->createMeetingForm($meet, $req);
+    }
+
+    private function createMeetingForm(Meeting $meet, Request $req) {
         $form = $this->createForm(MeetingType::class, $meet);
 
 
@@ -124,7 +139,7 @@ class MeetingController extends SuperController {
             return $this->handleForm($form, $meet);
         }
 
-        return $this->createMeetingForm($form);
+        return $this->renderMeetingForm($form);
     }
 
     /**
@@ -177,7 +192,7 @@ class MeetingController extends SuperController {
         } else {
             $rep->setData(array(
                 'success' => false,
-                'page' => $this->createMeetingForm($form)
+                'page' => $this->renderMeetingForm($form)
             ));
         }
 
@@ -191,7 +206,7 @@ class MeetingController extends SuperController {
      * @param Form $form
      * @return Response view
      */
-    private function createMeetingForm(Form $form) {
+    private function renderMeetingForm(Form $form) {
         return $this->render('project/meetingForm.html.twig', array(
                     'form' => $form->createView()
         ));

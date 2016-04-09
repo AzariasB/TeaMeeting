@@ -83,10 +83,10 @@ class SuperController extends Controller {
         return $this->getDoctrine()->getRepository($className)->findAll();
     }
 
-    protected function getFromClass($className, $predicate,$ordering = []) {
+    protected function getFromClass($className, $predicate, $ordering = []) {
         return $this->getDoctrine()
                         ->getRepository($className)
-                        ->findBy($predicate,$ordering);
+                        ->findBy($predicate, $ordering);
     }
 
 }
