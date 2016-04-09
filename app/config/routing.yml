@@ -110,3 +110,6 @@ update-role:
 update-meeting:
     path: /update-meeting/{meetingId}
     defaults: { _controller: AppBundle:Meeting:update }
+see-meeting-minute:
+    path: /meeting/{meetingId}/minute
+    defaults: { _controller: AppBundle:Minute:index }

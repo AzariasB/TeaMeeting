@@ -38,8 +38,8 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             This meeting is outdated.
-            <a href="#" class="alert-link" >
-                See the report
+            <a href="{{ path('see-meeting-minute',{'meetingId':meeting.id}) }}" class="alert-link" >
+                See the meeting minute
             </a>
         </div>
     {% endif %}

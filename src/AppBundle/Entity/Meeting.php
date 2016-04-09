@@ -95,9 +95,17 @@ class Meeting implements \JsonSerializable {
      */
     private $agendas;
 
+    /**
+     * @ORM\OneToMany(targetEntity="MeetingMinute",mappedBy="meeting",cascade={"persist","remove"})
+     *
+     * @var ArrayCollection
+     */
+    private $minutes;
+
     public function __construct() {
         $this->answers = new ArrayCollection;
         $this->agendas = new ArrayCollection;
+        $this->minutes = new ArrayCollection;
     }
 
     public function __toString() {
@@ -308,6 +316,48 @@ class Meeting implements \JsonSerializable {
     }
 
     /**
+     * Get meeting minutes
+     * 
+     * @return ArrayCollection
+     */
+    public function getMinutes() {
+        return $this->minutes;
+    }
+
+    /**
+     * Set meeting minutes
+     * 
+     * @param ArrayCollection $minutes
+     * @return Meeting
+     */
+    public function setMinutes(ArrayCollection $minutes) {
+        $this->minutes = $minutes;
+        return $this;
+    }
+    
+    /**
+     * Add minute
+     * 
+     * @param MeetingMinute $nwMinute
+     * @return Meeting
+     */
+    public function addMinute(MeetingMinute $nwMinute){
+        $this->minutes->add($nwMinute);
+        return $this;
+    }
+
+    public function getCurrentMinute() {
+        if (!$this->isOutdated()) {
+            return null;
+        } else {
+            if ($this->minutes->isEmpty()) {
+                return null;
+            }
+            return $this->minutes->last();
+        }
+    }
+
+    /**
      * Get the last agenda
      * 
      * @return Agenda
@@ -324,7 +374,7 @@ class Meeting implements \JsonSerializable {
         return array(
             'id' => $this->id,
             'room' => $this->room,
-            'date' => $this->date->getTimestamp()*1000,
+            'date' => $this->date->getTimestamp() * 1000,
             'outdated' => $this->isOutdated(),
             'duration' => $this->duration,
             'chairMan' => $this->chairman,

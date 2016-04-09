@@ -76,9 +76,18 @@ class MeetingMinute implements \JsonSerializable {
      * @var ArrayCollection
      */
     private $comments;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Meeting",inversedBy="minutes")
+     * @ORM\JoinColumn(name="meeting_id",referencedColumnName="id")
+     * 
+     * @var type 
+     */
+    private $meeting;
 
     public function __construct() {
         $this->presenceList = new ArrayCollection;
+        $this->comments = new ArrayCollection;
     }
 
     /**
@@ -178,6 +187,27 @@ class MeetingMinute implements \JsonSerializable {
      */
     public function setComments(ArrayCollection $comments) {
         $this->comments = $comments;
+        return $this;
+    }
+    
+    /**
+     * Get meeting
+     * 
+     * @return Meeting
+     */
+    public function getMeeting(){
+        return $this->meeting;
+    }
+    
+    /**
+     * Set meeting
+     * 
+     * @param Meeting $meet
+     * @return MeetingMinute
+     */
+    public function setMeeting(Meeting $meet){
+        $this->meeting = $meet;
+        $this->agenda = $meet->getCurrentAgenda();
         return $this;
     }
 

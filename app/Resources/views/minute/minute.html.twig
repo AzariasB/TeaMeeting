@@ -1,0 +1,15 @@
+{# twig #}
+
+{% extends "lobby-base.html.twig" %}
+
+{% block title %}
+    Meeting minute
+{% endblock %}
+
+{% block content %}
+    {% if minute %}
+        Here is the minute
+    {% else %}
+        No minute created
+    {% endif %}
+{% endblock %}
