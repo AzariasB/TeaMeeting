@@ -55,7 +55,7 @@ class MinuteAction implements \JsonSerializable {
      * @var int
      */
     private $id;
-    
+
     /**
      * 
      * @ORM\ManyToOne(targetEntity="ItemMinute",inversedBy="actions")
@@ -109,21 +109,21 @@ class MinuteAction implements \JsonSerializable {
      * 
      * @return ItemMinute
      */
-    public function getItemMinute(){
+    public function getItemMinute() {
         return $this->itemMinute;
     }
-    
+
     /**
      * Set item minute
      * 
      * @param ItemMinute $minutes
      * @return MinuteAction
      */
-    public function setItemMinute(ItemMinute $minutes){
+    public function setItemMinute(ItemMinute $minutes) {
         $this->itemMinute = $minutes;
         return $this;
     }
-    
+
     /**
      * Get id
      * 
@@ -219,7 +219,7 @@ class MinuteAction implements \JsonSerializable {
      * @param DateTime $deadline
      * @return MinuteAction
      */
-    public function setDeadline(DateTime $deadline) {
+    public function setDeadline(\DateTime $deadline) {
         $this->deadline = $deadline;
         return $this;
     }
@@ -231,7 +231,10 @@ class MinuteAction implements \JsonSerializable {
     public function jsonSerialize() {
         return array(
             'id' => $this->id,
-            'state' => $this->state
+            'state' => $this->state,
+            'description' => $this->description,
+            'deadline' => $this->deadline->getTimestamp() * 1000,
+            'implementer' => $this->implementer
         );
     }
 

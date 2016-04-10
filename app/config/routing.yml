@@ -122,3 +122,17 @@ edit-presence:
 post-comment:
     path: /meeting/{meetingId}/minute/post-comment
     defaults: { _controller: AppBundle:Minute:postComment }
+see-minute-item:
+    path: /minute-item/{itemId}/{json}
+    defaults: { _controller: AppBundle:MinuteItem:index, json: false }
+    requirements:
+        json: (false|json)
+add-minute-action:
+    path: /minute-item/{itemId}/add-action
+    defaults: { _controller: AppBundle:MinuteItem:addAction }
+edit-minute-action:
+    path: /minute-item/{itemId}/edit-action/{actionId}
+    defaults: { _controller: AppBundle:MinuteItem:editAction }
+submit-minute-action:
+    path: /minute-item/{itemId}/submit-action/{actionId}
+    defaults: { _controller: AppBundle:MinuteItem:submitAction }

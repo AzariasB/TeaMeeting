@@ -1,0 +1,63 @@
+{# twig #}
+
+{% extends "lobby-base.html.twig" %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('assets/js/itemminute.js') }}" ></script>
+{% endblock %}
+
+{% block title %}
+    {{ item.itemAgenda.title }}
+{% endblock %}
+
+{% block content %}
+    <span ng-init="ctrl.setUserId({{ app.user.id }})" >
+    </span>
+    <div class="container-fluid">
+        <div class="col-xs-12">
+            <h1>Item '{{ item.itemAgenda.title }}'</h1>
+        </div>
+        <div class="col-xs-12">
+            <h2>Actions</h2>
+            <ul class="list-group hidden-badge-list" >
+                <li ng-attr-title='// ctrl.getActionTitle(action) //'
+                    ng-class="'list-group-item-'+ctrl.getActionClass(action)"
+                    class="list-group-item"
+                    ng-repeat='action in ctrl.actions' >
+                    <strong>// action.implementer.name //</strong> must implement 
+                    before the // action.deadline | date : 'dd/MM/yyyy' //
+                    Description : // action.description //
+                    <span class="pull-right">
+                        {% if canEdit %}
+                            <a href="{{ path('edit-minute-action',{'itemId':item.id,'actionId':'__id__'}) }}"
+                               ng-click="ctrl.updateAction($event,action.id)"
+                               class="btn btn-default btn-xs hidden-badge-item" 
+                               title="Update" >
+                                <i class="glyphicon glyphicon-refresh"></i>
+                                Update
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('submit-minute-action',{'itemId':item.id,'actionId':'__id__'}) }}"
+                           ng-click="ctrl.submitAction($event,action.id)"
+                           ng-if='action.implementer.id == ctrl.userId'
+                            class="btn-xs btn btn-info hidden-badge-item" >
+                            <i class="glyphicon glyphicon-send"></i>
+                            Submit
+                        </a>
+                    </span>
+                </li>
+            </ul>
+            {% if canEdit %}
+                <a ng-click='ctrl.addAction($event)'
+                   class="btn btn-default"
+                   href='{{ path('add-minute-action',{'itemId':item.id}) }}'>
+                    Add action
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'modal.html.twig' %}
+{% endblock %}

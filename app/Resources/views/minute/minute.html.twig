@@ -23,33 +23,66 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-6">
-                <ul class="list-group hidden-badge-list row" >
-                    <li class="list-group-item col-xs-12"
-                        ng-attr-title="// presence.wasPresent ? 'Present':'Absent' //"
-                        ng-class="presence.wasPresent ? 'list-group-item-success' : 'list-group-item-warning'"
-                        ng-repeat="presence in ctrl.presenceList" >
-                        <strong> // presence.user.name // </strong>  :
-                        // presence.string //
-                        {% if canEdit %}
-                            <span class="pull-right hidden-badge-item">
-                                <a ng-click='ctrl.editPresence($event,presence.id)'
-                                   class="btn btn-primary btn-xs"
-                                   href='{{ path('edit-presence',{'presenceId':'__id__'}) }}'>
-                                    <i class="glyphicon glyphicon-pencil" ></i>
-                                    Update
-                                </a>
-                            </span>
-                        {% endif %}
-                    </li>
-                </ul>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4 class="panel-title" >
+                            <a role="button" 
+                               data-toggle="collapse" 
+                               href="#collapsePresence" 
+                               aria-controls="collapseParticipants">
+                                // ctrl.presenceList.length // persons
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapsePresence" class="collapse panel-collapse in" >
+                        <ul class="panel-body list-group hidden-badge-list row" >
+                            <li class="list-group-item col-xs-12"
+                                ng-attr-title="// presence.wasPresent ? 'Present':'Absent' //"
+                                ng-class="presence.wasPresent ? 'list-group-item-success' : 'list-group-item-warning'"
+                                ng-repeat="presence in ctrl.presenceList" >
+                                <strong> // presence.user.name // </strong>  :
+                                // presence.string //
+                                {% if canEdit %}
+                                    <span class="pull-right hidden-badge-item">
+                                        <a ng-click='ctrl.editPresence($event,presence.id)'
+                                           class="btn btn-primary btn-xs"
+                                           href='{{ path('edit-presence',{'presenceId':'__id__'}) }}'>
+                                            <i class="glyphicon glyphicon-pencil" ></i>
+                                            Update
+                                        </a>
+                                    </span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="col-xs-12 col-sm-6">
-                <ul class="list-group hidden-badge-list">
-                    <li class="list-group-item"
-                        ng-repeat="item in ctrl.items">
-                        // item.agendaItem.title //
-                    </li>
-                </ul>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4 class="panel-title" >
+                            <a role="button" 
+                               data-toggle="collapse" 
+                               href="#collapseItems" 
+                               aria-controls="collapseParticipants">
+                                // ctrl.items.length // items
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseItems"
+                         class="panel-collapse collapse in" 
+                         role="tabpanel">
+                        <ul class="list-group hidden-badge-list">
+                            <li class="list-group-item"
+                                ng-repeat="item in ctrl.items">
+                                <a ng-click="ctrl.seeItem($event,item.id)"
+                                    href="{{ path('see-minute-item',{'itemId':'__id__'}) }}">
+                                    // item.agendaItem.title //
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">

@@ -74,6 +74,13 @@ class ItemMinute implements \JsonSerializable {
     private $comment;
 
     /**
+     *
+     * @ORM\Column(type="time",nullable=true)
+     * @var DateTime
+     */
+    private $minutes;
+    
+    /**
      * @ORM\OneToMany(targetEntity="MinuteAction",mappedBy="itemMinute")
      * @var ArrayCollection
      */
@@ -136,6 +143,15 @@ class ItemMinute implements \JsonSerializable {
      */
     public function getActions() {
         return $this->actions;
+    }
+    
+    /**
+     * Get minutes
+     * 
+     * @return Datetime
+     */
+    public function getMinutes(){
+        return $this->minutes;
     }
 
     /**
@@ -201,6 +217,17 @@ class ItemMinute implements \JsonSerializable {
         $this->actions = $actions;
         return $this;
     }
+    
+    /**
+     * Set minutes
+     * 
+     * @param \DateTime $minutes
+     * @return ItemMinute
+     */
+    public function setMinutes(\DateTime $minutes){
+        $this->minutes = $minutes;
+        return $this;
+    }
 
     /**
      * Set postponed
@@ -217,9 +244,10 @@ class ItemMinute implements \JsonSerializable {
         return array(
             'id' => $this->id,
             'agendaItem' => $this->itemAgenda,
+            'minutes' => $this->minutes ? $this->minutes->getTimestamp()*1000 : 0,
             'comment' => $this->comment,
             'postponed' => $this->postponed,
-            'actions' => $this->actions
+            'actions' => $this->actions->toArray()
         );
     }
 

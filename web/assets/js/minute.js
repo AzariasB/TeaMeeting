@@ -61,6 +61,12 @@ app.controller('controller', function ($scope, $http) {
         });
     };
 
+    this.seeItem = function($event,itemId){
+        $event.preventDefault();
+        var url = $($event.toElement).attr('href').replace(/__id__/,itemId);
+        window.location = url;
+    };
+
     function showModal(data, url, formId, callback) {
         $("#modal-main-content").html(data);
         $("#" + formId).on('submit', function (e) {

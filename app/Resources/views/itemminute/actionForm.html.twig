@@ -1,0 +1,27 @@
+
+{% set formId = 'create-action-form' %}
+
+{% extends "modalForm.html.twig" %}
+
+{% block modalTitle %}
+    Create an action
+{% endblock %}
+
+{% block modalBody %}
+    <div class="row">
+        <div class="col-xs-4">
+            {{ form_row(form.state,formClass) }}
+        </div>
+        <div class="col-xs-4">
+            {{ form_row(form.implementer,formClass) }}
+        </div>
+        <div class="col-xs-4">
+            {{ form_row(form.deadline,formClass) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            {{ form_row(form.description,formClass) }}
+        </div>
+    </div>
+{% endblock %}
