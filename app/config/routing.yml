@@ -119,3 +119,6 @@ minute-json:
 edit-presence:
     path: /edit-presence/{presenceId}
     defaults: { _controller: AppBundle:Minute:editPresence }
+post-comment:
+    path: /meeting/{meetingId}/minute/post-comment
+    defaults: { _controller: AppBundle:Minute:postComment }

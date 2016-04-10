@@ -35,7 +35,7 @@ use AppBundle\Entity\MeetingMinute;
 use AppBundle\Entity\Meeting;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use AppBundle\Form\MeetingMinuteType;
+use AppBundle\Entity\MinuteComment;
 use AppBundle\Entity\UserPresence;
 use AppBundle\Form\UserPresenceType;
 
@@ -72,7 +72,8 @@ class MinuteController extends SuperController {
 
         return $this->render('minute/minute.html.twig', [
                     'minute' => $minute,
-                    'canEdit' => $meeting->userIsSecretary($this->getCurrentUser())
+                    'canEdit' => $meeting->userIsSecretary($this->getCurrentUser()),
+                    'canComment' => $minute->userWasPresent($this->getCurrentUser())
         ]);
     }
 
@@ -86,40 +87,61 @@ class MinuteController extends SuperController {
                     'minute' => $minute
         ));
     }
-    
-    public function editPresenceAction($presenceId,Request $req){
+
+    public function postCommentAction($meetingId, Request $req) {
+        $meeting = $this->getEntityFromId(Meeting::class, $meetingId);
+
+        $minute = $meeting->getCurrentMinute();
+
+        $user = $this->getCurrentUser();
+
+        $comment = $req->get('comment');
+
+        $minuteComment = new MinuteComment($minute, $user, $comment);
+
+        $minute->addComment($minuteComment);
+        $this->saveEntity($minute);
+
+        $rep = new JsonResponse;
+        return $rep->setData(array(
+                    'success' => true,
+                    'comment' => $minuteComment
+        ));
+    }
+
+    public function editPresenceAction($presenceId, Request $req) {
         $presence = $this->getEntityFromId(UserPresence::class, $presenceId);
-        
-        $form = $this->createForm(UserPresenceType::class,$presence);
-        
+
+        $form = $this->createForm(UserPresenceType::class, $presence);
+
         $form->handleRequest($req);
-        
-        if($form->isSubmitted()){
+
+        if ($form->isSubmitted()) {
             return $this->handleEditPresenceForm($presence, $form);
         }
-        
+
         return $this->renderPresenceFormView($form);
     }
-    
-    private function handleEditPresenceForm(UserPresence $pres,Form $form){
+
+    private function handleEditPresenceForm(UserPresence $pres, Form $form) {
         $res = new JsonResponse;
-        if($form->isValid()){
+        if ($form->isValid()) {
             $this->saveEntity($pres);
             return $res->setData(array(
-                'success' => true,
-                'presence' => $pres
+                        'success' => true,
+                        'presence' => $pres
             ));
-        }else{
+        } else {
             return $res->setData(array(
-                'success' => false,
-                'page' => $this->renderPresenceFormView($form)
+                        'success' => false,
+                        'page' => $this->renderPresenceFormView($form)
             ));
         }
     }
-    
-    private function renderPresenceFormView(Form $form){
-        return $this->render('minute/presence.html.twig',array(
-            'form' => $form->createView()
+
+    private function renderPresenceFormView(Form $form) {
+        return $this->render('minute/presence.html.twig', array(
+                    'form' => $form->createView()
         ));
     }
 

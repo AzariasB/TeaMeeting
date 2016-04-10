@@ -11,6 +11,8 @@ app.controller('controller', function ($scope, $http) {
 
     this.presenceList = [];
     this.items = [];
+    this.comments = [];
+    this.currentComment = '';
     var self = this;
 
     function init() {
@@ -22,7 +24,24 @@ app.controller('controller', function ($scope, $http) {
         var minute = response.data.minute;
         self.items = minute.items;
         self.presenceList = minute.presenceList;
-        console.log(self.items);
+        self.comments = minute.comments;
+    }
+
+    this.postComment = function ($event) {
+        $event.preventDefault();
+        if(this.currentComment){
+             var url = $($event.currentTarget).attr('action');
+             postReq("comment="+this.currentComment,url,commentPosted);
+             this.currentComment = '';
+        }
+    };
+    
+    function commentPosted(response){
+        var data = response.data;
+        if(data.success){
+            console.log(data);
+            self.comments.push(data.comment);
+        }
     }
 
     function postReq(data, url, callback) {
@@ -49,7 +68,7 @@ app.controller('controller', function ($scope, $http) {
             var form = $(this).serialize();
             postReq(form, url, function (response) {
                 var data = response.data;
-                if(data.success){
+                if (data.success) {
                     callback && callback(data);
                     $("#modal-main").modal('hide');
                 }

@@ -1,5 +1,5 @@
 {
-  "name": "TeaMeeting",
+  "name": "teameeting",
   "version": "1.0.0",
   "ignore": [
     ".jshintrc",
@@ -8,7 +8,8 @@
   "dependencies": {
     "font-awesome": "4.5.0",
     "bootstrap": "3.3.6",
-    "chartist": "^0.9.7"
+    "chartist": "^0.9.7",
+    "angular" : "^1.5.3"
   },
   "devDependencies": {}
 }

@@ -80,8 +80,17 @@ class MinuteComment implements \JsonSerializable {
      */
     private $date;
 
-    public function __construct() {
+    /**
+     * 
+     * @param MeetingMinute $minute
+     * @param User $commenter
+     * @param string $comment
+     */
+    public function __construct(MeetingMinute $minute = null, User $commenter = null,$comment = '') {
         $this->date = new \DateTime;
+        $this->meetingMinute  = $minute;
+        $this->commenter = $commenter;
+        $this->comment = $comment;
     }
 
     /**
@@ -188,7 +197,8 @@ class MinuteComment implements \JsonSerializable {
         return array(
             'id' => $this->id,
             'commenter' => $this->commenter,
-            'comment' => $this->comment
+            'comment' => $this->comment,
+            'date' => $this->date->getTimestamp()*1000
         );
     }
 

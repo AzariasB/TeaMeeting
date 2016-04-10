@@ -1,7 +1,7 @@
 .nav-side-menu {
     background-color: #222222;
     display: block;
-    width: 220px;
+    width: 170px;
     margin-bottom: -99999px;
     padding-bottom: 99999px;
     float: left;
@@ -24,7 +24,7 @@
 }
 
 #content{
-    margin-left: 210px;
+    margin-left: 180px;
 }
 
 .nav-side-menu ul,
@@ -94,6 +94,26 @@
 }
 
 #lobby-content{
-    margin-left: 230px;
+    margin-left: 190px;
 }
 
+footer.container-fluid{
+    margin-top: 20px;
+    margin-left: 170px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #aaa;
+    color: white;
+    min-height: 80px;
+}
+
+.comment{
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.comment .info{
+    float: right;
+    font-size: 12px;
+}

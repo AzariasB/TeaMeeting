@@ -242,8 +242,25 @@ class MeetingMinute implements \JsonSerializable {
         }
     }
 
+    /**
+     * Add an item
+     * 
+     * @param ItemMinute $item
+     * @return MeetingMinute
+     */
     public function addItem(ItemMinute $item) {
         $this->items->add($item);
+        return $this;
+    }
+    
+    /**
+     * 
+     * @param MinuteComment $comment
+     * @return MeetingMinute
+     */
+    public function addComment(MinuteComment $comment){
+        $this->comments->add($comment);
+        return $this;
     }
 
     /**
