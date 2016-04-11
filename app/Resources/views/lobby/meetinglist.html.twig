@@ -5,13 +5,11 @@
 {% set ANSWER_YES = constant('AppBundle\\Entity\\UserAnswer::ANSWER_YES') %}
 {% set ANSWER_MAYBE = constant('AppBundle\\Entity\\UserAnswer::ANSWER_MAYBE') %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('assets/js/meeting.js') }}" ></script>
+{% block angularController %}
+    <script src="{{ asset('assets/js/controllers/meetingListController.js') }}" ></script>
 {% endblock %}
 
 {% block content %}
-
     <div id="meetings-list">
         <h3>Meetings list</h3>
         <div class="container-fluid">

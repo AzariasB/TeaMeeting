@@ -5,9 +5,9 @@
     {{ project.projectName }}
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('assets/js/editProject.js') }}"></script>
+
+{% block angularController %}
+    <script src="{{ asset('assets/js/controllers/projectController.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -95,7 +95,7 @@
                                     {% if canEdit %}
                                         <span class="pull-right">
                                             <a href="{{ path('update-role',{'roleId':'__id__'}) }}"
-                                               ng-click="ctrl.editRole($event,ro.id)"
+                                               ng-click="ctrl.editItem($event,ro.id,'role')"
                                                class="btn btn-primary btn-xs">
                                                 <i class="glyphicon glyphicon-pencil"></i>
                                                 Edit
@@ -155,7 +155,7 @@
                                     {% if canEdit %}
                                         <span ng-if="!meet.outdated" class="pull-right">
                                             <a href="{{ path('update-meeting',{'meetingId':'__id__'}) }}"
-                                               ng-click="ctrl.editMeeting($event,meet.id)"
+                                               ng-click="ctrl.editItem($event,meet.id,'meeting')"
                                                class="btn btn-primary btn-xs">
                                                 <i class="glyphicon glyphicon-pencil"></i>
                                                 Edit

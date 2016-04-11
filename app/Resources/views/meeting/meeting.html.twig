@@ -5,7 +5,10 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('assets/vendor/chartist/dist/chartist.min.js') }}" ></script>
-    <script src='{{ asset('assets/js/editMeeting.js') }}'></script>
+{% endblock %}
+
+{% block angularController %}
+        <script src='{{ asset('assets/js/controllers/meetingController.js') }}'></script>
 {% endblock %}
 
 {% block stylesheets %}

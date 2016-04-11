@@ -170,7 +170,7 @@ class UserAnswer implements \JsonSerializable {
      * @return boolean true if the value was changed, false otherwise
      */
     public function setAnswer($nwAnswer) {
-        if ($this->answer === self::NO_ANSWER) {
+        if ($this->answer === self::NO_ANSWER || $this->answer === 0) {
             $this->answer = $nwAnswer;
             return true;
         } else {

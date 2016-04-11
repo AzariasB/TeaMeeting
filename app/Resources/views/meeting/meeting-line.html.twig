@@ -42,7 +42,7 @@
                            id="presence-yes-{{ meet.id }}" />
                     Yes
                 </label>
-                <a data-target="{{ meet.id }}"
+                <a ng-click="ctrl.saveAnswer($event,{{ meet.id }})"
                    href="{{ path('save-answer', { 'answerId' : answer_object.id  }) }}" 
                    class="btn btn-xs btn-primary save-answer pull-right" >
                     Save!
