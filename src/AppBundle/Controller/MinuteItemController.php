@@ -53,7 +53,11 @@ class MinuteItemController extends SuperController {
             $rep = new JsonResponse;
             return $rep->setData($data);
         } else {
-            $data['canEdit'] = $item->getMeetingMinute()->getMeeting()->userIsChairman($this->getCurrentUser());
+            $data['canEdit'] = $item
+                    ->getMeetingMinute()
+                    ->getMeeting()
+                    ->userIsChairman($this->getCurrentUser());
+            $data['breadcrumbs'] = $this->generateBreadCrumbs($item);
             return $this->render('itemminute/index.html.twig', $data);
         }
     }

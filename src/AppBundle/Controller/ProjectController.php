@@ -80,7 +80,8 @@ class ProjectController extends SuperController {
     private function infoProjectPage(Project $project, $canEdit = false) {
         return $this->render('project/presentation.html.twig', array(
                     'project' => $project,
-                    'canEdit' => $canEdit
+                    'canEdit' => $canEdit,
+                    'breadcrumbs' => $this->generateBreadCrumbs($project)
         ));
     }
 

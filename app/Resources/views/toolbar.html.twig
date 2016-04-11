@@ -14,7 +14,20 @@
         <a class="navbar-brand" href="#">TeaMeeting</a>
     </div>
 
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <div class="collapse navbar-collapse">
+        {% if breadcrumbs is defined %}
+            <ul class="nav navbar-nav navbar-left">
+                <ul class="navbar-text  breadcrumb list-inline" >
+                    {% for crumb in breadcrumbs %}
+                        {% if loop.last %}
+                            <li class="active" >{{ crumb.text }}</li>
+                            {% else %}
+                            <li><a href="{{ crumb.link }}">{{ crumb.text }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                </ul>
+            </ul>
+        {% endif %}
         <ul class="nav navbar-nav navbar-right">
             {% if app.user.getUnansweredAnswers()|length %}
                 <li class="dropdown">

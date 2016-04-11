@@ -89,4 +89,35 @@ class SuperController extends Controller {
                         ->findBy($predicate, $ordering);
     }
 
+    protected function generateBreadCrumbs($entity) {
+        $arr1 = [];
+        $text = $link = '';
+        if ($entity instanceof \AppBundle\Entity\Project) {
+            $link = $this->get('router')
+                    ->generate('seeproject', ['projId' => $entity->getId()]
+            );
+            $text = 'Project';
+        } else if ($entity instanceof \AppBundle\Entity\Meeting) {
+            $arr1 = $this->generateBreadCrumbs($entity->getProject());
+            $link = $this->get('router')
+                    ->generate('see-meeting', ['meetingId' => $entity->getId()]
+            );
+            $text = 'Meeting';
+        } else if ($entity instanceof \AppBundle\Entity\MeetingMinute) {
+            $arr1 = $this->generateBreadCrumbs($entity->getMeeting());
+            $link = $this->get('router')
+                    ->generate('see-meeting-minute', ['meetingId' => $entity->getMeeting()->getId()]
+            );
+            $text = 'Meeting minute';
+        } else if ($entity instanceof \AppBundle\Entity\ItemMinute) {
+            $arr1 = $this->generateBreadCrumbs($entity->getMeetingMinute());
+            $link = $this->get('router')
+                    ->generate('see-minute-item', ['itemId' => $entity->getId()]);
+            $text = 'Action';
+        } else {
+            return [];
+        }
+        return array_merge($arr1, [['text' => $text, 'link' => $link]]);
+    }
+
 }

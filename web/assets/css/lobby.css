@@ -93,6 +93,13 @@
     overflow: hidden;
 }
 
+.nav .breadcrumb{
+    padding: 0;
+    padding-left: 30px;
+    background: inherit;
+    font-size: 17px;
+}
+
 #lobby-content{
     margin-left: 190px;
 }

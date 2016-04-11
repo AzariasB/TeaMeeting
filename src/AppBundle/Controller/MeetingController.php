@@ -91,15 +91,13 @@ class MeetingController extends SuperController {
     public function showAction($meetingId, Request $req) {
 
         $m = $this->getEntityFromId(Meeting::class, $meetingId);
-        if (!$m) {
-            throw new $this->createNotFoundException('Meeting not found');
-        }
 
         $u = $this->getCurrentUser();
 
         return $this->render('meeting/meeting.html.twig', array(
                     'meeting' => $m,
-                    'canEdit' => $u == $m->getChairman()
+                    'canEdit' => $u == $m->getChairman(),
+                    'breadcrumbs' => $this->generateBreadCrumbs($m)
         ));
     }
 

@@ -73,7 +73,8 @@ class MinuteController extends SuperController {
         return $this->render('minute/minute.html.twig', [
                     'minute' => $minute,
                     'canEdit' => $meeting->userIsSecretary($this->getCurrentUser()),
-                    'canComment' => $minute->userWasPresent($this->getCurrentUser())
+                    'canComment' => $minute->userWasPresent($this->getCurrentUser()),
+                    'breadcrumbs' => $this->generateBreadCrumbs($minute)
         ]);
     }
 
