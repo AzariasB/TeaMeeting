@@ -1,0 +1,22 @@
+{# twig #}
+
+<div class="col-xs-4">
+    <a href="{{ path('see-meeting-minute',{ 'meetingId' : meet.id }) }}">
+        {{ meet.date|date('d/m/Y H:i') }} in 
+        {{ meet.room }}
+    </a>
+</div>
+<div class="col-xs-4 text-center">
+    {% if minute.userWasPresent(app.user) %}
+        You were noted as present during the meeting
+    {% else %}
+        You were noted as absent during the meeting
+    {% endif %}
+</div>
+<div class="col-xs-4 text-right">
+    <span class="glyphicon glyphicon-comment"></span>
+    {{ minute.comments  | length }}
+
+    <span class="glyphicon glyphicon-check"></span>
+    {{ minute.items | length }}
+</div>

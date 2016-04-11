@@ -95,6 +95,7 @@
 
 .nav .breadcrumb{
     padding: 0;
+    margin-bottom: 0;
     padding-left: 30px;
     background: inherit;
     font-size: 17px;

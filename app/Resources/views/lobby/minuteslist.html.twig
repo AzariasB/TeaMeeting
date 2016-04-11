@@ -1,0 +1,29 @@
+
+{% extends "lobby-base.html.twig" %}
+
+{% block content %}
+    <div id="meetings-list">
+        <h3>Meetings list</h3>
+        <div class="container-fluid">
+            <ul class="list-group hidden-badge-list" >
+                {% for proj in app.user.projects %}
+                    <div class="panel panel-default container-fluid">
+                        <div class="panel-heading row">
+                            {{ proj.projectName }}
+                        </div>
+                        <ul class="list-group hidden-badge-list">
+                            {% for meet in proj.meetings %}
+                                {% if meet.isOutdated() %}
+                                    {% set minute = meet.getCurrentMinute() %}
+                                    <li class="list-group-item list-group-item-text row" >
+                                        {% include 'minute/minute-line.html.twig' %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

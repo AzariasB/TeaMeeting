@@ -82,6 +82,11 @@ my-meetings:
     defaults:
         _controller: FrameworkBundle:Template:template
         template: lobby/meetinglist.html.twig
+my-minutes:
+    path: /my-minutes
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: lobby/minuteslist.html.twig
 all-users-json:
     path: /all-users/json
     defaults: { _controller: AppBundle:User:getAll }

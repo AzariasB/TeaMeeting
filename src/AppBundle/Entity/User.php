@@ -260,7 +260,7 @@ class User implements UserInterface, \JsonSerializable {
      * Return the answer for all the meetings
      * of all the projects
      * 
-     * @return Answers
+     * @return ArrayCollection
      */
     public function getAllAnswers() {
         $meetings = $this->getAllMeetings();
@@ -277,7 +277,7 @@ class User implements UserInterface, \JsonSerializable {
     public function getUnansweredAnswers() {
         $answers = $this->getAllAnswers();
         return $answers->filter(function($ans) {
-                    return $ans->isUnknown();
+                    return !$ans->getMeeting()->isOutdated() && $ans->isUnknown();
                 });
     }
 
