@@ -2,10 +2,8 @@
 
 {% extends "lobby-base.html.twig" %}
 
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('assets/js/itemminute.js') }}" ></script>
+{% block angularController %}
+    <script type="text/javascript" src="{{ asset('assets/js/controllers/itemminuteController.js') }}" ></script>
 {% endblock %}
 
 {% block title %}

@@ -54,7 +54,7 @@ class ItemMinute implements \JsonSerializable {
      * The meeting relied to the item
      *
      * @ORM\ManyToOne(targetEntity="MeetingMinute",inversedBy="items")
-     * @ORM\JoinColumn(name="meeting_id",referencedColumnName="id")
+     * @ORM\JoinColumn(name="meeting_id",referencedColumnName="id",onDelete="CASCADE")
      * @var MeetingMinute
      */
     private $meetingMinute;

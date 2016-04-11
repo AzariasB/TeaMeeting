@@ -9,7 +9,8 @@
     "font-awesome": "4.5.0",
     "bootstrap": "3.3.6",
     "chartist": "^0.9.7",
-    "angular" : "^1.5.3"
+    "angular": "^1.5.3",
+    "angular-ui-notification": "^0.2.0"
   },
   "devDependencies": {}
 }

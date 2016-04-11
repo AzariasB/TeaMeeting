@@ -2,9 +2,8 @@
 
 {% extends "lobby-base.html.twig" %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('assets/js/minute.js') }}"></script>
+{% block angularController %}
+    <script src="{{ asset('assets/js/controllers/minuteController.js') }}"></script>
 {% endblock %}
 
 {% block title %}
@@ -35,8 +34,8 @@
                         </h4>
                     </div>
                     <div id="collapsePresence" class="collapse panel-collapse in" >
-                        <ul class="panel-body list-group hidden-badge-list row" >
-                            <li class="list-group-item col-xs-12"
+                        <ul class="list-group hidden-badge-list" >
+                            <li class="list-group-item"
                                 ng-attr-title="// presence.wasPresent ? 'Present':'Absent' //"
                                 ng-class="presence.wasPresent ? 'list-group-item-success' : 'list-group-item-warning'"
                                 ng-repeat="presence in ctrl.presenceList" >
