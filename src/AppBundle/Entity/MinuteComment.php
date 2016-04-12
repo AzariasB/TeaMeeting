@@ -86,9 +86,9 @@ class MinuteComment implements \JsonSerializable {
      * @param User $commenter
      * @param string $comment
      */
-    public function __construct(MeetingMinute $minute = null, User $commenter = null,$comment = '') {
+    public function __construct(MeetingMinute $minute = null, User $commenter = null, $comment = '') {
         $this->date = new \DateTime;
-        $this->meetingMinute  = $minute;
+        $this->meetingMinute = $minute;
         $this->commenter = $commenter;
         $this->comment = $comment;
     }
@@ -193,12 +193,43 @@ class MinuteComment implements \JsonSerializable {
         return $this;
     }
 
+    public function getPassedString($full = false) {
+        $today = new \DateTime;
+        $diff = $today->diff($this->date);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = [
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second'
+        ];
+
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            } else {
+                unset($string[$k]);
+            }
+        }
+        if (!$full) {
+            $string = array_slice($string, 0, 1);
+        }
+        return $string ? implode(',', $string) . ' ago' : 'just now';
+    }
+
     public function jsonSerialize() {
         return array(
             'id' => $this->id,
             'commenter' => $this->commenter,
             'comment' => $this->comment,
-            'date' => $this->date->getTimestamp()*1000
+            'date' => $this->date->getTimestamp() * 1000,
+            'ago' => $this->getPassedString()
         );
     }
 

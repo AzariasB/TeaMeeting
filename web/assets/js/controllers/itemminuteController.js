@@ -12,11 +12,13 @@
     angular.module('TeaMeeting')
             .controller('Controller', itemMinuteController);
 
-    function itemMinuteController(post, modalForm) {
+    function itemMinuteController(post, modalForm, Notification) {
         var self = this;
+        var initToggle = 1;
 
         //Attributes
         self.actions = [];
+        self.postponed = null;
         self.userId;
 
         //Functions
@@ -26,6 +28,7 @@
         self.getActionTitle = getActionTitle;
         self.updateAction = updateAction;
         self.submitAction = submitAction;
+        self.togglePostponed = togglePostponed;
 
         function init() {
             var url = window.location.pathname + '/json';
@@ -59,9 +62,8 @@
         }
 
         function submitAction($event, actionId) {
-            var url = getUrl($event,actionId);
+            var url = getUrl($event, actionId);
             post(url, function (response) {
-                //...
                 if (response.data.success) {
                     actionUpdated(response.data);
                 }
@@ -82,6 +84,26 @@
         function initArrays(response) {
             var item = response.data.item;
             self.actions = item.actions;
+            self.postponed = item.postponed;
+
+        }
+
+        function togglePostponed() {
+            if (initToggle === 1) {
+                initToggle = 0;
+            } else {
+                var url = $("#postponed-toggle").attr('href');
+                post(url, function (response) {
+                    var data = response.data;
+                    if (data.success) {
+                        var msg = self.postponed ?
+                                'The item is now postponed' :
+                                'The item is not postponed';
+                        Notification.success(msg);
+                    }
+                });
+            }
+
         }
 
         init();

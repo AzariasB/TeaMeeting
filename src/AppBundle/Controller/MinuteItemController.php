@@ -62,6 +62,17 @@ class MinuteItemController extends SuperController {
         }
     }
 
+    public function toggleAction($itemId, Request $req) {
+        $item = $this->getEntityFromId(ItemMinute::class, $itemId);
+        $item->togglePostponed();
+        $this->saveEntity($item);
+        $rep = new JsonResponse;
+        return $rep->setData(array(
+                    'success' => true,
+                    'item' => $item
+        ));
+    }
+
     public function addActionAction($itemId, Request $req) {
         $item = $this->getEntityFromId(ItemMinute::class, $itemId);
 

@@ -2,9 +2,25 @@
 
 {% extends "lobby-base.html.twig" %}
 
-{% block angularController %}
-    <script type="text/javascript" src="{{ asset('assets/js/controllers/itemminuteController.js') }}" ></script>
+{% block stylesheets %}
+    {{ parent() }}
+    {% if canEdit %}
+        <link rel="stylesheet" href="{{ asset(bower~'nz-toggle/dist/nz-toggle.min.css') }}" />
+    {% endif %}
 {% endblock %}
+
+{% block angularApp %}
+    <script src="{{ asset('assets/js/minuteApp.js') }}" ></script>
+{% endblock %}
+
+{% block angularController %}
+    {% if canEdit %}
+        <script src="{{ asset(bower~'nz-toggle/dist/nz-toggle.min.js') }}" ></script>
+    {% endif %}
+    <script type="text/javascript" src="{{ asset('assets/js/controllers/itemminuteController.js') }}" >
+    </script>
+{% endblock %}
+
 
 {% block title %}
     {{ item.itemAgenda.title }}
@@ -40,7 +56,7 @@
                         <a href="{{ path('submit-minute-action',{'itemId':item.id,'actionId':'__id__'}) }}"
                            ng-click="ctrl.submitAction($event,action.id)"
                            ng-if='action.implementer.id == ctrl.userId'
-                            class="btn-xs btn btn-info hidden-badge-item" >
+                           class="btn-xs btn btn-info hidden-badge-item" >
                             <i class="glyphicon glyphicon-send"></i>
                             Submit
                         </a>
@@ -48,11 +64,27 @@
                 </li>
             </ul>
             {% if canEdit %}
-                <a ng-click='ctrl.addAction($event)'
-                   class="btn btn-default"
-                   href='{{ path('add-minute-action',{'itemId':item.id}) }}'>
-                    Add action
-                </a>
+                <div class="row" >
+                    <div class="col-xs-2">
+                        <a ng-click='ctrl.addAction($event)'
+                           class="btn btn-default"
+                           href='{{ path('add-minute-action',{'itemId':item.id}) }}'>
+                            Add action
+                        </a>
+                    </div>
+                    <div class="col-xs-3 text-left" >
+                        <div class="col-xs-12">
+                            <strong>Postponned</strong>
+                        </div>
+                        <div class="col-xs-12">
+                            <nz-toggle 
+                                id='postponed-toggle'
+                                on-toggle='ctrl.togglePostponed()'
+                                href="{{ path('toggle-minute-item',{'itemId':item.id}) }}"
+                                ng-model="ctrl.postponed"></nz-toggle>
+                        </div>
+                    </div>
+                </div>
             {% endif %}
         </div>
     </div>

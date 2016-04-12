@@ -37,7 +37,7 @@
         function commentPosted(response) {
             var data = response.data;
             if (data.success) {
-                self.comments.push(data.comment);
+                self.comments = data.comments;
             }
         }
 

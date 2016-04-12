@@ -3,9 +3,9 @@
     'use strict';
 
     angular.module('TeaMeeting')
-            .controller('Controller', ['post', meetingListController]);
+            .controller('Controller', ['post', 'Notification', meetingListController]);
 
-    function meetingListController(post) {
+    function meetingListController(post, Notification) {
 
         var self = this;
         self.saveAnswer = saveAnswer;
@@ -20,7 +20,7 @@
                 var data = {
                     'answer': answer
                 };
-                
+
                 post(url, answerChanged, $.param(data));
             }
         }
@@ -33,8 +33,9 @@
                     $("#radio-answers-" + ans.meeting.id).hide();
                     $("#answered-yes-" + ans.meeting.id).show();
                 }
+                Notification.success('Your answer was saved');
             } else {
-                console.error(data.error);
+                Notification.error(data);
             }
         }
     }

@@ -14,7 +14,9 @@
 
 {% block javascripts %}
     <script src="{{ asset(bower~'angular/angular.min.js') }}"></script>
-    <script src="{{ asset('assets/js/baseApp.js') }}"></script>
+    {% block angularApp %}
+        <script src="{{ asset('assets/js/baseApp.js') }}"></script>
+    {% endblock %}
     <script src="{{ asset(bower~'angular-ui-notification/dist/angular-ui-notification.min.js') }}"></script>
     {% block angularServices %}
         <script src="{{ asset('assets/js/services/postService.js') }}" ></script>

@@ -239,6 +239,10 @@ class ItemMinute implements \JsonSerializable {
         $this->postponed = $postponed;
         return $this;
     }
+    
+    public function togglePostponed(){
+        $this->postponed = !$this->postponed;
+    }
 
     public function jsonSerialize() {
         return array(

@@ -106,7 +106,7 @@ class MinuteController extends SuperController {
         $rep = new JsonResponse;
         return $rep->setData(array(
                     'success' => true,
-                    'comment' => $minuteComment
+                    'comments' => $minute->getComments()->toArray()
         ));
     }
 

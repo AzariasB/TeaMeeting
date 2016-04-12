@@ -15,9 +15,11 @@
                             {% for meet in proj.meetings %}
                                 {% if meet.isOutdated() %}
                                     {% set minute = meet.getCurrentMinute() %}
-                                    <li class="list-group-item list-group-item-text row" >
-                                        {% include 'minute/minute-line.html.twig' %}
-                                    </li>
+                                    {% if minute %}
+                                        <li class="list-group-item list-group-item-text row" >
+                                            {% include 'minute/minute-line.html.twig' %}
+                                        </li>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </ul>

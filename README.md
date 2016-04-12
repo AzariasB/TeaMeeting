@@ -1,6 +1,21 @@
 TeaMeeting
 =========
 
+# Installation
+
+First install all the components :
+```bash
+# Clone repository
+git clone https://github.com/AzariasB/TeaMeeting.git
+cd TeaMeeting
+# Install symfony and all php back-end frameworkds/libraries
+composer update
+# Install jquery, angular and all the front-end frameworkds/libraries
+bower install
+```
+Then go to `localhost/web` or `localhost/web/app_dev.php` for developer mode.
+
+
 Project Case Study: Student team project meeting agenda / minutes / actions management
 ========================================================================================
 

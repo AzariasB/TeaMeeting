@@ -64,7 +64,7 @@
                                data-toggle="collapse" 
                                href="#collapseItems" 
                                aria-controls="collapseParticipants">
-                                <ng-pluralize count='ctrl.item.length'
+                                <ng-pluralize count='ctrl.items.length'
                                               when="{'0':'No items',
                                               '1':'One item',
                                               'other':'{} items'}">
@@ -121,8 +121,8 @@
                 <div class="col-xs-11 comment"  ng-repeat="comment in ctrl.comments" >
                     <div class="col-xs-12">
                         <span class="info" >
-                            By <strong> // comment.commenter.name // </strong> the
-                            // comment.date | date : 'dd/MM/yyyy' //
+                            By <strong> // comment.commenter.name // </strong>
+                            // comment.ago //
                         </span>
                     </div>
                     <div class="col-xs-12">

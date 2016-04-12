@@ -141,3 +141,6 @@ edit-minute-action:
 submit-minute-action:
     path: /minute-item/{itemId}/submit-action/{actionId}
     defaults: { _controller: AppBundle:MinuteItem:submitAction }
+toggle-minute-item:
+    path: /minute-item/{itemId}/toggle
+    defaults: { _controller: AppBundle:MinuteItem:toggle }

@@ -135,7 +135,6 @@ class ItemAgendaController extends SuperController {
     private function handleForm(Form $form, Agenda $ag, ItemAgenda $item) {
         $rep = new JsonResponse;
         if ($form->isValid()) {
-            $item->setAgenda($ag);
             $this->saveEntity($item);
             return $rep->setData(array(
                         'success' => true,

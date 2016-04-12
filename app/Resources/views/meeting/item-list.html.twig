@@ -25,6 +25,7 @@
                 <li ng-repeat="item in ctrl.items" 
                     class="list-group-item"
                     ng-attr-id="// item.id //" >
+                    // item.id // - 
                     <strong>// item.title //</strong>
                     Proposed by // item.proposer.name //
                     {% if canEdit and not meeting.isOutdated() %}
