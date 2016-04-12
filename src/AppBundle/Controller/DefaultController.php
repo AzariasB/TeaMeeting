@@ -7,9 +7,9 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\User;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Form;
 use AppBundle\Form\Model\ChangePassword;
 use AppBundle\Form\ChangePasswordType;
 
@@ -58,12 +58,12 @@ class DefaultController extends SuperController {
      */
     public function lobbyAction(Request $req) {
         $em = $this->getDoctrine()->getManager();
-        
-        $users =  $em->getRepository('AppBundle:User')->findAll();
+
+        $users = $em->getRepository('AppBundle:User')->findAll();
         $projects = $em->getRepository('AppBundle:Project')->findAll();
-        return $this->render('lobby/lobby.html.twig',array(
-            'users' => $users,
-            'projects' => $projects
+        return $this->render('lobby/lobby.html.twig', array(
+                    'users' => $users,
+                    'projects' => $projects
         ));
     }
 
@@ -80,25 +80,38 @@ class DefaultController extends SuperController {
 
         $form->handleRequest($req);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
+            return $this->handleResetPasswordForm($form);
+        }
+
+        return $this->renderResetForm($form);
+    }
+
+    private function handleResetPasswordForm(Form $form) {
+        $resp = new JsonResponse;
+        if ($form->isValid()) {
             $user = $this->getCurrentUser();
-            // perform some action,
-            // such as encoding with MessageDigestPasswordEncoder and persist
             $nwPassword = $form->get('newPassword')->getData();
             $encrypted = $this->get('security.password_encoder')
                     ->encodePassword($user, $nwPassword);
             $user->setPassword($encrypted);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->merge($user);
-            $em->flush();
-            return $this->render('registration/passwordchanged.html.twig');
+            $this->saveEntity($user);
+            return $resp->setData(array(
+                        'success' => true
+            ));
+        } else {
+            return $resp->setData(array(
+                        'success' => false,
+                        'page' => $this->renderResetForm($form)
+            ));
         }
-
-        return $this->render('registration/resetpassword.html.twig', array(
-                    'form' => $form->createView(),
-        ));
     }
 
+    private function renderResetForm(Form $form) {
+        return $this->render('registration/resetpassword.html.twig', array(
+                    'form' => $form->createView()
+        ));
+    }
 
 }

@@ -7,11 +7,15 @@
     angular.module('TeaMeeting')
             .controller('Controller', meetingController);
 
-    function meetingController(post, modalForm) {
+    function meetingController(post, modalForm, Notification) {
         var self = this;
+        
+        //Attributes
         self.items = [];
         self.requests = [];
         self.init = init();
+        
+        //Functions
         self.swap = swap;
         self.newItem = newItem;
         self.saveItems = saveItems;
@@ -56,7 +60,7 @@
             event.preventDefault();
             var url = $(event.toElement).attr('href');
             post(url, function (reponse) {
-                console.log(reponse.data);
+                Notification.success('The items\'s order was saved.');
             }, {'items': self.items});
         }
 

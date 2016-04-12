@@ -7,10 +7,12 @@
     </a>
 </div>
 <div class="col-xs-4 text-center">
-    {% if minute.userWasPresent(app.user) %}
-        You were noted as present during the meeting
-    {% else %}
-        You were noted as absent during the meeting
+    {% if is_granted('ROLE_USER') and minute %}
+        {% if minute.userWasPresent(app.user) %}
+            You were noted as present during the meeting
+        {% else %}
+            You were noted as absent during the meeting
+        {% endif %}
     {% endif %}
 </div>
 <div class="col-xs-4 text-right">

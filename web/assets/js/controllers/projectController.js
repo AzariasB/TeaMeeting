@@ -3,9 +3,9 @@
     'use strict';
 
     angular.module('TeaMeeting')
-            .controller('Controller', ['post', 'modalForm', projectController]);
+            .controller('Controller', ['post', 'modalForm','Notification', projectController]);
 
-    function projectController(post, modalForm) {
+    function projectController(post, modalForm,Notification) {
         var projectId = $("#get-project-path").data('project-id');
         var self = this;
 

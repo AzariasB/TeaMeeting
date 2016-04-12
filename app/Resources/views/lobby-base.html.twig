@@ -8,11 +8,14 @@
 {% block stylesheets %}
     <link href="{{ asset('assets/css/lobby.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/toolbar.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" 
+          href="{{ asset(bower~'angular-ui-notification/dist/angular-ui-notification.min.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     <script src="{{ asset(bower~'angular/angular.min.js') }}"></script>
     <script src="{{ asset('assets/js/baseApp.js') }}"></script>
+    <script src="{{ asset(bower~'angular-ui-notification/dist/angular-ui-notification.min.js') }}"></script>
     {% block angularServices %}
         <script src="{{ asset('assets/js/services/postService.js') }}" ></script>
         <script src="{{ asset('assets/js/services/modalFormService.js') }}"></script>
@@ -23,13 +26,15 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'toolbar.html.twig' %}
-    {% include 'sidebar.html.twig' %}
+    {% if is_granted('ROLE_USER') %}
+        {% include 'toolbar.html.twig' %}
+        {% include 'sidebar.html.twig' %}
+    {% endif %}
 
     <div id="lobby-content" >
         {% block content %} {% endblock %}
     </div>
-
+    {% include 'modal.html.twig' %}
     <footer class="container-fluid" >
         {% block footer %}
             <div class="row">

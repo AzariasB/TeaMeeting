@@ -7,7 +7,11 @@
                    data-parent="#requestsAccordion" 
                    href="#collapseAccoridion" 
                    aria-controls="requestsPanel">
-                    Requests
+                    <ng-pluralize count="ctrl.requests.length"
+                                  when="{'0':'No requests',
+                                  '1':'One request',
+                                  'other':'{} requests'}">
+                    </ng-pluralize>
                 </a>
             </h4>
         </div>
@@ -15,14 +19,15 @@
              class="panel-collapse collapse" 
              role="tabpanel" 
              aria-labelledby="requestsPanel">
+            {% set req = 'AppBundle\\Entity\\UserRequest::STATE_' %}
             <ul class="list-group" id="list-meetings" >
                 <li ng-repeat="request in ctrl.requests" 
                     class="list-group-item"
                     ng-class="{ 
-            'list-group-item-danger' : request.state == 1,
-            'list-group-item-success': request.state == 4,
-            'list-group-item-warning': request.state == 2,
-            'list-group-item-info'   : request.state == 3
+            'list-group-item-danger' : request.state == {{ constant(req~'PENDING') }},
+            'list-group-item-success': request.state == {{ constant(req~'AGREED') }},
+            'list-group-item-warning': request.state == {{ constant(req~'NOTED_NO_CHANGE') }},
+            'list-group-item-info'   : request.state == {{ constant(req~'NOTED_ON_AGENDA') }}
         }" 
                     ng-attr-id="// item.id //" >
                     Proposed by // request.sender.name //   the // request.date | date : 'dd/MM/yyyy' //

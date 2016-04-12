@@ -183,12 +183,12 @@ class MinuteComment implements \JsonSerializable {
     }
 
     /**
-     * set date
+     * Set date
      * 
      * @param DateTime $date
      * @return MinuteComment
      */
-    public function setDate(DateTime $date) {
+    public function setDate(\DateTime $date) {
         $this->date = $date;
         return $this;
     }

@@ -8,7 +8,12 @@
                    data-parent="#panelItems" 
                    href="#itemAccordion" 
                    aria-controls="requestsPanel">
-                    Items
+                    <ng-pluralize count='ctrl.items.length'
+                                  when="{'0':'No item',
+                                  '1':'One item',
+                                  'other':'{} items'}">
+
+                    </ng-pluralize>
                 </a>
             </h4>
         </div>

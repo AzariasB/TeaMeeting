@@ -3,9 +3,9 @@
     'use strict';
 
     angular.module('TeaMeeting')
-            .controller('Controller', ['post', allUsersController]);
+            .controller('Controller', ['post', 'Notification', allUsersController]);
 
-    function allUsersController(post) {
+    function allUsersController(post, Notification) {
         var self = this;
 
         self.users = [];
@@ -26,15 +26,12 @@
             post(url, function (response) {
                 var data = response.data;
                 if (data.success) {
-                    showModal('The user\'s new passord is ' + data.password);
+                    Notification.success({
+                        message: 'The user\'s new passord is ' + data.password,
+                        closeOnClick: false
+                    });
                 }
             });
-        }
-
-        //Change with notification
-        function showModal(data) {
-            $("#modal-main-content").html(data);
-            $("#modal-main").modal();
         }
 
         init();

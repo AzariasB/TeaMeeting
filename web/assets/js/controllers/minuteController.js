@@ -3,9 +3,9 @@
     'use strict';
 
     angular.module('TeaMeeting')
-            .controller('Controller',['post', 'modalForm', minuteController]);
+            .controller('Controller', ['post', 'modalForm', minuteController]);
 
-    function minuteController(post,modalForm) {
+    function minuteController(post, modalForm) {
         var self = this;
 
         self.presenceList = [];
@@ -29,7 +29,7 @@
             $event.preventDefault();
             if (self.currentComment) {
                 var url = $($event.currentTarget).attr('action');
-                postReq("comment=" + this.currentComment, url, commentPosted);
+                post(url, commentPosted, "comment=" + this.currentComment);
                 self.currentComment = '';
             }
         };
@@ -44,7 +44,7 @@
         this.editPresence = function ($event, presenceId) {
             var url = getUrl($event, presenceId);
             post(url, function (response) {
-                modalForm(response.data, url, "update-presence-form", updatePresence);
+                modalForm(response.data, 'update-presence-form', url, updatePresence);
             });
         };
 
@@ -66,6 +66,7 @@
 
     function getUrl($event, idToReplace) {
         $event.preventDefault();
+        console.log($($event.toElement).attr('href'));
         return $($event.toElement).attr('href').replace(/__id__/, idToReplace);
     }
 })();

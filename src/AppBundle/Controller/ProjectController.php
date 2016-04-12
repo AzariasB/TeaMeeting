@@ -258,11 +258,16 @@ class ProjectController extends SuperController {
             $this->saveEntity($p);
         }
 
-        $res = new JsonResponse;
-        return $res->setData(array(
-                    'success' => $success,
-                    'project' => $p
-        ));
+        if ($rq->isXmlHttpRequest()) {
+            $res = new JsonResponse;
+            return $res->setData(array(
+                        'success' => $success,
+                        'project' => $p
+            ));
+        } else {
+            $referer = $rq->headers->get('referer');
+            return $this->redirect($referer);
+        }
     }
 
 }

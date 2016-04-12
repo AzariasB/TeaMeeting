@@ -49,9 +49,7 @@ class RegisterController extends SuperController {
                 $user->setPassword($password);
                 $user->setIsAdmin(false);
 
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($user);
-                $em->flush();
+                $this->saveEntity($user);
                 $resp->setData(array(
                     'success' => true,
                     'password' => $randPwd,

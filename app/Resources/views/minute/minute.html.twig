@@ -64,7 +64,11 @@
                                data-toggle="collapse" 
                                href="#collapseItems" 
                                aria-controls="collapseParticipants">
-                                // ctrl.items.length // items
+                                <ng-pluralize count='ctrl.item.length'
+                                              when="{'0':'No items',
+                                              '1':'One item',
+                                              'other':'{} items'}">
+                                </ng-pluralize>
                             </a>
                         </h4>
                     </div>
@@ -75,7 +79,7 @@
                             <li class="list-group-item"
                                 ng-repeat="item in ctrl.items">
                                 <a ng-click="ctrl.seeItem($event,item.id)"
-                                    href="{{ path('see-minute-item',{'itemId':'__id__'}) }}">
+                                   href="{{ path('see-minute-item',{'itemId':'__id__'}) }}">
                                     // item.agendaItem.title //
                                 </a>
                             </li>
@@ -86,7 +90,14 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <strong> // ctrl.comments.length // comments </strong>
+                <strong>
+                    <ng-pluralize count="ctrl.comments.length"
+                                  when="{'0': 'Nobody commented',
+                                  '1': 'There is one comment',
+                                  'other': 'There are {} comments'}">
+
+                    </ng-pluralize>
+                </strong>
             </div>
             <div class="col-xs-12">
                 {% if canComment %}
@@ -121,5 +132,4 @@
             </div>
         </div> 
     </div>
-    {% include 'modal.html.twig' %}
 {% endblock %}
