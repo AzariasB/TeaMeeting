@@ -34,7 +34,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Description of UserRequest
+ * The user request is a request made by a user
+ * on a item of the agenda to ask the chairman 
+ * to change/update this item or the agenda.
+ * When the user send the request, its state is on 'pending'
+ * then the chairman can update the state of the request
  *
  * @author boutina
  * @ORM\Entity
@@ -280,18 +284,38 @@ class UserRequest implements \JsonSerializable {
         }
     }
 
+    /**
+     * State is pending
+     * 
+     * @return boolean
+     */
     public function isPending() {
         return $this->state === self::STATE_PENDING;
     }
 
+    /**
+     * State is agreed
+     * 
+     * @return boolean
+     */
     public function isAgreed() {
         return $this->state === self::STATE_AGREED;
     }
 
+    /**
+     * State is noted on agenda
+     * 
+     * @return boolean
+     */
     public function isNotedInAgenda() {
         return $this->state === self::STATE_NOTED_ON_AGENDA;
     }
 
+    /**
+     * State is noted on agenda, not changed yet
+     * 
+     * @return boolean
+     */
     public function isNotInAgenda() {
         return $this->state === self::STATE_NOTED_NO_CHANGE;
     }

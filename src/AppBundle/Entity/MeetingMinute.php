@@ -35,7 +35,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * Description of MeetingMinute
+ * The meeting minute is created after a meeting is done
+ * it will contain a list of the present user along with
+ * the items of the meeting's last agenda.
+ * Any user noted as present during the meeting will be 
+ * able to comment the meeting minute
+ * 
  *
  * @author boutina
  * @ORM\Entity
@@ -222,6 +227,15 @@ class MeetingMinute implements \JsonSerializable {
         return $this;
     }
 
+    /**
+     * Initialize the presence list of the meeting minute.
+     * The initalisation is based on the answer given by the users
+     * before the meeting. All the user who answered yes are considered
+     * as present at the meeting. All the others are considered as
+     * absent.
+     * 
+     * @param Collection $participants
+     */
     private function initUserPresence(Collection $participants) {
         $this->presenceList->clear();
         foreach ($participants as $part) {
@@ -234,6 +248,12 @@ class MeetingMinute implements \JsonSerializable {
         }
     }
 
+    /**
+     * Creates all the item for the meeting minute
+     * from the items of the last agenda of the meeting.
+     * 
+     * @param Collection $agendaItems
+     */
     private function initItemMinute(Collection $agendaItems) {
         $this->items->clear();
         foreach ($agendaItems as $agendaItem) {

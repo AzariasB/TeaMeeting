@@ -34,7 +34,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Description of MinuteComment
+ * A minute comment is a comment made
+ * by a user at a certain date on 
+ * a meeting minute.
  *
  * @author boutina
  * @ORM\Entity
@@ -193,6 +195,14 @@ class MinuteComment implements \JsonSerializable {
         return $this;
     }
 
+    /**
+     * Little helper to show the numbers of days since the current comment
+     * instead of displaying a date in the view, the 'age' of the comment
+     * is displayed
+     * 
+     * @param type $full
+     * @return string
+     */
     public function getPassedString($full = false) {
         $today = new \DateTime;
         $diff = $today->diff($this->date);

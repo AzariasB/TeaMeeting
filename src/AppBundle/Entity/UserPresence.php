@@ -34,15 +34,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Description of UserPresence
+ * This class represents the presence of a user at a meeting minute
+ * The user can be :
+ * * Present during the whole meeting
+ * * Present but arrived late
+ * * Present but left early
+ * Or :
+ * * Absent with no apologies received
+ * * Absent with apologies received before the meeting
+ * * Absent with apologies received after the meeting
  *
  * @author boutina
  * @ORM\Entity
  */
 class UserPresence implements \JsonSerializable {
-
-    //put your code here
-
     const PRESENT_FOR_WHOLE_MEETING = 0;
     const PRESENT_ARRIVED_LATE = 0x1;
     const PRESENT_LEFT_EARLY = 0x2;

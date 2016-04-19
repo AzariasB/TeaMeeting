@@ -120,4 +120,10 @@ class SuperController extends Controller {
         return array_merge($arr1, [['text' => $text, 'link' => $link]]);
     }
 
+    protected function assert($assertion, $errorMessage = 'An error occured') {
+        if (!$assertion) {
+            throw new Exception($errorMessage);
+        }
+    }
+
 }

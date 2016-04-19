@@ -281,6 +281,12 @@ class User implements UserInterface, \JsonSerializable {
                 });
     }
 
+    /**
+     * Check if the user answered to the given meeting
+     * 
+     * @param Meeting $meeting
+     * @return boolean
+     */
     public function answeredThisMeeting(Meeting $meeting) {
         return $meeting->answerForUser($this)->getAnswer() !== UserAnswer::NO_ANSWER;
     }

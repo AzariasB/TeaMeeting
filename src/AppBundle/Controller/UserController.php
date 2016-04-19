@@ -31,10 +31,6 @@ class UserController extends SuperController {
     public function infoAction($user) {
         $u = $this->getEntityFromId(User::class, $user);
 
-        if (!$u) {
-            throw $this->createNotFoundException();
-        }
-
         $roles = $this->getUserProject($user);
         return $this->render('user/profile.html.twig', array(
                     'user' => $u,

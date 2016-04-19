@@ -346,6 +346,13 @@ class Meeting implements \JsonSerializable {
         return $this;
     }
 
+    /**
+     * Returns the current meeting minute
+     * if the meeting is not outdated
+     * otherwise, returns null.
+     * 
+     * @return MeetingMinute|null
+     */
     public function getCurrentMinute() {
         if (!$this->isOutdated()) {
             return null;
@@ -383,6 +390,7 @@ class Meeting implements \JsonSerializable {
     }
 
     /**
+     * Set the participants of the meeting
      * 
      * @param ArrayCollection $participants
      */
@@ -423,10 +431,22 @@ class Meeting implements \JsonSerializable {
         return $this->date < new \DateTime;
     }
 
+    /**
+     * Check wether the given user is the secretary of the meeting
+     * 
+     * @param User $user
+     * @return boolean
+     */
     public function userIsSecretary(User $user){
         return $this->secretary == $user;
     }
     
+    /**
+     * Check wether the given user is the chairman of the meeting
+     * 
+     * @param User $user
+     * @return boolean
+     */
     public function userIsChairMan(User $user){
         return $this->chairman == $user;
     }

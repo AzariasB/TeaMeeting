@@ -34,7 +34,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Description of ItemMinute
+ * An item minute is an item created at the end of a meeting
+ * for each item of the agenda
  *
  * @author boutina
  * @ORM\Entity
@@ -240,6 +241,9 @@ class ItemMinute implements \JsonSerializable {
         return $this;
     }
     
+    /**
+     * Change the state of the 'postponed' boolean 
+     */
     public function togglePostponed(){
         $this->postponed = !$this->postponed;
     }

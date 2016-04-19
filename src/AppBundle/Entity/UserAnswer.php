@@ -35,7 +35,10 @@ use AppBundle\Entity\User;
 use AppBundle\Entity\Project;
 
 /**
- * Description of UserAnswer
+ * The user answer is the answer given by the user when a meeting is created
+ * the default answer is no. Therefore, the servers knows when a user did not
+ * answered to a meeting presence.
+ * The answer (when given) can be no,maybe or yes.
  *
  * 
  * @author boutina
@@ -192,6 +195,12 @@ class UserAnswer implements \JsonSerializable {
         );
     }
 
+    /**
+     * Turns the given 'enum' of the answer
+     * to a readable string
+     * 
+     * @return string
+     */
     public function answerString() {
         switch ($this->answer) {
             case self::ANSWER_NO:
@@ -205,18 +214,38 @@ class UserAnswer implements \JsonSerializable {
         }
     }
 
+    /**
+     * Answer is no
+     * 
+     * @return boolean
+     */
     public function isNo() {
         return $this->answer === self::ANSWER_NO;
     }
 
+    /**
+     * Answer is yes
+     * 
+     * @return boolean
+     */
     public function isYes() {
         return $this->answer === self::ANSWER_YES;
     }
 
+    /**
+     * Answer is Maybe
+     * 
+     * @return boolean
+     */
     public function isMaybe() {
         return $this->answer === self::ANSWER_MAYBE;
     }
 
+    /**
+     * No answer was given
+     * 
+     * @return boolean
+     */
     public function isUnknown() {
         return $this->answer === self::NO_ANSWER;
     }

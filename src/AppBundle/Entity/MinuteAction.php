@@ -34,7 +34,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Description of MinuteAction
+ * The minute action is an action that must be 
+ * done by one member of the projectit contains 
+ * a description, an implementer a stae
+ * and a deadline.
  *
  * @author boutina
  * @ORM\Entity
@@ -224,6 +227,12 @@ class MinuteAction implements \JsonSerializable {
         return $this;
     }
 
+    /**
+     * Returns wether the deadline of the
+     * action is passed
+     * 
+     * @return boolean
+     */
     public function isOutdated() {
         return $this->deadline < new \DateTime;
     }

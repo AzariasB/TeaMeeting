@@ -34,6 +34,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ItemAgenda is the item of and agenda
+ * an item is proposed by a user, has a title and a
+ * position.
  *
  * @author boutina
  * @ORM\Entity
@@ -188,6 +190,14 @@ class ItemAgenda implements \JsonSerializable {
         return $this->agenda->getMeeting();
     }
     
+    /**
+     * Change the meeting of the item
+     * This will remove the item from the current agenda
+     * and add it to the current agenda of the given meeting
+     * 
+     * @param Meeting $nwMeeting
+     * @return ItemAgenda
+     */
     public function setMeeting(Meeting $nwMeeting){
         $this->agenda->removeItem($this);
         $this->agenda = $nwMeeting->getCurrentAgenda();
