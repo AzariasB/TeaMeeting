@@ -58,6 +58,7 @@ class DefaultController extends SuperController {
      */
     public function lobbyAction(Request $req) {
         $em = $this->getDoctrine()->getManager();
+        
 
         $users = $em->getRepository('AppBundle:User')->findAll();
         $projects = $em->getRepository('AppBundle:Project')->findAll();

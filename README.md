@@ -3,7 +3,7 @@ TeaMeeting
 
 # Installation
 
-First install all the components :
+First install all the components, on the server root :
 ```bash
 # Clone repository
 git clone https://github.com/AzariasB/TeaMeeting.git
@@ -12,8 +12,17 @@ cd TeaMeeting
 composer update
 # Install jquery, angular and all the front-end frameworkds/libraries
 bower install
+#Change bootstrap theme
+cd web/assets/
+cp css/bootstrap.min.css vendor/bootstrap/dist/
+
+#Create the database
+#Execute the content of the file 'db/symfony.sql'
+#on your database
 ```
 Then go to `localhost/web` or `localhost/web/app_dev.php` for developer mode.
+
+The only existing login is `admin` with password `admin`.
 
 
 Project Case Study: Student team project meeting agenda / minutes / actions management
