@@ -38,20 +38,28 @@ use AppBundle\Entity\MinuteAction;
 use AppBundle\Form\MinuteActionType;
 
 /**
- * Description of MinuteItemController
+ * This is the controller for a minute item
  *
  * @author boutina
  */
 class MinuteItemController extends SuperController {
 
+    /**
+     * Returns the minute item with the given id
+     * depending on the json boolean the response can be
+     * either twig render of json response
+     * 
+     * @param int $itemId
+     * @param boolean $json
+     * @return Response
+     */
     public function indexAction($itemId, $json = false) {
         $item = $this->getEntityFromId(ItemMinute::class, $itemId);
 
         $data = ['item' => $item];
 
         if ($json) {
-            $rep = new JsonResponse;
-            return $rep->setData($data);
+            return new JsonResponse($data);
         } else {
             $data['canEdit'] = $item
                     ->getMeetingMinute()
@@ -62,17 +70,30 @@ class MinuteItemController extends SuperController {
         }
     }
 
+    /**
+     * Toggle the postponed variable of the
+     * item with the given id
+     * 
+     * @param type $itemId
+     * @param Request $req
+     * @return JsonResponse;
+     */
     public function toggleAction($itemId, Request $req) {
         $item = $this->getEntityFromId(ItemMinute::class, $itemId);
         $item->togglePostponed();
         $this->saveEntity($item);
-        $rep = new JsonResponse;
-        return $rep->setData(array(
-                    'success' => true,
-                    'item' => $item
-        ));
+        return new JsonResponse(['success' => true, 'item' => $item]);
     }
 
+    /**
+     * Funny name right ?
+     * 
+     * Add an action to the minute item
+     * 
+     * @param type $itemId
+     * @param Request $req
+     * @return JsonResponse;
+     */
     public function addActionAction($itemId, Request $req) {
         $item = $this->getEntityFromId(ItemMinute::class, $itemId);
 
@@ -83,35 +104,65 @@ class MinuteItemController extends SuperController {
         return $this->createActionForm($action, $req);
     }
 
+    /**
+     * Edit the action of the given id,
+     * the action of the given item
+     * 
+     * @param int $itemId
+     * @param int $actionId
+     * @param Request $req
+     * @return Response
+     */
     public function editActionAction($itemId, $actionId, Request $req) {
         $action = $this->getEntityFromId(MinuteAction::class, $actionId);
         return $this->createActionForm($action, $req);
     }
 
+    /**
+     * Called whenever a user submit an action
+     * to the chairman
+     * This will change the state of the action to
+     * 'work under review'
+     * 
+     * @param type $itemId
+     * @param type $actionId
+     * @param Request $req
+     * @return type
+     */
     public function submitActionAction($itemId, $actionId, Request $req) {
         $action = $this->getEntityFromId(MinuteAction::class, $actionId);
         $action->setState(MinuteAction::ACTION_WORK_UNDER_REVIEW);
         $this->saveEntity($action);
-        $rep = new JsonResponse;
-        return $rep->setData(array(
-                    'success' => true,
-                    'action' => $action
-        ));
+        return new JsonResponse(['success' => true, 'action' => $action]);
     }
 
+    /**
+     * Creates the form to create an action
+     * 
+     * @param MinuteAction $action
+     * @param Request $req
+     * @return Response
+     */
     private function createActionForm(MinuteAction $action, Request $req) {
         $form = $this->createForm(MinuteActionType::class, $action);
 
         $form->handleRequest($req);
 
         if ($form->isSubmitted()) {
-            return $this->handleForm($form, $action);
+            return $this->handleCreationForm($form, $action);
         }
 
         return $this->renderFormView($form);
     }
 
-    private function handleForm(Form $form, MinuteAction $action) {
+    /**
+     * Handl the form to create an action
+     * 
+     * @param Form $form
+     * @param MinuteAction $action
+     * @return JsonResponse
+     */
+    private function handleCreationForm(Form $form, MinuteAction $action) {
         $rep = new JsonResponse;
         if ($form->isValid()) {
             $this->saveEntity($action);

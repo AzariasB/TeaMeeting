@@ -51,7 +51,18 @@ class UserController extends SuperController {
         return $roles;
     }
 
+    /**
+     * Reset the password of the user with the given
+     * id
+     * Can only be called by the admin
+     * 
+     * 
+     * @param type $userId
+     * @param Request $req
+     * @return JsonResponse
+     */
     public function resetPasswordAction($userId, Request $req) {
+        $this->assertAdmin();
         $user = $this->getEntityFromId(User::class, $userId);
         $randPwd = base64_encode(random_bytes(6));
 
@@ -60,11 +71,7 @@ class UserController extends SuperController {
         $user->setPassword($password);
         $this->saveEntity($user);
 
-        $resp = new JsonResponse;
-        return $resp->setData(array(
-                    'success' => true,
-                    'password' => $randPwd
-        ));
+        return new JsonResponse(['success' => true,'password' => $randPwd]);
     }
 
     /**
@@ -74,6 +81,7 @@ class UserController extends SuperController {
      * @return JsonResponse
      */
     public function getAllAction(Request $req) {
+        $this->assertAdmin();
         $users = $this->getAllFromClass(User::class);
         $resp = new JsonResponse;
         return $resp->setData($users);

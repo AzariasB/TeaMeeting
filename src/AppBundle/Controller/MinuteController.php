@@ -40,7 +40,7 @@ use AppBundle\Entity\UserPresence;
 use AppBundle\Form\UserPresenceType;
 
 /**
- * Description of MinuteController
+ * Controller for the meeting minute
  *
  * @author boutina
  */
@@ -78,6 +78,14 @@ class MinuteController extends SuperController {
         ]);
     }
 
+    /**
+     * Returns the meeting with the given id
+     * to the json format
+     * 
+     * @param int $meetingId
+     * @param Request $req
+     * @return JsonResponse
+     */
     public function minuteJsonAction($meetingId, Request $req) {
         $meeting = $this->getEntityFromId(Meeting::class, $meetingId);
 
@@ -89,6 +97,14 @@ class MinuteController extends SuperController {
         ));
     }
 
+    /**
+     * Post of comment of a the meeting
+     * with the given id
+     * 
+     * @param int $meetingId
+     * @param Request $req
+     * @return JsonResponse
+     */
     public function postCommentAction($meetingId, Request $req) {
         $meeting = $this->getEntityFromId(Meeting::class, $meetingId);
 
@@ -110,6 +126,13 @@ class MinuteController extends SuperController {
         ));
     }
 
+    /**
+     * 
+     * 
+     * @param int $presenceId
+     * @param Request $req
+     * @return JsonResponse
+     */
     public function editPresenceAction($presenceId, Request $req) {
         $presence = $this->getEntityFromId(UserPresence::class, $presenceId);
 
@@ -124,6 +147,13 @@ class MinuteController extends SuperController {
         return $this->renderPresenceFormView($form);
     }
 
+    /**
+     * Handle the form to edit the presence
+     * 
+     * @param UserPresence $pres
+     * @param Form $form
+     * @return JsonResponse
+     */
     private function handleEditPresenceForm(UserPresence $pres, Form $form) {
         $res = new JsonResponse;
         if ($form->isValid()) {

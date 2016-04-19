@@ -21,7 +21,15 @@ use Symfony\Component\Form\Form;
  */
 class ProjectController extends SuperController {
 
+    /**
+     * Get all the projects, this route is only
+     * available for the admin
+     * 
+     * @param Request $req
+     * @return Reponse
+     */
     public function getAllAction(Request $req) {
+        $this->assert($this->isGranted('ROLE_ADMIN'), 'Only the admin can see all the projects');
         $projects = $this->getAllFromClass(Project::class);
         $resp = new JsonResponse;
         return $resp->setData($projects);
@@ -29,7 +37,7 @@ class ProjectController extends SuperController {
 
     /**
      * Show the page with all the projects
-     * (projects loaded asynchronously)
+     * (Projects loaded asynchronously in js)
      * 
      * @param Request $req
      * @return Response
@@ -63,6 +71,14 @@ class ProjectController extends SuperController {
         return $this->infoProjectPage($proj);
     }
 
+    /**
+     * Returns the project with the given id
+     * in json format
+     * 
+     * @param int $projId
+     * @param Request $req
+     * @return JsonResponse
+     */
     public function getJsonAction($projId, Request $req) {
         $proj = $this->getEntityFromId(Project::class, $projId);
         $rep = new JsonResponse;
@@ -167,13 +183,13 @@ class ProjectController extends SuperController {
      * @param Project $proj
      */
     private function addParticipants(&$proj) {
-        $parts = $proj->getParticipants();
+        $participants = $proj->getParticipants();
         $leader = $proj->getLeader();
         $secretary = $proj->getSecretary();
-        if (!$parts->contains($leader)) {
+        if (!$participants->contains($leader)) {
             $proj->addParticipant($leader);
         }
-        if (!$parts->contains($secretary)) {
+        if (!$participants->contains($secretary)) {
             $proj->addParticipant($secretary);
         }
     }

@@ -44,12 +44,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class UserRequestController extends SuperController {
 
+    /**
+     * Update the request with the given id
+     * 
+     * @param type $requestId
+     * @param Request $req
+     * @return Response
+     */
     public function updateRequestAction($requestId, Request $req) {
         $userReq = $this->getEntityFromId(UserRequest::class, $requestId);
-
-        if (!$userReq) {
-            throw $this->createNotFoundException('Request not found');
-        }
 
         $form = $this->createFormBuilder()
                 ->add('state', ChoiceType::class, array(
@@ -70,13 +73,20 @@ class UserRequestController extends SuperController {
         $form->handleRequest($req);
 
         if ($form->isSubmitted()) {
-            return $this->handleForm($form, $userReq);
+            return $this->handleUpdateForm($form, $userReq);
         }
 
         return $this->createUpdateForm($form);
     }
 
-    private function handleForm(Form $form, UserRequest $userReq) {
+    /**
+     * Handle the form to update a request
+     * 
+     * @param Form $form
+     * @param UserRequest $userReq
+     * @return type
+     */
+    private function handleUpdateForm(Form $form, UserRequest $userReq) {
         $resp = new JsonResponse;
         if ($form->isValid()) {
             $nwState = $form->get('state')->getData();

@@ -33,13 +33,17 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
- * Description of SuperController
+ * The super controller is a helper,
+ * a subset to the existing symfony controller.
+ * It contains utils functions used in the controllers
+ * of the project.
  *
  * @author boutina
  */
 class SuperController extends Controller {
 
     /**
+     * Get the current user
      * 
      * @return User
      */
@@ -58,12 +62,28 @@ class SuperController extends Controller {
         $em->flush();
     }
 
+    /**
+     * Remove an entity from the database
+     * 
+     * @param Object $entity
+     */
     protected function removeEntity($entity) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($entity);
         $em->flush();
     }
 
+    /**
+     * Find the entity with the given
+     * class name and the givne id
+     * in the database
+     * throw an error if not found
+     * 
+     * @param string $className
+     * @param int $id
+     * @return Object
+     * @throws NotFoundHttpException
+     */
     protected function getEntityFromId($className, $id) {
         $entity = $this->getDoctrine()->getManager()->find($className, $id);
         if (!$entity) {
@@ -82,13 +102,30 @@ class SuperController extends Controller {
     protected function getAllFromClass($className) {
         return $this->getDoctrine()->getRepository($className)->findAll();
     }
-
+    
+    /**
+     * Find the object with the given class name
+     * the given predicate and the given ordering
+     * 
+     * @param string $className
+     * @param array $predicate
+     * @param array $ordering
+     * @return Object
+     */
     protected function getFromClass($className, $predicate, $ordering = []) {
         return $this->getDoctrine()
                         ->getRepository($className)
                         ->findBy($predicate, $ordering);
     }
 
+    /**
+     * Genereate the breadcrumb from the given entity,
+     * the order of the breadcrumb is like this:
+     * Project > Meeting > Meeting Minute > Minute Action
+     * 
+     * @param Object $entity
+     * @return array
+     */
     protected function generateBreadCrumbs($entity) {
         $arr1 = [];
         $text = $link = '';
@@ -120,10 +157,22 @@ class SuperController extends Controller {
         return array_merge($arr1, [['text' => $text, 'link' => $link]]);
     }
 
+    /**
+     * If the assertion if false
+     * throw an exception with the given message
+     * 
+     * @param boolean $assertion
+     * @param string $errorMessage
+     * @throws Exception
+     */
     protected function assert($assertion, $errorMessage = 'An error occured') {
         if (!$assertion) {
             throw new Exception($errorMessage);
         }
+    }
+    
+    protected function assertAdmin($errorMessage='Only the admin can have access to it'){
+        $this->assert($this->isGranted('ROLE_ADMIN'),$errorMessage);
     }
 
 }

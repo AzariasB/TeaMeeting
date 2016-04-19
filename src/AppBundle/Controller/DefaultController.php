@@ -88,6 +88,13 @@ class DefaultController extends SuperController {
         return $this->renderResetForm($form);
     }
 
+    /**
+     * Handl the form to reset
+     * the user's password
+     * 
+     * @param Form $form
+     * @return JsonResponse
+     */
     private function handleResetPasswordForm(Form $form) {
         $resp = new JsonResponse;
         if ($form->isValid()) {

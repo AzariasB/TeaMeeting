@@ -44,12 +44,17 @@ use AppBundle\Entity\UserRequest;
  */
 class AgendaController extends SuperController {
 
+    /**
+     * Create a request on the given agenda
+     * from the current user to the chairman
+     * of the agenda's meeting.
+     * 
+     * @param int $agendaId
+     * @param Request $req
+     * @return Reponse
+     */
     public function sendRequestAction($agendaId, Request $req) {
         $agenda = $this->getEntityFromId(Agenda::class, $agendaId);
-
-        if (!$agenda) {
-            throw $this->createNotFoundException('Agenda not found');
-        }
 
         $userReq = new UserRequest;
         $userReq->setAgenda($agenda);
@@ -66,6 +71,14 @@ class AgendaController extends SuperController {
         return $this->sendRequestView($form);
     }
 
+    /**
+     * Handle the form to send
+     * a request of an agenda
+     * 
+     * @param Form $form
+     * @param UserRequest $userReq
+     * @return JsonResponse
+     */
     private function handleForm(Form $form, UserRequest $userReq) {
         $rep = new JsonResponse;
         if ($form->isValid()) {

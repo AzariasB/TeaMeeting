@@ -41,12 +41,19 @@ use AppBundle\Entity\ItemAgenda;
 use AppBundle\Entity\Meeting;
 
 /**
- * Description of ItemAgendaController
+ * Controller for an agenda's item
  *
  * @author boutina
  */
 class ItemAgendaController extends SuperController {
 
+    /**
+     * Update an item of the agenda
+     * 
+     * @param int $itemId
+     * @param Request $req
+     * @return Reponse
+     */
     public function updateAction($itemId, Request $req) {
         $item = $this->getEntityFromId(ItemAgenda::class, $itemId);
 
@@ -73,6 +80,13 @@ class ItemAgendaController extends SuperController {
         return $this->createFormPage($form);
     }
 
+    /**
+     * Handl the form to update an agenda item
+     * 
+     * @param Form $form
+     * @param ItemAgenda $item
+     * @return JsonResponse
+     */
     private function handleUpdateForm(Form $form, ItemAgenda $item) {
         $rep = new JsonResponse;
         if ($form->isValid()) {
@@ -126,13 +140,21 @@ class ItemAgendaController extends SuperController {
         $form->handleRequest($req);
 
         if ($form->isSubmitted()) {
-            return $this->handleForm($form, $agenda, $item);
+            return $this->handleCreateForm($form, $agenda, $item);
         }
 
         return $this->createFormPage($form);
     }
 
-    private function handleForm(Form $form, Agenda $ag, ItemAgenda $item) {
+    /**
+     * Handle the form to create an agenda item
+     * 
+     * @param Form $form
+     * @param Agenda $ag
+     * @param ItemAgenda $item
+     * @return JsonResponse
+     */
+    private function handleCreateForm(Form $form, Agenda $ag, ItemAgenda $item) {
         $rep = new JsonResponse;
         if ($form->isValid()) {
             $this->saveEntity($item);
